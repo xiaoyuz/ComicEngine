@@ -3,7 +3,7 @@ package com.xiaoyuz.comicengine.contract.presenter;
 import android.support.annotation.NonNull;
 
 import com.xiaoyuz.comicengine.contract.SearchResultContract;
-import com.xiaoyuz.comicengine.db.source.repository.SearchResultRepository;
+import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.entity.SearchResult;
 
 import java.util.List;
@@ -19,13 +19,13 @@ import rx.subscriptions.CompositeSubscription;
 public class SearchResultPresenter implements SearchResultContract.Presenter {
 
     @NonNull
-    private final SearchResultRepository mSearchResultRepository;
+    private final BookRepository mSearchResultRepository;
     @NonNull
     private final SearchResultContract.View mSearchResultView;
     @NonNull
     private CompositeSubscription mSubscriptions;
 
-    public SearchResultPresenter(@NonNull SearchResultRepository searchResultRepository,
+    public SearchResultPresenter(@NonNull BookRepository searchResultRepository,
                                  @NonNull SearchResultContract.View searchResultView) {
         mSearchResultRepository = searchResultRepository;
         mSearchResultView = searchResultView;

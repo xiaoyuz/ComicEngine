@@ -1,7 +1,6 @@
 package com.xiaoyuz.comicengine.activity;
 
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -18,9 +17,6 @@ import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.base.BaseActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
-import com.xiaoyuz.comicengine.contract.presenter.SearchResultPresenter;
-import com.xiaoyuz.comicengine.db.source.remote.SearchResultRemoteDataSource;
-import com.xiaoyuz.comicengine.db.source.repository.SearchResultRepository;
 import com.xiaoyuz.comicengine.fragment.DefaultFragment;
 import com.xiaoyuz.comicengine.fragment.SearchEngineFragment;
 

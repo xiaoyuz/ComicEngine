@@ -1,6 +1,7 @@
 package com.xiaoyuz.comicengine.db.source.remote;
 
-import com.xiaoyuz.comicengine.db.source.SearchResultDataSource;
+import com.xiaoyuz.comicengine.db.source.BookDataSource;
+import com.xiaoyuz.comicengine.entity.BookDetail;
 import com.xiaoyuz.comicengine.entity.SearchResult;
 import com.xiaoyuz.comicengine.net.JsoupParser;
 
@@ -17,17 +18,17 @@ import rx.Subscriber;
 /**
  * Created by zhangxiaoyu on 16-10-28.
  */
-public class SearchResultRemoteDataSource implements SearchResultDataSource {
+public class BookRemoteDataSource implements BookDataSource {
 
-    private static SearchResultRemoteDataSource sInstance;
+    private static BookRemoteDataSource sInstance;
 
-    private SearchResultRemoteDataSource() {
+    private BookRemoteDataSource() {
 
     }
 
-    public static SearchResultRemoteDataSource getInstance() {
+    public static BookRemoteDataSource getInstance() {
         if (sInstance == null) {
-            sInstance = new SearchResultRemoteDataSource();
+            sInstance = new BookRemoteDataSource();
         }
         return sInstance;
     }
@@ -46,6 +47,22 @@ public class SearchResultRemoteDataSource implements SearchResultDataSource {
                         searchResults.add(new SearchResult(element));
                     }
                     subscriber.onNext(searchResults);
+                    subscriber.onCompleted();
+                } else {
+                    subscriber.onError(new NullPointerException());
+                }
+            }
+        });
+    }
+
+    @Override
+    public Observable<BookDetail> getBookDetail(final String url) {
+        return Observable.create(new Observable.OnSubscribe<BookDetail>() {
+            @Override
+            public void call(Subscriber<? super BookDetail> subscriber) {
+                Document doc = JsoupParser.getDocument(url);
+                if (doc != null) {
+                    subscriber.onNext(new BookDetail(doc));
                     subscriber.onCompleted();
                 } else {
                     subscriber.onError(new NullPointerException());
