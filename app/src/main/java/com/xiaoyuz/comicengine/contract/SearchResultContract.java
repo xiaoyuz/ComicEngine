@@ -14,6 +14,8 @@ public interface SearchResultContract {
     interface View extends BaseView<Presenter> {
 
         void showSearchResults(List<SearchResult> searchResults);
+
+        void showNoResult();
     }
 
     interface Presenter extends BasePresenter {

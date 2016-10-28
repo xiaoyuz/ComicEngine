@@ -11,7 +11,11 @@ import android.widget.Toast;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.base.BaseEntity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
+import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.SearchResultContract;
+import com.xiaoyuz.comicengine.contract.presenter.SearchResultPresenter;
+import com.xiaoyuz.comicengine.db.source.remote.SearchResultRemoteDataSource;
+import com.xiaoyuz.comicengine.db.source.repository.SearchResultRepository;
 import com.xiaoyuz.comicengine.entity.SearchResult;
 import com.xiaoyuz.comicengine.net.JsoupParser;
 import com.xiaoyuz.comicengine.utils.App;
@@ -29,9 +33,20 @@ import rx.schedulers.Schedulers;
 /**
  * Created by zhangxiaoyu on 16/10/27.
  */
-public class SearchEngineFragment extends BaseFragment implements SearchResultContract.View {
+public class SearchEngineFragment extends BaseFragment {
 
-    private SearchResultContract.Presenter mSearchResultPresenter;
+    private LazyInstance<SearchResultsFragment> mLazySearchResultsFragment;
+
+    @Override
+    protected void initVariables() {
+        mLazySearchResultsFragment = new LazyInstance<SearchResultsFragment>(
+                new LazyInstance.InstanceCreator<SearchResultsFragment>() {
+            @Override
+            public SearchResultsFragment createInstance() {
+                return new SearchResultsFragment();
+            }
+        });
+    }
 
     @Override
     protected View initView(LayoutInflater inflater,
@@ -45,30 +60,20 @@ public class SearchEngineFragment extends BaseFragment implements SearchResultCo
             @Override
             public void onClick(View v) {
                 String keyword = keywordEditText.getText().toString();
-                mSearchResultPresenter.loadSearchResults(keyword);
+                Bundle bundle = new Bundle();
+                bundle.putString("keyword", keyword);
+                mLazySearchResultsFragment.get().setArguments(bundle);
+                new SearchResultPresenter(SearchResultRepository.getInstace(
+                        SearchResultRemoteDataSource.getInstance()),
+                        mLazySearchResultsFragment.get());
+                replaceFragment(mLazySearchResultsFragment.get());
             }
         });
         return view;
     }
 
     @Override
-    protected void initVariables() {
-
-    }
-
-    @Override
     protected void loadData() {
 
-    }
-
-    @Override
-    public void setPresenter(SearchResultContract.Presenter presenter) {
-        mSearchResultPresenter = presenter;
-    }
-
-    @Override
-    public void showSearchResults(List<SearchResult> searchResults) {
-        Toast.makeText(App.getContext(), searchResults.get(0).toString(),
-                Toast.LENGTH_SHORT).show();
     }
 }

@@ -75,8 +75,10 @@ public class MainActivity extends BaseActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
+
+        selectNavItem(0);
     }
 
     @Override
@@ -123,9 +125,6 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_camera:
-                new SearchResultPresenter(SearchResultRepository.getInstace(
-                        SearchResultRemoteDataSource.getInstance()),
-                        mLazySearchEngineFragment.get());
                 replaceFragment(mLazySearchEngineFragment.get());
                 break;
             default:

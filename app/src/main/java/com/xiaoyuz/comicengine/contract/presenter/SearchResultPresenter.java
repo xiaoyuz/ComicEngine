@@ -49,10 +49,15 @@ public class SearchResultPresenter implements SearchResultContract.Presenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<SearchResult>>() {
-            @Override
-            public void call(List<SearchResult> searchResults) {
-                mSearchResultView.showSearchResults(searchResults);
-            }
-        });
+                    @Override
+                    public void call(List<SearchResult> searchResults) {
+                        mSearchResultView.showSearchResults(searchResults);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        mSearchResultView.showNoResult();
+                    }
+                });
     }
 }
