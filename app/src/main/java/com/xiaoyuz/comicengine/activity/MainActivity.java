@@ -18,6 +18,9 @@ import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.base.BaseActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
+import com.xiaoyuz.comicengine.contract.presenter.SearchResultPresenter;
+import com.xiaoyuz.comicengine.db.source.remote.SearchResultRemoteDataSource;
+import com.xiaoyuz.comicengine.db.source.repository.SearchResultRepository;
 import com.xiaoyuz.comicengine.fragment.DefaultFragment;
 import com.xiaoyuz.comicengine.fragment.SearchEngineFragment;
 
@@ -74,10 +77,6 @@ public class MainActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        // TODO: Remove later.
-        StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
     }
 
     @Override
@@ -124,6 +123,9 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_camera:
+                new SearchResultPresenter(SearchResultRepository.getInstace(
+                        SearchResultRemoteDataSource.getInstance()),
+                        mLazySearchEngineFragment.get());
                 replaceFragment(mLazySearchEngineFragment.get());
                 break;
             default:

@@ -9,18 +9,29 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.xiaoyuz.comicengine.R;
+import com.xiaoyuz.comicengine.base.BaseEntity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
+import com.xiaoyuz.comicengine.contract.SearchResultContract;
 import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.net.JsoupParser;
 import com.xiaoyuz.comicengine.utils.App;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.util.List;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
 /**
  * Created by zhangxiaoyu on 16/10/27.
  */
-public class SearchEngineFragment extends BaseFragment {
+public class SearchEngineFragment extends BaseFragment implements SearchResultContract.View {
+
+    private SearchResultContract.Presenter mSearchResultPresenter;
 
     @Override
     protected View initView(LayoutInflater inflater,
@@ -33,21 +44,8 @@ public class SearchEngineFragment extends BaseFragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    String keyword = keywordEditText.getText().toString();
-                    Document doc = Jsoup.connect("http://www.57mh.com/search/q_" + keyword)
-                            .header("User-Agent", "Mozilla/5.0 (Macintosh; U;" +
-                                    "Intel Mac OS X 10.4; en-US; rv:1.9.2.2)" +
-                                    " Gecko/20100316 Firefox/3.6.2")
-                            .get();
-                    Elements elements = doc.select(".book-result .cf");
-                    Toast.makeText(App.getContext(), new SearchResult(elements.first()).toString(),
-                            Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Toast.makeText(App.getContext(), e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-
+                String keyword = keywordEditText.getText().toString();
+                mSearchResultPresenter.loadSearchResults(keyword);
             }
         });
         return view;
@@ -61,5 +59,16 @@ public class SearchEngineFragment extends BaseFragment {
     @Override
     protected void loadData() {
 
+    }
+
+    @Override
+    public void setPresenter(SearchResultContract.Presenter presenter) {
+        mSearchResultPresenter = presenter;
+    }
+
+    @Override
+    public void showSearchResults(List<SearchResult> searchResults) {
+        Toast.makeText(App.getContext(), searchResults.get(0).toString(),
+                Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,11 +1,13 @@
 package com.xiaoyuz.comicengine.entity;
 
+import com.xiaoyuz.comicengine.base.BaseEntity;
+
 import org.jsoup.nodes.Element;
 
 /**
  * Created by zhangxiaoyu on 16/10/27.
  */
-public class SearchResult {
+public class SearchResult extends BaseEntity {
 
     private String bookCover;
     private boolean status;
@@ -15,13 +17,13 @@ public class SearchResult {
     private String lastChapter;
 
     public SearchResult(Element element) {
-        Element detail = element.select(".book-detail").first();
+        super(element);
         bookCover = element.select(".book-cover .bcover img").attr("src");
-        status = detail.select("dd.tags.status>span>span").first().text().equals("连载中");
-        url = detail.select("dl>dt>a").attr("href");
-        title = detail.select("dl>dt>a").attr("title");
-        updateTime = detail.select("dd.tags.status>span>span").get(1).text();
-        lastChapter = detail.select("dd.tags.status>span>a").text();
+        status = element.select(".book-detail dd.tags.status>span>span").first().text().equals("连载中");
+        url = element.select(".book-detail dl>dt>a").attr("href");
+        title = element.select(".book-detail dl>dt>a").attr("title");
+        updateTime = element.select(".book-detail dd.tags.status>span>span").get(1).text();
+        lastChapter = element.select(".book-detail dd.tags.status>span>a").text();
     }
 
     @Override
