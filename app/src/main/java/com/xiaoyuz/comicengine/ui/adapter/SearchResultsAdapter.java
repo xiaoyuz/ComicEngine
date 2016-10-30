@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -22,15 +23,24 @@ import java.util.List;
 public class SearchResultsAdapter extends
         RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder> {
 
-    class SearchResultsViewHolder extends RecyclerView.ViewHolder {
-
+    class SearchResultsViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
+        RelativeLayout layout;
         ImageView imageView;
         TextView titleTextView;
 
         public SearchResultsViewHolder(View view){
             super(view);
+            layout = (RelativeLayout) view.findViewById(R.id.layout);
             imageView = (ImageView) view.findViewById(R.id.image);
             titleTextView = (TextView) view.findViewById(R.id.title);
+            layout.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            SearchResult searchResult = (SearchResult) v.getTag();
+            mPresenter.openBookDetail(searchResult);
         }
     }
 
@@ -46,7 +56,8 @@ public class SearchResultsAdapter extends
 
     @Override
     public SearchResultsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_results_item,
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.search_results_item,
                 parent,false);
         return new SearchResultsViewHolder(view);
     }
@@ -57,6 +68,7 @@ public class SearchResultsAdapter extends
         String title = mSearchResults.get(position).getTitle();
         holder.titleTextView.setText(title);
 //        holder.itemView.setTag(imageUrl);
+        holder.itemView.setTag(mSearchResults.get(position));
         Glide.with(App.getContext()).load(imageUrl)
                 .diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.imageView);
     }

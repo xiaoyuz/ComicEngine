@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.xiaoyuz.comicengine.EventDispatcher;
+import com.xiaoyuz.comicengine.GotoFragmentOperation;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
@@ -23,7 +25,7 @@ public class SearchEngineFragment extends BaseFragment {
 
     @Override
     protected void initVariables() {
-        mLazySearchResultsFragment = new LazyInstance<SearchResultsFragment>(
+        mLazySearchResultsFragment = new LazyInstance<>(
                 new LazyInstance.InstanceCreator<SearchResultsFragment>() {
             @Override
             public SearchResultsFragment createInstance() {
@@ -50,7 +52,8 @@ public class SearchEngineFragment extends BaseFragment {
                 new SearchResultPresenter(BookRepository.getInstance(
                         BookRemoteDataSource.getInstance()),
                         mLazySearchResultsFragment.get());
-                replaceFragment(mLazySearchResultsFragment.get());
+                EventDispatcher.post(new GotoFragmentOperation(mLazySearchResultsFragment.get(),
+                        true));
             }
         });
         return view;

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,9 +14,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.squareup.otto.Subscribe;
+import com.xiaoyuz.comicengine.EventDispatcher;
+import com.xiaoyuz.comicengine.GotoFragmentOperation;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.base.BaseActivity;
-import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.fragment.DefaultFragment;
 import com.xiaoyuz.comicengine.fragment.SearchEngineFragment;
@@ -23,15 +26,28 @@ import com.xiaoyuz.comicengine.fragment.SearchEngineFragment;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FragmentManager mFragmentManager;
+    private class EventHandler {
+        @Subscribe
+        public void onGotoFragmentOperation(GotoFragmentOperation operation) {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.fragment_container, operation.getFragment());
+            if (operation.isNeedBack()) {
+                ft.addToBackStack(operation.getFragment().getClass().getSimpleName());
+            }
+            ft.commitAllowingStateLoss();
+        }
+    }
+
     private LazyInstance<SearchEngineFragment> mLazySearchEngineFragment;
     private LazyInstance<DefaultFragment> mLazyDefaultFragment;
 
     private NavigationView mNavigationView;
 
+    private EventHandler mEventHandler;
+
     @Override
     protected void initVariables() {
-        mFragmentManager = getSupportFragmentManager();
         mLazyDefaultFragment =
                 new LazyInstance<>(new LazyInstance
                         .InstanceCreator<DefaultFragment>() {
@@ -48,6 +64,7 @@ public class MainActivity extends BaseActivity
                         return new SearchEngineFragment();
                     }
                 });
+        mEventHandler = new EventHandler();
     }
 
     @Override
@@ -75,6 +92,8 @@ public class MainActivity extends BaseActivity
         mNavigationView.setNavigationItemSelectedListener(this);
 
         selectNavItem(0);
+
+        EventDispatcher.register(mEventHandler);
     }
 
     @Override
@@ -121,10 +140,12 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_camera:
-                replaceFragment(mLazySearchEngineFragment.get());
+                EventDispatcher.post(new GotoFragmentOperation(mLazySearchEngineFragment.get(),
+                        false));
                 break;
             default:
-                replaceFragment(mLazyDefaultFragment.get());
+                EventDispatcher.post(new GotoFragmentOperation(mLazyDefaultFragment.get(),
+                        false));
                 break;
         }
 
@@ -133,12 +154,13 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
-    private void selectNavItem(int pos) {
-        onNavigationItemSelected(mNavigationView.getMenu().getItem(pos).setChecked(true));
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventDispatcher.unregister(mEventHandler);
     }
 
-    public void replaceFragment(BaseFragment fragment) {
-        mFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment).commitAllowingStateLoss();
+    private void selectNavItem(int pos) {
+        onNavigationItemSelected(mNavigationView.getMenu().getItem(pos).setChecked(true));
     }
 }

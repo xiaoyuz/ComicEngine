@@ -8,6 +8,7 @@ import com.xiaoyuz.comicengine.entity.SearchResult;
 
 import java.util.List;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -19,7 +20,7 @@ import rx.subscriptions.CompositeSubscription;
 public class SearchResultPresenter implements SearchResultContract.Presenter {
 
     @NonNull
-    private final BookRepository mSearchResultRepository;
+    private final BookRepository mBookRepository;
     @NonNull
     private final SearchResultContract.View mSearchResultView;
     @NonNull
@@ -27,7 +28,7 @@ public class SearchResultPresenter implements SearchResultContract.Presenter {
 
     public SearchResultPresenter(@NonNull BookRepository searchResultRepository,
                                  @NonNull SearchResultContract.View searchResultView) {
-        mSearchResultRepository = searchResultRepository;
+        mBookRepository = searchResultRepository;
         mSearchResultView = searchResultView;
         mSubscriptions= new CompositeSubscription();
         mSearchResultView.setPresenter(this);
@@ -45,7 +46,7 @@ public class SearchResultPresenter implements SearchResultContract.Presenter {
 
     @Override
     public void loadSearchResults(String keyword) {
-        mSearchResultRepository.getSearchResults(keyword)
+        Subscription subscription = mBookRepository.getSearchResults(keyword)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<SearchResult>>() {
@@ -59,5 +60,11 @@ public class SearchResultPresenter implements SearchResultContract.Presenter {
                         mSearchResultView.showNoResult();
                     }
                 });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void openBookDetail(final SearchResult searchResult) {
+        mSearchResultView.openBookDetail(searchResult);
     }
 }
