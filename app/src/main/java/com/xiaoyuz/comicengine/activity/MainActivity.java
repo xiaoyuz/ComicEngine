@@ -16,9 +16,9 @@ import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
 import com.xiaoyuz.comicengine.EventDispatcher;
-import com.xiaoyuz.comicengine.GotoFragmentOperation;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.base.BaseActivity;
+import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.fragment.DefaultFragment;
 import com.xiaoyuz.comicengine.fragment.SearchEngineFragment;
@@ -27,15 +27,25 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FragmentManager.OnBackStackChangedListener {
 
+    public static class GotoFragmentOperation {
+
+        private BaseFragment mFragment;
+
+        public GotoFragmentOperation(BaseFragment fragment) {
+            mFragment = fragment;
+        }
+
+        public BaseFragment getFragment() {
+            return mFragment;
+        }
+    }
+
     private class EventHandler {
         @Subscribe
         public void onGotoFragmentOperation(GotoFragmentOperation operation) {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.fragment_container, operation.getFragment());
-            if (operation.isNeedBack()) {
-                ft.addToBackStack(null);
-            }
             ft.commitAllowingStateLoss();
         }
     }
@@ -147,12 +157,10 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_camera:
-                EventDispatcher.post(new GotoFragmentOperation(mLazySearchEngineFragment.get(),
-                        false));
+                EventDispatcher.post(new GotoFragmentOperation(mLazySearchEngineFragment.get()));
                 break;
             default:
-                EventDispatcher.post(new GotoFragmentOperation(mLazyDefaultFragment.get(),
-                        false));
+                EventDispatcher.post(new GotoFragmentOperation(mLazyDefaultFragment.get()));
                 break;
         }
 
@@ -170,23 +178,4 @@ public class MainActivity extends BaseActivity
     private void selectNavItem(int pos) {
         onNavigationItemSelected(mNavigationView.getMenu().getItem(pos).setChecked(true));
     }
-
-//    public void switchContent(Fragment from, Fragment to) {
-//        if (from != to) {
-//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//            if (!to.isAdded()) {
-//                transaction.hide(from).add(R.id.fragment_container, to).commit();
-//            } else {
-//                transaction.hide(from).show(to).commit();
-//            }
-//            from = to;
-//        }
-//    }
-//
-//    public void switchContent2(Fragment to){
-//        FragmentTransaction transaction = mFm.beginTransaction();
-//        transaction.replace(R.id.id_addfram,to);
-//        //transaction.addToBackStack(null);
-//        transaction.commit();
-//    }
 }

@@ -1,5 +1,6 @@
 package com.xiaoyuz.comicengine.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.xiaoyuz.comicengine.EventDispatcher;
-import com.xiaoyuz.comicengine.GotoFragmentOperation;
 import com.xiaoyuz.comicengine.R;
+import com.xiaoyuz.comicengine.activity.BookInfoActivity;
+import com.xiaoyuz.comicengine.activity.MainActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.presenter.SearchResultPresenter;
@@ -48,12 +50,16 @@ public class SearchEngineFragment extends BaseFragment {
                 String keyword = keywordEditText.getText().toString();
                 Bundle bundle = new Bundle();
                 bundle.putString("keyword", keyword);
-                mLazySearchResultsFragment.get().setArguments(bundle);
-                new SearchResultPresenter(BookRepository.getInstance(
-                        BookRemoteDataSource.getInstance()),
-                        mLazySearchResultsFragment.get());
-                EventDispatcher.post(new GotoFragmentOperation(mLazySearchResultsFragment.get(),
-                        true));
+                Intent intent = new Intent(getActivity(), BookInfoActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+//                mLazySearchResultsFragment.get().setArguments(bundle);
+//                new SearchResultPresenter(BookRepository.getInstance(
+//                        BookRemoteDataSource.getInstance()),
+//                        mLazySearchResultsFragment.get());
+//                EventDispatcher.post(new MainActivity.GotoFragmentOperation
+//                        (mLazySearchResultsFragment.get(),
+//                        true));
             }
         });
         return view;

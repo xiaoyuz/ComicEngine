@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.xiaoyuz.comicengine.EventDispatcher;
-import com.xiaoyuz.comicengine.GotoFragmentOperation;
 import com.xiaoyuz.comicengine.R;
+import com.xiaoyuz.comicengine.activity.BookInfoActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.SearchResultContract;
@@ -102,7 +102,7 @@ public class SearchResultsFragment extends BaseFragment
         new BookDetailPresenter(BookRepository.getInstance(
                 BookRemoteDataSource.getInstance()),
                 fragment);
-        EventDispatcher.post(new GotoFragmentOperation(fragment, true));
+        EventDispatcher.post(new BookInfoActivity.GotoFragmentOperation(fragment));
     }
 
     @Override
