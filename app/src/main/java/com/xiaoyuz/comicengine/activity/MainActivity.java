@@ -24,7 +24,8 @@ import com.xiaoyuz.comicengine.fragment.DefaultFragment;
 import com.xiaoyuz.comicengine.fragment.SearchEngineFragment;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        FragmentManager.OnBackStackChangedListener {
 
     private class EventHandler {
         @Subscribe
@@ -33,7 +34,7 @@ public class MainActivity extends BaseActivity
             FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.fragment_container, operation.getFragment());
             if (operation.isNeedBack()) {
-                ft.addToBackStack(operation.getFragment().getClass().getSimpleName());
+                ft.addToBackStack(null);
             }
             ft.commitAllowingStateLoss();
         }
@@ -73,6 +74,8 @@ public class MainActivity extends BaseActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,9 +94,8 @@ public class MainActivity extends BaseActivity
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        selectNavItem(0);
-
         EventDispatcher.register(mEventHandler);
+        selectNavItem(0);
     }
 
     @Override
@@ -109,6 +111,11 @@ public class MainActivity extends BaseActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onBackStackChanged() {
+
     }
 
     @Override
@@ -163,4 +170,23 @@ public class MainActivity extends BaseActivity
     private void selectNavItem(int pos) {
         onNavigationItemSelected(mNavigationView.getMenu().getItem(pos).setChecked(true));
     }
+
+//    public void switchContent(Fragment from, Fragment to) {
+//        if (from != to) {
+//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//            if (!to.isAdded()) {
+//                transaction.hide(from).add(R.id.fragment_container, to).commit();
+//            } else {
+//                transaction.hide(from).show(to).commit();
+//            }
+//            from = to;
+//        }
+//    }
+//
+//    public void switchContent2(Fragment to){
+//        FragmentTransaction transaction = mFm.beginTransaction();
+//        transaction.replace(R.id.id_addfram,to);
+//        //transaction.addToBackStack(null);
+//        transaction.commit();
+//    }
 }

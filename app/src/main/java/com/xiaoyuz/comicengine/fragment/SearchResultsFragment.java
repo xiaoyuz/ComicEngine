@@ -57,7 +57,8 @@ public class SearchResultsFragment extends BaseFragment
     }
 
     @Override
-    protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    protected View initView(LayoutInflater inflater,
+                            ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_results_fragment,
                 container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
