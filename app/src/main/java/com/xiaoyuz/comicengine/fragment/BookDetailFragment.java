@@ -6,7 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.contract.BookDetailContract;
@@ -26,6 +30,7 @@ public class BookDetailFragment extends BaseFragment implements
         BookDetailContract.View {
 
     private RecyclerView mRecyclerView;
+    private TextView mLoadingView;
     private SearchResult mSearchResult;
     private List<Chapter> mChapters;
     private BookDetailContract.Presenter mPresenter;
@@ -44,6 +49,12 @@ public class BookDetailFragment extends BaseFragment implements
                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.book_detail_fragment,
                 container, false);
+        ((TextView) view.findViewById(R.id.title)).setText(mSearchResult.getTitle());
+
+        Glide.with(App.getContext()).load(mSearchResult.getBookCover())
+                .into((ImageView) view.findViewById(R.id.image));
+
+        mLoadingView = (TextView) view.findViewById(R.id.loading);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.chapter_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
         mRecyclerView.setAdapter(mChapterAdapter);
@@ -57,8 +68,17 @@ public class BookDetailFragment extends BaseFragment implements
 
     @Override
     public void showBookDetail(BookDetail bookDetail) {
+        mLoadingView.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
         mChapters.addAll(bookDetail.getChapters());
         mChapterAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showNoChapter() {
+        mLoadingView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
+        mLoadingView.setText("No Result");
     }
 
     @Override

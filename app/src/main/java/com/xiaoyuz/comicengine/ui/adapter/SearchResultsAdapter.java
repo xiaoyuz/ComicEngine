@@ -69,8 +69,7 @@ public class SearchResultsAdapter extends
         holder.titleTextView.setText(title);
 //        holder.itemView.setTag(imageUrl);
         holder.itemView.setTag(mSearchResults.get(position));
-        Glide.with(App.getContext()).load(imageUrl)
-                .diskCacheStrategy(DiskCacheStrategy.NONE).into(holder.imageView);
+        Glide.with(App.getContext()).load(imageUrl).into(holder.imageView);
     }
 
     @Override

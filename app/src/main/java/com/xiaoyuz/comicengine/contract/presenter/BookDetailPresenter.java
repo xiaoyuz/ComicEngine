@@ -55,7 +55,7 @@ public class BookDetailPresenter implements BookDetailContract.Presenter {
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-
+                mBookDetailView.showNoChapter();
             }
         });
         mSubscriptions.add(subscription);

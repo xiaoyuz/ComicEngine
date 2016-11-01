@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
 
 import com.squareup.otto.Subscribe;
 import com.xiaoyuz.comicengine.EventDispatcher;
@@ -21,18 +20,24 @@ import com.xiaoyuz.comicengine.fragment.SearchResultsFragment;
  * Search result list and book detail.
  * Created by zhangxiaoyu on 16/10/31.
  */
-public class BookInfoActivity extends BaseActivity {
+public class SearchResultActivity extends BaseActivity {
 
     public static class GotoFragmentOperation {
 
         private BaseFragment mFragment;
+        private boolean mNeedHide;
 
-        public GotoFragmentOperation(BaseFragment fragment) {
+        public GotoFragmentOperation(BaseFragment fragment, boolean needHide) {
             mFragment = fragment;
+            mNeedHide = needHide;
         }
 
         public BaseFragment getFragment() {
             return mFragment;
+        }
+
+        public boolean isNeedHide() {
+            return mNeedHide;
         }
     }
 
@@ -89,19 +94,16 @@ public class BookInfoActivity extends BaseActivity {
         new SearchResultPresenter(BookRepository.getInstance(
                 BookRemoteDataSource.getInstance()),
                 mLazySearchResultsFragment.get());
-        EventDispatcher.post(new GotoFragmentOperation(mLazySearchResultsFragment.get()));
+        EventDispatcher.post(new GotoFragmentOperation(mLazySearchResultsFragment.get(), false));
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        super.onKeyDown(keyCode, event);
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-                finish();
-            }
-            return getSupportFragmentManager().getBackStackEntryCount() >= 1;
+    public void onBackPressed() {
+        super.onBackPressed();
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() == 0) {
+            finish();
         }
-        return false;
     }
 
     @Override

@@ -13,6 +13,8 @@ public interface BookDetailContract {
 
         void showBookDetail(BookDetail bookDetail);
 
+        void showNoChapter();
+
     }
 
     interface Presenter extends BasePresenter {
