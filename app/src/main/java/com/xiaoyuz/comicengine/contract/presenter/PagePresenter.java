@@ -44,20 +44,22 @@ public class PagePresenter implements PageContract.Presenter {
 
     @Override
     public void loadPage(String url) {
-        Subscription subscription = mBookRepository.getPage(url)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Page>() {
-                    @Override
-                    public void call(Page page) {
-                        mPageView.showPage(page);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
+        mPageView.showPage(url);
 
-                    }
-                });
-        mSubscriptions.add(subscription);
+//        Subscription subscription = mBookRepository.getPage(url)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<Page>() {
+//                    @Override
+//                    public void call(Page page) {
+//                        mPageView.showPage(page);
+//                    }
+//                }, new Action1<Throwable>() {
+//                    @Override
+//                    public void call(Throwable throwable) {
+//
+//                    }
+//                });
+//        mSubscriptions.add(subscription);
     }
 }

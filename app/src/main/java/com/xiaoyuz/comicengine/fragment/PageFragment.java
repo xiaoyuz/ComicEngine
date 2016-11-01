@@ -36,6 +36,7 @@ public class PageFragment extends BaseFragment {
         mViewPager = (ViewPager) view.findViewById(R.id.viewer);
         mPageAdapter = new PageAdapter(mPageUrls);
         mViewPager.setAdapter(mPageAdapter);
+        mViewPager.setOffscreenPageLimit(6);
         return view;
     }
 

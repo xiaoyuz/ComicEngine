@@ -23,6 +23,10 @@ public class JsoupParser {
         } catch (IOException e) {
             return null;
         }
+    }
 
+    public static Document getDocumentByCode(String code) {
+        Document doc = Jsoup.parse(code);
+        return doc;
     }
 }

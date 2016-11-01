@@ -12,6 +12,8 @@ public interface PageContract {
     interface View extends BaseView<Presenter> {
 
         void showPage(Page page);
+
+        void showPage(String url);
     }
 
     interface Presenter extends BasePresenter {
