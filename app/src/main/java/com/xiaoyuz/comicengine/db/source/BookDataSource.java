@@ -1,6 +1,7 @@
 package com.xiaoyuz.comicengine.db.source;
 
 import com.xiaoyuz.comicengine.entity.BookDetail;
+import com.xiaoyuz.comicengine.entity.Page;
 import com.xiaoyuz.comicengine.entity.SearchResult;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface BookDataSource {
     Observable<List<SearchResult>> getSearchResults(String keyword);
 
     Observable<BookDetail> getBookDetail(String url);
+
+    Observable<Page> getPage(String url);
 }

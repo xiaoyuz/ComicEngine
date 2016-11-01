@@ -2,6 +2,7 @@ package com.xiaoyuz.comicengine.db.source.remote;
 
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.entity.BookDetail;
+import com.xiaoyuz.comicengine.entity.Page;
 import com.xiaoyuz.comicengine.entity.SearchResult;
 import com.xiaoyuz.comicengine.net.JsoupParser;
 import com.xiaoyuz.comicengine.utils.Contants;
@@ -64,6 +65,22 @@ public class BookRemoteDataSource implements BookDataSource {
                 Document doc = JsoupParser.getDocument(Contants.URL_DOMAIN + url);
                 if (doc != null) {
                     subscriber.onNext(new BookDetail(doc));
+                    subscriber.onCompleted();
+                } else {
+                    subscriber.onError(new NullPointerException());
+                }
+            }
+        });
+    }
+
+    @Override
+    public Observable<Page> getPage(final String url) {
+        return Observable.create(new Observable.OnSubscribe<Page>() {
+            @Override
+            public void call(Subscriber<? super Page> subscriber) {
+                Document doc = JsoupParser.getDocument(Contants.URL_DOMAIN + url);
+                if (doc != null) {
+                    subscriber.onNext(new Page(doc));
                     subscriber.onCompleted();
                 } else {
                     subscriber.onError(new NullPointerException());

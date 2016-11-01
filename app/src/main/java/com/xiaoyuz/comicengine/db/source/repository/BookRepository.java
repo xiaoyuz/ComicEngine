@@ -2,6 +2,7 @@ package com.xiaoyuz.comicengine.db.source.repository;
 
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.entity.BookDetail;
+import com.xiaoyuz.comicengine.entity.Page;
 import com.xiaoyuz.comicengine.entity.SearchResult;
 
 import java.util.List;
@@ -38,5 +39,10 @@ public class BookRepository implements BookDataSource {
     @Override
     public Observable<BookDetail> getBookDetail(String url) {
         return mBookRemoteDataSource.getBookDetail(url);
+    }
+
+    @Override
+    public Observable<Page> getPage(String url) {
+        return mBookRemoteDataSource.getPage(url);
     }
 }

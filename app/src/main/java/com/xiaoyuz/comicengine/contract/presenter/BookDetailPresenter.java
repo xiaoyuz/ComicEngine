@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 import com.xiaoyuz.comicengine.contract.BookDetailContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.entity.BookDetail;
+import com.xiaoyuz.comicengine.entity.Chapter;
+
+import java.util.ArrayList;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -59,5 +62,16 @@ public class BookDetailPresenter implements BookDetailContract.Presenter {
             }
         });
         mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void openChapter(Chapter chapter) {
+        ArrayList<String> pageUrls = new ArrayList<>();
+        String pageInfo = chapter.getPageInfo();
+        int maxPageNum = Integer.parseInt(pageInfo.split("p")[0]);
+        for (int i = 1; i <= maxPageNum; i++) {
+            pageUrls.add(chapter.getUrl() + "?p=" + i);
+        }
+        mBookDetailView.showChapter(pageUrls);
     }
 }
