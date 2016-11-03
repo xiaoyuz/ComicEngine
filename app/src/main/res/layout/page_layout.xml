@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:comic="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.xiaoyuz.comicengine.ui.widget.ComicImageView
+        android:id="@+id/comic_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        comic:loading_anim="@anim/loading_animation"
+        comic:loading_src="@drawable/loading"
+        comic:background_color="@color/comic_page_background"/>
+
+</FrameLayout>

@@ -1,8 +1,8 @@
 package com.xiaoyuz.comicengine.ui.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.JavascriptInterface;
@@ -29,6 +29,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import uk.co.senab.photoview.PhotoView;
 
 /**
  * Layout for image type detail view, just show image. Used in viewpager.
@@ -38,8 +39,6 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
     final class InJavaScriptLocalObj {
         @JavascriptInterface
         public void showSource(final String html) {
-            Log.d("HTML", html);
-
             Observable.create(
                     new Observable.OnSubscribe<Page>() {
                         @Override
@@ -72,56 +71,48 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            Log.d("WebView", "onPageFinished ");
             view.loadUrl("javascript:window.local_obj.showSource('<head>'+" +
                     "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
             super.onPageFinished(view, url);
         }
     }
 
-    protected ImageView mImageView;
+    protected PhotoView mImageView;
     protected Context mContext;
     protected ImageView mLoadingView;
     private PageContract.Presenter mPresenter;
 
     private WebView mWebView;
 
-    public ComicImageView(Context ctx) {
-        super(ctx);
-        mContext = ctx;
-        init();
+    public ComicImageView(Context context) {
+        super(context);
+        mContext = context;
     }
 
-    public ComicImageView(Context ctx, AttributeSet attrs) {
-        super(ctx, attrs);
-        mContext = ctx;
-        init();
+    public ComicImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        mContext = context;
+        initLayout(attrs);
     }
 
     public ImageView getImageView() {
         return mImageView;
     }
 
-    protected void init() {
-        mImageView = new ImageView(mContext);
+    protected void initLayout(AttributeSet attrs) {
+        mImageView = new PhotoView(mContext);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT);
         mImageView.setLayoutParams(params);
         mImageView.setBackgroundColor(0xff000000);
         mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         mImageView.setVisibility(GONE);
-        this.addView(mImageView);
 
         mLoadingView = new ImageView(App.getContext());
         LayoutParams loadingParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
         loadingParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         mLoadingView.setLayoutParams(loadingParams);
-        mLoadingView.setImageResource(R.drawable.loading);
-        Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(
-                App.getContext(), R.anim.loading_animation);
-        mLoadingView.startAnimation(hyperspaceJumpAnimation);
-        this.addView(mLoadingView);
 
         // WebView
         mWebView = new WebView(App.getContext());
@@ -130,9 +121,33 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
         mWebView.setWebViewClient(new MyWebViewClient());
-        mWebView.loadUrl("http://m.57mh.com/282/0469.html");
         mWebView.setVisibility(INVISIBLE);
+
+        TypedArray typedArray = mContext.obtainStyledAttributes(attrs,
+                R.styleable.ComicImageView);
+        for (int i = 0; i < typedArray.getIndexCount(); i++) {
+            int attr = typedArray.getIndex(i);
+            switch (attr) {
+                case R.styleable.ComicImageView_loading_anim:
+                    Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(
+                            getContext(), typedArray.getResourceId(
+                                    R.styleable.ComicImageView_loading_anim, 0));
+                    mLoadingView.startAnimation(hyperspaceJumpAnimation);
+                    break;
+                case R.styleable.ComicImageView_loading_src:
+                    mLoadingView.setImageResource(typedArray.getResourceId(
+                            R.styleable.ComicImageView_loading_src, 0));
+                    break;
+                case R.styleable.ComicImageView_background_color:
+                    mImageView.setBackgroundColor(typedArray.getResourceId(
+                            R.styleable.ComicImageView_background_color, 0));
+                    break;
+            }
+        }
+        this.addView(mImageView);
+        this.addView(mLoadingView);
         this.addView(mWebView);
+        typedArray.recycle();
     }
 
     @Override
