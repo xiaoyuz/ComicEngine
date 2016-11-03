@@ -36,12 +36,12 @@ public class BookRemoteDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<List<SearchResult>> getSearchResults(final String keyword) {
+    public Observable<List<SearchResult>> getSearchResults(final String keyword, final int page) {
         return Observable.create(new Observable.OnSubscribe<List<SearchResult>>() {
             @Override
             public void call(Subscriber<? super List<SearchResult>> subscriber) {
                 Document doc = JsoupParser
-                        .getDocument("http://www.57mh.com/search/q_" + keyword);
+                        .getDocument("http://www.57mh.com/search/q_" + keyword + "-p-" + page);
                 if (doc != null) {
                     Elements elements = doc.select(".book-result .cf");
                     List<SearchResult> searchResults = new ArrayList<>();

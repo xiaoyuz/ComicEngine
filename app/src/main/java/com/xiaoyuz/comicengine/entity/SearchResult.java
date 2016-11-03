@@ -67,6 +67,11 @@ public class SearchResult implements Parcelable {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return url.equals(((SearchResult) obj).url) && title.equals(((SearchResult) obj).title);
+    }
+
+    @Override
     public String toString() {
         return new StringBuffer().append("Cover: ").append(bookCover).append("\n")
                 .append("status: ").append(status).append("\n")

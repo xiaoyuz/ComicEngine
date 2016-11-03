@@ -13,7 +13,7 @@ import rx.Observable;
  */
 public interface BookDataSource {
 
-    Observable<List<SearchResult>> getSearchResults(String keyword);
+    Observable<List<SearchResult>> getSearchResults(String keyword, int page);
 
     Observable<BookDetail> getBookDetail(String url);
 

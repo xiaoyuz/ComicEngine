@@ -23,7 +23,7 @@ public interface SearchResultContract {
 
     interface Presenter extends BasePresenter {
 
-        void loadSearchResults(String keyword);
+        void loadSearchResults(String keyword, int page);
 
         void openBookDetail(SearchResult searchResult);
     }

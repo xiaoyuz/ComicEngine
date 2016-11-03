@@ -32,8 +32,8 @@ public class BookRepository implements BookDataSource {
     }
 
     @Override
-    public Observable<List<SearchResult>> getSearchResults(String keyword) {
-        return mBookRemoteDataSource.getSearchResults(keyword);
+    public Observable<List<SearchResult>> getSearchResults(String keyword, int page) {
+        return mBookRemoteDataSource.getSearchResults(keyword, page);
     }
 
     @Override

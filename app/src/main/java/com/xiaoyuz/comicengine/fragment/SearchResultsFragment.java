@@ -1,6 +1,7 @@
 package com.xiaoyuz.comicengine.fragment;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,12 +29,17 @@ import java.util.List;
  * Created by zhangxiaoyu on 16-10-28.
  */
 public class SearchResultsFragment extends BaseFragment
-        implements SearchResultContract.View {
+        implements SearchResultContract.View, SwipeRefreshLayout.OnRefreshListener {
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private List<SearchResult> mSearchResults;
+    private List<SearchResult> mLastLoadedResults;
     private SearchResultsAdapter mAdapter;
     private TextView mLoadingView;
+    private boolean mIsLoading;
+    private boolean mNoMoreResult;
+    private int mNextPage = 1;
 
     private String mKeyword;
 
@@ -53,6 +59,7 @@ public class SearchResultsFragment extends BaseFragment
         mKeyword = getArguments().getString("keyword");
         mSearchResultPresenter.subscribe();
         mSearchResults = new ArrayList<>();
+        mLastLoadedResults = new ArrayList<>();
         mAdapter = new SearchResultsAdapter(mSearchResults, mSearchResultPresenter);
     }
 
@@ -61,16 +68,41 @@ public class SearchResultsFragment extends BaseFragment
                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_results_fragment,
                 container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
         mLoadingView = (TextView) view.findViewById(R.id.loading);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(App.getContext());
+        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (!mNoMoreResult) {
+                    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                    if (lastVisibleItemPosition + 1 == mAdapter.getItemCount()) {
+                        if (!mIsLoading && !mSwipeRefreshLayout.isRefreshing()) {
+                            mIsLoading = true;
+                            loadData();
+                        }
+                    }
+                }
+            }
+        });
         return view;
     }
 
     @Override
     protected void loadData() {
-        mSearchResultPresenter.loadSearchResults(mKeyword);
+        mSearchResultPresenter.loadSearchResults(mKeyword, mNextPage);
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
@@ -81,15 +113,23 @@ public class SearchResultsFragment extends BaseFragment
     @Override
     public void showSearchResults(List<SearchResult> searchResults) {
         mLoadingView.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
-        mSearchResults.addAll(searchResults);
-        mAdapter.notifyDataSetChanged();
+        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+        if (!sameSearchResults(mLastLoadedResults, searchResults)) {
+            mSearchResults.addAll(searchResults);
+            mAdapter.notifyDataSetChanged();
+            mLastLoadedResults = searchResults;
+            mNextPage++;
+        } else {
+            mNoMoreResult = true;
+        }
+        mSwipeRefreshLayout.setRefreshing(false);
+        mIsLoading = false;
     }
 
     @Override
     public void showNoResult() {
         mLoadingView.setVisibility(View.VISIBLE);
-        mRecyclerView.setVisibility(View.GONE);
+        mSwipeRefreshLayout.setVisibility(View.GONE);
         mLoadingView.setText("No Result");
     }
 
@@ -109,5 +149,27 @@ public class SearchResultsFragment extends BaseFragment
     public void onDestroy() {
         super.onDestroy();
         mSearchResultPresenter.unsubscribe();
+    }
+
+    @Override
+    public void onRefresh() {
+        mSearchResults.clear();
+        mLastLoadedResults.clear();
+        mNextPage = 1;
+        mNoMoreResult = false;
+        loadData();
+    }
+
+    private boolean sameSearchResults(List<SearchResult> searchResults1,
+                                      List<SearchResult> searchResults2) {
+        if (searchResults1.size() != searchResults2.size()) {
+            return false;
+        }
+        for (int i = 0; i < searchResults1.size(); i++) {
+            if (!searchResults1.get(i).equals(searchResults2.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

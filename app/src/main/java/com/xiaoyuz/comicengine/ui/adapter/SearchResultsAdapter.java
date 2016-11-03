@@ -20,15 +20,15 @@ import java.util.List;
  * Created by zhangxiaoyu on 16-10-28.
  */
 public class SearchResultsAdapter extends
-        RecyclerView.Adapter<SearchResultsAdapter.SearchResultsViewHolder> {
+        RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    class SearchResultsViewHolder extends RecyclerView.ViewHolder
+    class SearchResultViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
         RelativeLayout layout;
         ImageView imageView;
         TextView titleTextView;
 
-        public SearchResultsViewHolder(View view){
+        public SearchResultViewHolder(View view){
             super(view);
             layout = (RelativeLayout) view.findViewById(R.id.layout);
             imageView = (ImageView) view.findViewById(R.id.image);
@@ -54,20 +54,23 @@ public class SearchResultsAdapter extends
     }
 
     @Override
-    public SearchResultsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.search_results_item,
-                parent,false);
-        return new SearchResultsViewHolder(view);
+                        parent, false);
+        return new SearchResultViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(SearchResultsViewHolder holder, int position) {
-        String imageUrl = mSearchResults.get(position).getBookCover();
-        String title = mSearchResults.get(position).getTitle();
-        holder.titleTextView.setText(title);
-        holder.itemView.setTag(mSearchResults.get(position));
-        Glide.with(App.getContext()).load(imageUrl).into(holder.imageView);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof SearchResultViewHolder) {
+            String imageUrl = mSearchResults.get(position).getBookCover();
+            String title = mSearchResults.get(position).getTitle();
+            ((SearchResultViewHolder) holder).titleTextView.setText(title);
+            holder.itemView.setTag(mSearchResults.get(position));
+            Glide.with(App.getContext()).load(imageUrl)
+                    .into(((SearchResultViewHolder) holder).imageView);
+        }
     }
 
     @Override

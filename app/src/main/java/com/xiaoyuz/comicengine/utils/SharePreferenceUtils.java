@@ -15,7 +15,7 @@ import java.util.Set;
 public class SharePreferenceUtils {
 
     private static final String TAG = "SharePreferenceUtils";
-    private static final String PREFS_STORE = "reading_assistant";
+    private static final String PREFS_STORE = "comic_engine";
 
     private static final LazyInstance<SharedPreferences> mLazySharedPreferences =
             new LazyInstance<>(new LazyInstance.InstanceCreator<SharedPreferences>() {
