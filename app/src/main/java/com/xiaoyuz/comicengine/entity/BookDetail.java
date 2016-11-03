@@ -5,6 +5,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by zhangxiaoyu on 16-10-28.
@@ -20,8 +21,14 @@ public class BookDetail {
         Elements uls = element.select("div#chpater-list-1 ul");
         for (Element ul : uls) {
             Elements lis = ul.select("li");
+            // Reverse the chapters.
+            Stack<Chapter> liStack = new Stack<>();
             for (Element li : lis) {
-                chapters.add(new Chapter(li));
+                liStack.add(new Chapter(li));
+            }
+            int stackSize = liStack.size();
+            for (int i = 0; i < stackSize; i++) {
+                chapters.add(liStack.pop());
             }
         }
     }
