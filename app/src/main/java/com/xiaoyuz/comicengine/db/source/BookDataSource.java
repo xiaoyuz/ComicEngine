@@ -17,7 +17,7 @@ public interface BookDataSource {
 
     Observable<BookDetail> getBookDetail(String url);
 
-//    Observable<Page> getPage(String url);
+    Observable<String> getHtml(String url);
 
     Observable<Page> getPage(String html);
 }

@@ -42,6 +42,11 @@ public class BookRepository implements BookDataSource {
     }
 
     @Override
+    public Observable<String> getHtml(String url) {
+        return mBookRemoteDataSource.getHtml(url);
+    }
+
+    @Override
     public Observable<Page> getPage(String html) {
         return mBookRemoteDataSource.getPage(html);
     }

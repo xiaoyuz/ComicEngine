@@ -1,6 +1,7 @@
 package com.xiaoyuz.comicengine.contract.presenter;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.xiaoyuz.comicengine.contract.PageContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
@@ -9,6 +10,7 @@ import com.xiaoyuz.comicengine.entity.Page;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -46,8 +48,24 @@ public class PagePresenter implements PageContract.Presenter {
      * @param url
      */
     @Override
-    public void loadHtmlPage(String url) {
-        mPageView.loadUrlByWebView(url);
+    public void loadHtmlPage(final String url) {
+        Subscription subscription = mBookRepository.getHtml(url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        if (TextUtils.isEmpty(s)) {
+                            mPageView.loadUrlByWebView(url);
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+        mSubscriptions.add(subscription);
     }
 
     /**
@@ -57,6 +75,7 @@ public class PagePresenter implements PageContract.Presenter {
     @Override
     public void loadPage(String html) {
         Subscription subscription = mBookRepository.getPage(html)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Page>() {
                     @Override

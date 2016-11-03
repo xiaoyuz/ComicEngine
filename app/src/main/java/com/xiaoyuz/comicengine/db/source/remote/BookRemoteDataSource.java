@@ -74,6 +74,17 @@ public class BookRemoteDataSource implements BookDataSource {
     }
 
     @Override
+    public Observable<String> getHtml(String url) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onNext("");
+                subscriber.onCompleted();
+            }
+        });
+    }
+
+    @Override
     public Observable<Page> getPage(final String html) {
         return Observable.create(new Observable.OnSubscribe<Page>() {
             @Override
