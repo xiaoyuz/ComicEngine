@@ -13,12 +13,13 @@ public interface PageContract {
 
         void showPage(Page page);
 
-        void showPage(String url);
+        void loadUrlByWebView(String url);
     }
 
     interface Presenter extends BasePresenter {
 
-        void loadPage(String url);
+        void loadHtmlPage(String url);
 
+        void loadPage(String html);
     }
 }

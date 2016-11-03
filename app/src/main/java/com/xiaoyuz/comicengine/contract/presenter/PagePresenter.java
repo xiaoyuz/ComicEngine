@@ -9,7 +9,6 @@ import com.xiaoyuz.comicengine.entity.Page;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -42,24 +41,34 @@ public class PagePresenter implements PageContract.Presenter {
         mSubscriptions.clear();
     }
 
+    /**
+     * Load html page for webview, output is html code.
+     * @param url
+     */
     @Override
-    public void loadPage(String url) {
-        mPageView.showPage(url);
+    public void loadHtmlPage(String url) {
+        mPageView.loadUrlByWebView(url);
+    }
 
-//        Subscription subscription = mBookRepository.getPage(url)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Action1<Page>() {
-//                    @Override
-//                    public void call(Page page) {
-//                        mPageView.showPage(page);
-//                    }
-//                }, new Action1<Throwable>() {
-//                    @Override
-//                    public void call(Throwable throwable) {
-//
-//                    }
-//                });
-//        mSubscriptions.add(subscription);
+    /**
+     * Load html code and get the page instance.
+     * @param html
+     */
+    @Override
+    public void loadPage(String html) {
+        Subscription subscription = mBookRepository.getPage(html)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Page>() {
+                    @Override
+                    public void call(Page page) {
+                        mPageView.showPage(page);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+        mSubscriptions.add(subscription);
     }
 }

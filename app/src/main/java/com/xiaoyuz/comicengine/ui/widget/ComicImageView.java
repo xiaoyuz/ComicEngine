@@ -18,17 +18,9 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.PageContract;
 import com.xiaoyuz.comicengine.entity.Page;
-import com.xiaoyuz.comicengine.net.JsoupParser;
 import com.xiaoyuz.comicengine.utils.App;
 import com.xiaoyuz.comicengine.utils.Contants;
 
-import org.jsoup.nodes.Document;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import uk.co.senab.photoview.PhotoView;
 
 /**
@@ -39,27 +31,7 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
     final class InJavaScriptLocalObj {
         @JavascriptInterface
         public void showSource(final String html) {
-            Observable.create(
-                    new Observable.OnSubscribe<Page>() {
-                        @Override
-                        public void call(Subscriber<? super Page> subscriber) {
-                            Document doc = JsoupParser.getDocumentByCode(html);
-                            subscriber.onNext(new Page(doc));
-                            subscriber.onCompleted();
-                        }
-                    }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<Page>() {
-                        @Override
-                        public void call(Page page) {
-                            loadComic(page);
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-
-                        }
-                    });
+            mPresenter.loadPage(html);
         }
     }
 
@@ -157,24 +129,6 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
 
     @Override
     public void showPage(Page page) {
-        Glide.with(getContext()).load(page.getImageUrl()).into(new SimpleTarget<GlideDrawable>() {
-            @Override
-            public void onResourceReady(GlideDrawable resource,
-                                        GlideAnimation<? super GlideDrawable> glideAnimation) {
-                mLoadingView.clearAnimation();
-                mLoadingView.setVisibility(GONE);
-                mImageView.setImageDrawable(resource);
-                mImageView.setVisibility(VISIBLE);
-            }
-        });
-    }
-
-    @Override
-    public void showPage(String url) {
-        mWebView.loadUrl(Contants.MOBILE_URL_DOMAIN + url);
-    }
-
-    private void loadComic(Page page) {
         Glide.with(getContext()).load(page.getImageUrl()).into(
                 new SimpleTarget<GlideDrawable>() {
                     @Override
@@ -187,5 +141,10 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
                         mImageView.setVisibility(VISIBLE);
                     }
                 });
+    }
+
+    @Override
+    public void loadUrlByWebView(String url) {
+        mWebView.loadUrl(Contants.MOBILE_URL_DOMAIN + url);
     }
 }

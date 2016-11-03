@@ -74,17 +74,13 @@ public class BookRemoteDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<Page> getPage(final String url) {
+    public Observable<Page> getPage(final String html) {
         return Observable.create(new Observable.OnSubscribe<Page>() {
             @Override
             public void call(Subscriber<? super Page> subscriber) {
-                Document doc = JsoupParser.getDocument(Contants.URL_DOMAIN + url);
-                if (doc != null) {
-                    subscriber.onNext(new Page(doc));
-                    subscriber.onCompleted();
-                } else {
-                    subscriber.onError(new NullPointerException());
-                }
+                Document doc = JsoupParser.getDocumentByCode(html);
+                subscriber.onNext(new Page(doc));
+                subscriber.onCompleted();
             }
         });
     }

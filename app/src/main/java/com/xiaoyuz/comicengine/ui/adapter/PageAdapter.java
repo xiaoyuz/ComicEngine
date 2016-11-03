@@ -54,7 +54,7 @@ public class PageAdapter extends PagerAdapter {
                 = (ComicImageView) pageView.findViewById(R.id.comic_image_view);
         PageContract.Presenter presenter = new PagePresenter(
                 BookRepository.getInstance(BookRemoteDataSource.getInstance()), comicImageView);
-        presenter.loadPage(mPageUrls.get(position));
+        presenter.loadHtmlPage(mPageUrls.get(position));
         collection.addView(pageView, 0);
         return pageView;
     }
