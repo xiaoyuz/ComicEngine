@@ -30,7 +30,8 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
 
     final class InJavaScriptLocalObj {
         @JavascriptInterface
-        public void showSource(final String html) {
+        public void showSource(final String url, final String html) {
+            mPresenter.saveHtmlToLocal(url, html);
             mPresenter.loadPage(html);
         }
     }
@@ -43,7 +44,7 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            view.loadUrl("javascript:window.local_obj.showSource('<head>'+" +
+            view.loadUrl("javascript:window.local_obj.showSource('" + url + "','<head>'+" +
                     "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
             super.onPageFinished(view, url);
         }
@@ -145,6 +146,6 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
 
     @Override
     public void loadUrlByWebView(String url) {
-        mWebView.loadUrl(Contants.MOBILE_URL_DOMAIN + url);
+        mWebView.loadUrl(url);
     }
 }

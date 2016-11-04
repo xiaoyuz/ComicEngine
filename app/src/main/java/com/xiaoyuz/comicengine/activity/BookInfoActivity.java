@@ -13,6 +13,7 @@ import com.xiaoyuz.comicengine.base.BaseActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.presenter.SearchResultPresenter;
+import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.fragment.SearchResultsFragment;
@@ -42,17 +43,8 @@ public class BookInfoActivity extends BaseActivity {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
 
-            if (fm.getBackStackEntryCount() != 0) {
-                String fragmentTag =
-                        fm.getBackStackEntryAt(fm.getBackStackEntryCount()-1).getName();
-                Fragment topmostFragment = fm.findFragmentByTag(fragmentTag);
-                if (topmostFragment != null) {
-                    ft.hide(topmostFragment);
-                }
-            }
             ft.add(R.id.fragment_container, operation.getFragment(),
                     operation.getFragment().getClass().getSimpleName());
-            ft.show(operation.getFragment());
             ft.addToBackStack(operation.getFragment().getClass().getSimpleName());
             ft.commitAllowingStateLoss();
             fm.executePendingTransactions();
@@ -86,7 +78,7 @@ public class BookInfoActivity extends BaseActivity {
         EventDispatcher.register(mEventHandler);
 
         mLazySearchResultsFragment.get().setArguments(getIntent().getExtras());
-        new SearchResultPresenter(BookRepository.getInstance(
+        new SearchResultPresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
                 BookRemoteDataSource.getInstance()),
                 mLazySearchResultsFragment.get());
         EventDispatcher.post(new GotoFragmentOperation(mLazySearchResultsFragment.get()));

@@ -12,6 +12,7 @@ import com.xiaoyuz.comicengine.base.BaseActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.presenter.SearchResultPresenter;
+import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.fragment.SearchResultsFragment;
@@ -91,7 +92,7 @@ public class SearchResultActivity extends BaseActivity {
         EventDispatcher.register(mEventHandler);
 
         mLazySearchResultsFragment.get().setArguments(getIntent().getExtras());
-        new SearchResultPresenter(BookRepository.getInstance(
+        new SearchResultPresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
                 BookRemoteDataSource.getInstance()),
                 mLazySearchResultsFragment.get());
         EventDispatcher.post(new GotoFragmentOperation(mLazySearchResultsFragment.get(), false));

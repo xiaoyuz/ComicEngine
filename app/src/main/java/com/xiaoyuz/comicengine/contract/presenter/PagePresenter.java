@@ -1,5 +1,6 @@
 package com.xiaoyuz.comicengine.contract.presenter;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -54,9 +55,11 @@ public class PagePresenter implements PageContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<String>() {
                     @Override
-                    public void call(String s) {
-                        if (TextUtils.isEmpty(s)) {
+                    public void call(String html) {
+                        if (TextUtils.isEmpty(html)) {
                             mPageView.loadUrlByWebView(url);
+                        } else {
+                            loadPage(html);
                         }
                     }
                 }, new Action1<Throwable>() {
@@ -89,5 +92,15 @@ public class PagePresenter implements PageContract.Presenter {
                     }
                 });
         mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void saveHtmlToLocal(String url, String html) {
+        mBookRepository.saveHtml(url, html);
+    }
+
+    @Override
+    public void saveComicPicToLocal(String url, Bitmap bitmap) {
+        mBookRepository.saveComicPic(url, bitmap);
     }
 }

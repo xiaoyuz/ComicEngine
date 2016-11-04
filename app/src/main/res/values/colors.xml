@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="fragment_background">#FFFFFF</color>
+
     <color name="comic_reader_background">#000000</color>
 
     <color name="image_detail_header_background">#212121</color>

@@ -1,5 +1,7 @@
 package com.xiaoyuz.comicengine.db.source.remote;
 
+import android.graphics.Bitmap;
+
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.entity.BookDetail;
 import com.xiaoyuz.comicengine.entity.Page;
@@ -85,6 +87,11 @@ public class BookRemoteDataSource implements BookDataSource {
     }
 
     @Override
+    public Observable<Bitmap> getComicPic(String url) {
+        return null;
+    }
+
+    @Override
     public Observable<Page> getPage(final String html) {
         return Observable.create(new Observable.OnSubscribe<Page>() {
             @Override
@@ -94,5 +101,15 @@ public class BookRemoteDataSource implements BookDataSource {
                 subscriber.onCompleted();
             }
         });
+    }
+
+    @Override
+    public void saveHtml(String url, String html) {
+
+    }
+
+    @Override
+    public void saveComicPic(String url, Bitmap bitmap) {
+
     }
 }

@@ -14,7 +14,6 @@ import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.activity.BookInfoActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
-import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.BookDetailContract;
 import com.xiaoyuz.comicengine.entity.BookDetail;
 import com.xiaoyuz.comicengine.entity.Chapter;
@@ -38,22 +37,12 @@ public class BookDetailFragment extends BaseFragment implements
     private BookDetailContract.Presenter mPresenter;
     private ChapterAdapter mChapterAdapter;
 
-    private LazyInstance<PageFragment> mLazyPageFragment;
-
     @Override
     protected void initVariables() {
         mPresenter.subscribe();
         mSearchResult = getArguments().getParcelable("searchResult");
         mChapters = new ArrayList<>();
         mChapterAdapter = new ChapterAdapter(mChapters, mPresenter);
-
-        mLazyPageFragment = new LazyInstance<>(
-                new LazyInstance.InstanceCreator<PageFragment>() {
-            @Override
-            public PageFragment createInstance() {
-                return new PageFragment();
-            }
-        });
     }
 
     @Override
@@ -108,7 +97,7 @@ public class BookDetailFragment extends BaseFragment implements
     public void showChapter(ArrayList<String> pageUrls) {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("urls", pageUrls);
-        PageFragment fragment = mLazyPageFragment.get();
+        PageFragment fragment = new PageFragment();
         fragment.setArguments(bundle);
         EventDispatcher.post(new BookInfoActivity.GotoFragmentOperation(fragment));
     }

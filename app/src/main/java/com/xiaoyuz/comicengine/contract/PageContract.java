@@ -1,5 +1,7 @@
 package com.xiaoyuz.comicengine.contract;
 
+import android.graphics.Bitmap;
+
 import com.xiaoyuz.comicengine.base.BasePresenter;
 import com.xiaoyuz.comicengine.base.BaseView;
 import com.xiaoyuz.comicengine.entity.Page;
@@ -21,5 +23,9 @@ public interface PageContract {
         void loadHtmlPage(String url);
 
         void loadPage(String html);
+
+        void saveHtmlToLocal(String url, String html);
+
+        void saveComicPicToLocal(String url, Bitmap bitmap);
     }
 }

@@ -16,6 +16,7 @@ import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.SearchResultContract;
 import com.xiaoyuz.comicengine.contract.presenter.BookDetailPresenter;
+import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.entity.SearchResult;
@@ -139,7 +140,7 @@ public class SearchResultsFragment extends BaseFragment
         bundle.putParcelable("searchResult", searchResult);
         BookDetailFragment fragment = mLazyBookDetailFragment.get();
         fragment.setArguments(bundle);
-        new BookDetailPresenter(BookRepository.getInstance(
+        new BookDetailPresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
                 BookRemoteDataSource.getInstance()),
                 fragment);
         EventDispatcher.post(new BookInfoActivity.GotoFragmentOperation(fragment));
