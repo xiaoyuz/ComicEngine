@@ -37,6 +37,7 @@ public class BookRemoteDataSource implements BookDataSource {
 
     @Override
     public Observable<List<SearchResult>> getSearchResults(final String keyword, final int page) {
+        int a = 1;
         return Observable.create(new Observable.OnSubscribe<List<SearchResult>>() {
             @Override
             public void call(Subscriber<? super List<SearchResult>> subscriber) {
@@ -97,7 +98,17 @@ public class BookRemoteDataSource implements BookDataSource {
     }
 
     @Override
-    public void saveHtml(String url, String html) {
+    public Observable<Integer> getChapterHistory(String chapterUrl) {
+        return null;
+    }
 
+    @Override
+    public Observable<Object> saveHtml(String url, String html) {
+        return null;
+    }
+
+    @Override
+    public Observable<Object> saveChapterHistory(String chapterUrl, int position) {
+        return null;
     }
 }

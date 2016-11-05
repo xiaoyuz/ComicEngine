@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
-import com.xiaoyuz.comicengine.contract.PageContract;
-import com.xiaoyuz.comicengine.contract.presenter.PagePresenter;
+import com.xiaoyuz.comicengine.contract.ComicImageContract;
+import com.xiaoyuz.comicengine.contract.presenter.ComicImagePresenter;
 import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
@@ -59,7 +59,7 @@ public class PageAdapter extends PagerAdapter {
         ComicImageView comicImageView
                 = (ComicImageView) pageView.findViewById(R.id.comic_image_view);
         comicImageView.setPosition(position);
-        PageContract.Presenter presenter = new PagePresenter(
+        ComicImageContract.Presenter presenter = new ComicImagePresenter(
                 BookRepository.getInstance(BookLocalDataSource.getInstance(),
                         BookRemoteDataSource.getInstance()), comicImageView);
         presenter.loadHtmlPage(Contants.MOBILE_URL_DOMAIN + mPageUrls.get(position));

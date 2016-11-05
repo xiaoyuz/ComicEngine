@@ -12,6 +12,7 @@ import com.squareup.otto.Subscribe;
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.base.BaseFragment;
+import com.xiaoyuz.comicengine.contract.PageContract;
 import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
 import com.xiaoyuz.comicengine.ui.adapter.PageAdapter;
 
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by zhangxiaoyu on 16-10-18.
  */
-public class PageFragment extends BaseFragment {
+public class PageFragment extends BaseFragment implements PageContract.View {
 
     private class EventHandler {
         @Subscribe
@@ -36,7 +37,8 @@ public class PageFragment extends BaseFragment {
                     }
                     break;
                 case ComicPageControlEvent.FLIP_TYPE:
-                    StringBuffer pageNumInfoSB = new StringBuffer().append(event.getPosition() + 1)
+                    mCurrentPosition = event.getPosition();
+                    StringBuffer pageNumInfoSB = new StringBuffer().append(mCurrentPosition + 1)
                             .append("/").append(mPageUrls.size());
                     mPageNumView.setText(pageNumInfoSB.toString());
                     break;
@@ -50,13 +52,18 @@ public class PageFragment extends BaseFragment {
     private RelativeLayout mBottom;
     private TextView mPageNumView;
 
+    private String mChapterUrl;
     private ArrayList<String> mPageUrls;
+    private int mCurrentPosition;
 
     private EventHandler mEventHandler;
+
+    private PageContract.Presenter mPresenter;
 
     @Override
     protected void initVariables() {
         Bundle bundle = getArguments();
+        mChapterUrl = bundle.getString("chapterUrl");
         mPageUrls = bundle.getStringArrayList("urls");
         mEventHandler = new EventHandler();
         EventDispatcher.register(mEventHandler);
@@ -71,6 +78,8 @@ public class PageFragment extends BaseFragment {
         mPageAdapter = new PageAdapter(mPageUrls);
         mViewPager.setAdapter(mPageAdapter);
         mViewPager.setOffscreenPageLimit(6);
+        mViewPager.setVisibility(View.INVISIBLE);
+        mPresenter.loadChapterHistory(mChapterUrl);
 
         mHeader = (RelativeLayout) view.findViewById(R.id.header);
         mBottom = (RelativeLayout) view.findViewById(R.id.bottom);
@@ -84,8 +93,20 @@ public class PageFragment extends BaseFragment {
     }
 
     @Override
+    public void setPresenter(PageContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         EventDispatcher.unregister(mEventHandler);
+        mPresenter.saveChapterHistory(mChapterUrl, mCurrentPosition);
+    }
+
+    @Override
+    public void jump2HistoryPage(int position) {
+        mViewPager.setCurrentItem(position, false);
+        mViewPager.setVisibility(View.VISIBLE);
     }
 }

@@ -72,6 +72,6 @@ public class BookDetailPresenter implements BookDetailContract.Presenter {
         for (int i = 1; i <= maxPageNum; i++) {
             pageUrls.add(chapter.getUrl() + "?p=" + i);
         }
-        mBookDetailView.showChapter(pageUrls);
+        mBookDetailView.showChapter(chapter.getUrl(), pageUrls);
     }
 }

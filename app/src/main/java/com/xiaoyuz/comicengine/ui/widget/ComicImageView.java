@@ -19,7 +19,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
-import com.xiaoyuz.comicengine.contract.PageContract;
+import com.xiaoyuz.comicengine.contract.ComicImageContract;
 import com.xiaoyuz.comicengine.entity.Page;
 import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
 import com.xiaoyuz.comicengine.utils.App;
@@ -30,7 +30,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 /**
  * Layout for image type detail view, just show image. Used in viewpager.
  */
-public class ComicImageView extends RelativeLayout implements PageContract.View,
+public class ComicImageView extends RelativeLayout implements ComicImageContract.View,
         PhotoViewAttacher.OnViewTapListener {
 
     final class InJavaScriptLocalObj {
@@ -58,7 +58,7 @@ public class ComicImageView extends RelativeLayout implements PageContract.View,
     protected PhotoView mImageView;
     protected Context mContext;
     protected ImageView mLoadingView;
-    private PageContract.Presenter mPresenter;
+    private ComicImageContract.Presenter mPresenter;
     private int mPosition;
 
     private WebView mWebView;
@@ -137,7 +137,7 @@ public class ComicImageView extends RelativeLayout implements PageContract.View,
     }
 
     @Override
-    public void setPresenter(PageContract.Presenter presenter) {
+    public void setPresenter(ComicImageContract.Presenter presenter) {
         mPresenter = presenter;
     }
 

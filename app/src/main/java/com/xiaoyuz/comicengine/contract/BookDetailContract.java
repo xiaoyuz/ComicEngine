@@ -18,7 +18,7 @@ public interface BookDetailContract {
 
         void showNoChapter();
 
-        void showChapter(ArrayList<String> pageUrls);
+        void showChapter(String chapterUrl, ArrayList<String> pageUrls);
     }
 
     interface Presenter extends BasePresenter {
@@ -28,5 +28,4 @@ public interface BookDetailContract {
         void openChapter(Chapter chapter);
 
     }
-
 }

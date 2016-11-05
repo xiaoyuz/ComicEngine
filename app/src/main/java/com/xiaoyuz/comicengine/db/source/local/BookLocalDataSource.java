@@ -60,14 +60,34 @@ public class BookLocalDataSource implements BookDataSource {
     }
 
     @Override
-    public void saveHtml(String url, final String html) {
-        Observable.just(url).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String url) {
-                        ComicEngineCache.putPageHtml(url, html);
-                    }
-                });
+    public Observable<Integer> getChapterHistory(final String chapterUrl) {
+        int a = 1;
+        return Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(Subscriber<? super Integer> subscriber) {
+                subscriber.onNext(ComicEngineCache.getChapterHistory(chapterUrl));
+                subscriber.onCompleted();
+            }
+        });
+    }
+
+    @Override
+    public Observable<Object> saveHtml(final String url, final String html) {
+        return Observable.create(new Observable.OnSubscribe<Object>() {
+            @Override
+            public void call(Subscriber<? super Object> subscriber) {
+                ComicEngineCache.putPageHtml(url, html);
+            }
+        });
+    }
+
+    @Override
+    public Observable<Object> saveChapterHistory(final String chapterUrl, final int position) {
+        return Observable.create(new Observable.OnSubscribe<Object>() {
+            @Override
+            public void call(Subscriber<? super Object> subscriber) {
+                ComicEngineCache.putChapterHistory(chapterUrl, position);
+            }
+        });
     }
 }

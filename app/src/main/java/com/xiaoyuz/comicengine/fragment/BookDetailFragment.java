@@ -16,6 +16,10 @@ import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.activity.BookInfoActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.contract.BookDetailContract;
+import com.xiaoyuz.comicengine.contract.presenter.PagePresenter;
+import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
+import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
+import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.entity.BookDetail;
 import com.xiaoyuz.comicengine.entity.Chapter;
 import com.xiaoyuz.comicengine.entity.SearchResult;
@@ -99,11 +103,14 @@ public class BookDetailFragment extends BaseFragment implements
     }
 
     @Override
-    public void showChapter(ArrayList<String> pageUrls) {
+    public void showChapter(String chapterUrl, ArrayList<String> pageUrls) {
         Bundle bundle = new Bundle();
+        bundle.putString("chapterUrl", chapterUrl);
         bundle.putStringArrayList("urls", pageUrls);
         PageFragment fragment = new PageFragment();
         fragment.setArguments(bundle);
+        new PagePresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
+                BookRemoteDataSource.getInstance()), fragment);
         EventDispatcher.post(new BookInfoActivity.GotoFragmentOperation(fragment));
     }
 }

@@ -1,12 +1,9 @@
 package com.xiaoyuz.comicengine.contract.presenter;
 
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.xiaoyuz.comicengine.contract.PageContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
-import com.xiaoyuz.comicengine.entity.Page;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -15,23 +12,23 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by zhangxiaoyu on 16-11-1.
+ * Created by zhangxiaoyu on 16-11-5.
  */
 public class PagePresenter implements PageContract.Presenter {
 
     @NonNull
     private BookRepository mBookRepository;
     @NonNull
-    private PageContract.View mPageView;
+    private PageContract.View mView;
     @NonNull
     private CompositeSubscription mSubscriptions;
 
     public PagePresenter(@NonNull BookRepository bookRepository,
-                         @NonNull PageContract.View pageView) {
+                         @NonNull PageContract.View view) {
         mBookRepository = bookRepository;
-        mPageView = pageView;
+        mView = view;
         mSubscriptions= new CompositeSubscription();
-        mPageView.setPresenter(this);
+        mView.setPresenter(this);
     }
 
     @Override
@@ -44,23 +41,23 @@ public class PagePresenter implements PageContract.Presenter {
         mSubscriptions.clear();
     }
 
-    /**
-     * Load html page for webview, output is html code.
-     * @param url
-     */
     @Override
-    public void loadHtmlPage(final String url) {
-        Subscription subscription = mBookRepository.getHtml(url)
+    public void saveChapterHistory(String chapterUrl, int position) {
+        Subscription subscription = mBookRepository.saveChapterHistory(chapterUrl, position)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe();
+        mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void loadChapterHistory(String chapterUrl) {
+        Subscription subscription = mBookRepository.getChapterHistory(chapterUrl)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
+                .subscribe(new Action1<Integer>() {
                     @Override
-                    public void call(String html) {
-                        if (TextUtils.isEmpty(html)) {
-                            mPageView.loadUrlByWebView(url);
-                        } else {
-                            loadPage(html);
-                        }
+                    public void call(Integer position) {
+                        mView.jump2HistoryPage(position);
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -69,33 +66,5 @@ public class PagePresenter implements PageContract.Presenter {
                     }
                 });
         mSubscriptions.add(subscription);
-    }
-
-    /**
-     * Load html code and get the page instance.
-     * @param html
-     */
-    @Override
-    public void loadPage(String html) {
-        Subscription subscription = mBookRepository.getPage(html)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Page>() {
-                    @Override
-                    public void call(Page page) {
-                        mPageView.showPage(page);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
-                    }
-                });
-        mSubscriptions.add(subscription);
-    }
-
-    @Override
-    public void saveHtmlToLocal(String url, String html) {
-        mBookRepository.saveHtml(url, html);
     }
 }
