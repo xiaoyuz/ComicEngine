@@ -3,6 +3,7 @@ package com.xiaoyuz.comicengine.ui.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.JavascriptInterface;
@@ -16,18 +17,21 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.PageContract;
 import com.xiaoyuz.comicengine.entity.Page;
+import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
 import com.xiaoyuz.comicengine.utils.App;
-import com.xiaoyuz.comicengine.utils.Contants;
 
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Layout for image type detail view, just show image. Used in viewpager.
  */
-public class ComicImageView extends RelativeLayout implements PageContract.View {
+public class ComicImageView extends RelativeLayout implements PageContract.View,
+        PhotoViewAttacher.OnViewTapListener {
 
     final class InJavaScriptLocalObj {
         @JavascriptInterface
@@ -55,6 +59,7 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
     protected Context mContext;
     protected ImageView mLoadingView;
     private PageContract.Presenter mPresenter;
+    private int mPosition;
 
     private WebView mWebView;
 
@@ -73,6 +78,10 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
         return mImageView;
     }
 
+    public void setPosition(int position) {
+        mPosition = position;
+    }
+
     protected void initLayout(AttributeSet attrs) {
         mImageView = new PhotoView(mContext);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -81,6 +90,9 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
         mImageView.setBackgroundColor(0xff000000);
         mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         mImageView.setVisibility(GONE);
+
+        PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImageView);
+        mAttacher.setOnViewTapListener(this);
 
         mLoadingView = new ImageView(App.getContext());
         LayoutParams loadingParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -149,5 +161,11 @@ public class ComicImageView extends RelativeLayout implements PageContract.View 
     @Override
     public void loadUrlByWebView(String url) {
         mWebView.loadUrl(url);
+    }
+
+    @Override
+    public void onViewTap(View view, float x, float y) {
+        EventDispatcher.post(new ComicPageControlEvent(ComicPageControlEvent.SINGLE_CLICK_TYPE,
+                mPosition));
     }
 }

@@ -5,12 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.PageContract;
 import com.xiaoyuz.comicengine.contract.presenter.PagePresenter;
 import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
+import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
 import com.xiaoyuz.comicengine.ui.widget.ComicImageView;
 import com.xiaoyuz.comicengine.utils.App;
 import com.xiaoyuz.comicengine.utils.Contants;
@@ -41,6 +43,8 @@ public class PageAdapter extends PagerAdapter {
         mCurrentView = (View) object;
         if (mCurrentPosition == position) return;
         mCurrentPosition = position;
+        EventDispatcher.post(new ComicPageControlEvent(ComicPageControlEvent.FLIP_TYPE,
+                mCurrentPosition));
     }
 
     @Override
@@ -54,6 +58,7 @@ public class PageAdapter extends PagerAdapter {
         View pageView = layoutInflater.inflate(R.layout.page_layout, null);
         ComicImageView comicImageView
                 = (ComicImageView) pageView.findViewById(R.id.comic_image_view);
+        comicImageView.setPosition(position);
         PageContract.Presenter presenter = new PagePresenter(
                 BookRepository.getInstance(BookLocalDataSource.getInstance(),
                         BookRemoteDataSource.getInstance()), comicImageView);

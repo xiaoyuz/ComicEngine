@@ -20,7 +20,14 @@
         android:clickable="true"
         android:paddingBottom="1px"
         android:visibility="gone">
-
+        <TextView
+            android:id="@+id/page_num"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="5dp"/>
     </RelativeLayout>
 
     <!-- footer -->

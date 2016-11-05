@@ -52,6 +52,9 @@ public class BookDetailFragment extends BaseFragment implements
         View view = inflater.inflate(R.layout.book_detail_fragment,
                 container, false);
         ((TextView) view.findViewById(R.id.title)).setText(mSearchResult.getTitle());
+        ((TextView) view.findViewById(R.id.status)).setText(mSearchResult.getStatus());
+        ((TextView) view.findViewById(R.id.last_chapter)).setText(mSearchResult.getLastChapter());
+        ((TextView) view.findViewById(R.id.update_time)).setText(mSearchResult.getUpdateTime());
 
         Glide.with(App.getContext()).load(mSearchResult.getBookCover())
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)

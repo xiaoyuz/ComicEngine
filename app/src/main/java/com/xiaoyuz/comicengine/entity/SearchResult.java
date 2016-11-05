@@ -97,6 +97,10 @@ public class SearchResult implements Parcelable {
         return title;
     }
 
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
     public String getLastChapter() {
         return lastChapter;
     }
