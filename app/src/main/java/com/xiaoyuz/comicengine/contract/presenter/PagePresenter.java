@@ -98,9 +98,4 @@ public class PagePresenter implements PageContract.Presenter {
     public void saveHtmlToLocal(String url, String html) {
         mBookRepository.saveHtml(url, html);
     }
-
-    @Override
-    public void saveComicPicToLocal(String url, Bitmap bitmap) {
-        mBookRepository.saveComicPic(url, bitmap);
-    }
 }

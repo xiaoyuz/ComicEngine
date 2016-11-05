@@ -1,7 +1,5 @@
 package com.xiaoyuz.comicengine.db.source.local;
 
-import android.graphics.Bitmap;
-
 import com.xiaoyuz.comicengine.cache.ComicEngineCache;
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.entity.BookDetail;
@@ -57,17 +55,6 @@ public class BookLocalDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<Bitmap> getComicPic(final String url) {
-        return Observable.create(new Observable.OnSubscribe<Bitmap>() {
-            @Override
-            public void call(Subscriber<? super Bitmap> subscriber) {
-                subscriber.onNext(ComicEngineCache.getComicPic(url));
-                subscriber.onCompleted();
-            }
-        });
-    }
-
-    @Override
     public Observable<Page> getPage(String html) {
         return null;
     }
@@ -80,18 +67,6 @@ public class BookLocalDataSource implements BookDataSource {
                     @Override
                     public void call(String url) {
                         ComicEngineCache.putPageHtml(url, html);
-                    }
-                });
-    }
-
-    @Override
-    public void saveComicPic(String url, final Bitmap bitmap) {
-        Observable.just(url).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String url) {
-                        ComicEngineCache.putComicPic(url, bitmap);
                     }
                 });
     }

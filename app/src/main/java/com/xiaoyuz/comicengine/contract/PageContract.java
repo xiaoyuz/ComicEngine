@@ -25,7 +25,5 @@ public interface PageContract {
         void loadPage(String html);
 
         void saveHtmlToLocal(String url, String html);
-
-        void saveComicPicToLocal(String url, Bitmap bitmap);
     }
 }

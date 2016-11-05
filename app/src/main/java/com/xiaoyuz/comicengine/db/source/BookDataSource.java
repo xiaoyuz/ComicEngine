@@ -1,7 +1,5 @@
 package com.xiaoyuz.comicengine.db.source;
 
-import android.graphics.Bitmap;
-
 import com.xiaoyuz.comicengine.entity.BookDetail;
 import com.xiaoyuz.comicengine.entity.Page;
 import com.xiaoyuz.comicengine.entity.SearchResult;
@@ -21,11 +19,7 @@ public interface BookDataSource {
 
     Observable<String> getHtml(String url);
 
-    Observable<Bitmap> getComicPic(String url);
-
     Observable<Page> getPage(String html);
 
     void saveHtml(String url, String html);
-
-    void saveComicPic(String url, Bitmap bitmap);
 }

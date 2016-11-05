@@ -1,7 +1,5 @@
 package com.xiaoyuz.comicengine.db.source.repository;
 
-import android.graphics.Bitmap;
-
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.entity.BookDetail;
 import com.xiaoyuz.comicengine.entity.Page;
@@ -55,11 +53,6 @@ public class BookRepository implements BookDataSource {
     }
 
     @Override
-    public Observable<Bitmap> getComicPic(String url) {
-        return mBookLocalDataSource.getComicPic(url);
-    }
-
-    @Override
     public Observable<Page> getPage(String html) {
         return mBookRemoteDataSource.getPage(html);
     }
@@ -67,10 +60,5 @@ public class BookRepository implements BookDataSource {
     @Override
     public void saveHtml(String url, String html) {
         mBookLocalDataSource.saveHtml(url, html);
-    }
-
-    @Override
-    public void saveComicPic(String url, Bitmap bitmap) {
-        mBookLocalDataSource.saveComicPic(url, bitmap);
     }
 }
