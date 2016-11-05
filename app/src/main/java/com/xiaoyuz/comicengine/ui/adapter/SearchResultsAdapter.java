@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.SearchResultContract;
 import com.xiaoyuz.comicengine.entity.SearchResult;
@@ -69,6 +70,7 @@ public class SearchResultsAdapter extends
             ((SearchResultViewHolder) holder).titleTextView.setText(title);
             holder.itemView.setTag(mSearchResults.get(position));
             Glide.with(App.getContext()).load(imageUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .into(((SearchResultViewHolder) holder).imageView);
         }
     }

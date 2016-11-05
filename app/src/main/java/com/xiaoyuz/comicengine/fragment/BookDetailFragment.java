@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.activity.BookInfoActivity;
@@ -53,6 +54,7 @@ public class BookDetailFragment extends BaseFragment implements
         ((TextView) view.findViewById(R.id.title)).setText(mSearchResult.getTitle());
 
         Glide.with(App.getContext()).load(mSearchResult.getBookCover())
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into((ImageView) view.findViewById(R.id.image));
 
         mLoadingView = (TextView) view.findViewById(R.id.loading);
