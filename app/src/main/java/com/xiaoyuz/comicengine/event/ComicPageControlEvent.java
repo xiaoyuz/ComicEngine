@@ -9,18 +9,12 @@ public class ComicPageControlEvent {
     public static final int FLIP_TYPE = 2;
 
     private int mType;
-    private int mPosition;
 
-    public ComicPageControlEvent(int type, int position) {
+    public ComicPageControlEvent(int type) {
         mType = type;
-        mPosition = position;
     }
 
     public int getType() {
         return mType;
-    }
-
-    public int getPosition() {
-        return mPosition;
     }
 }

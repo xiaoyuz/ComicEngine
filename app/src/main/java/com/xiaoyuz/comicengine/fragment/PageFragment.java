@@ -36,12 +36,29 @@ public class PageFragment extends BaseFragment implements PageContract.View {
                         mBottom.setVisibility(View.GONE);
                     }
                     break;
-                case ComicPageControlEvent.FLIP_TYPE:
-                    mCurrentPosition = event.getPosition();
-                    StringBuffer pageNumInfoSB = new StringBuffer().append(mCurrentPosition + 1)
-                            .append("/").append(mPageUrls.size());
-                    mPageNumView.setText(pageNumInfoSB.toString());
-                    break;
+            }
+        }
+    }
+
+    class OnPageChange implements ViewPager.OnPageChangeListener {
+        @Override
+        public void onPageScrolled(int position,
+                                   float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            if (state == ViewPager.SCROLL_STATE_IDLE) {
+                StringBuffer pageNumInfoSB = new StringBuffer()
+                        .append(mViewPager.getCurrentItem() + 1)
+                        .append("/").append(mPageUrls.size());
+                mPageNumView.setText(pageNumInfoSB.toString());
             }
         }
     }
@@ -54,7 +71,6 @@ public class PageFragment extends BaseFragment implements PageContract.View {
 
     private String mChapterUrl;
     private ArrayList<String> mPageUrls;
-    private int mCurrentPosition;
 
     private EventHandler mEventHandler;
 
@@ -77,8 +93,9 @@ public class PageFragment extends BaseFragment implements PageContract.View {
         mViewPager = (ViewPager) view.findViewById(R.id.viewer);
         mPageAdapter = new PageAdapter(mPageUrls);
         mViewPager.setAdapter(mPageAdapter);
-        mViewPager.setOffscreenPageLimit(6);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setVisibility(View.INVISIBLE);
+        mViewPager.addOnPageChangeListener(new OnPageChange());
         mPresenter.loadChapterHistory(mChapterUrl);
 
         mHeader = (RelativeLayout) view.findViewById(R.id.header);
@@ -101,7 +118,7 @@ public class PageFragment extends BaseFragment implements PageContract.View {
     public void onDestroy() {
         super.onDestroy();
         EventDispatcher.unregister(mEventHandler);
-        mPresenter.saveChapterHistory(mChapterUrl, mCurrentPosition);
+        mPresenter.saveChapterHistory(mChapterUrl, mViewPager.getCurrentItem());
     }
 
     @Override

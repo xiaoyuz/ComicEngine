@@ -1,9 +1,6 @@
 package com.xiaoyuz.comicengine.cache;
 
-import android.text.TextUtils;
-
 import com.xiaoyuz.comicengine.utils.App;
-import com.xiaoyuz.comicengine.utils.ConvertUtils;
 
 /**
  * Created by zhangxiaoyu on 16-11-3.

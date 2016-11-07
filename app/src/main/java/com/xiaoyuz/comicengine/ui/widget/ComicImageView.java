@@ -24,14 +24,15 @@ import com.xiaoyuz.comicengine.entity.Page;
 import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
 import com.xiaoyuz.comicengine.utils.App;
 
+import java.lang.ref.WeakReference;
+
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Layout for image type detail view, just show image. Used in viewpager.
  */
-public class ComicImageView extends RelativeLayout implements ComicImageContract.View,
-        PhotoViewAttacher.OnViewTapListener {
+public class ComicImageView extends RelativeLayout implements ComicImageContract.View {
 
     final class InJavaScriptLocalObj {
         @JavascriptInterface
@@ -59,9 +60,9 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
     protected Context mContext;
     protected ImageView mLoadingView;
     private ComicImageContract.Presenter mPresenter;
-    private int mPosition;
 
     private WebView mWebView;
+    private WebView mWeakWebView;
 
     public ComicImageView(Context context) {
         super(context);
@@ -78,10 +79,6 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
         return mImageView;
     }
 
-    public void setPosition(int position) {
-        mPosition = position;
-    }
-
     protected void initLayout(AttributeSet attrs) {
         mImageView = new PhotoView(mContext);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -90,9 +87,18 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
         mImageView.setBackgroundColor(0xff000000);
         mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         mImageView.setVisibility(GONE);
+        mImageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float x, float y) {
+                EventDispatcher.post(new ComicPageControlEvent(
+                        ComicPageControlEvent.SINGLE_CLICK_TYPE));
+            }
 
-        PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImageView);
-        mAttacher.setOnViewTapListener(this);
+            @Override
+            public void onOutsidePhotoTap() {
+
+            }
+        });
 
         mLoadingView = new ImageView(App.getContext());
         LayoutParams loadingParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -101,13 +107,15 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
         mLoadingView.setLayoutParams(loadingParams);
 
         // WebView
-        mWebView = new WebView(App.getContext());
+        mWebView = new WebView(getContext());
+        WeakReference<WebView> webViewWeakReference = new WeakReference<>(mWebView);
+        mWeakWebView = webViewWeakReference.get();
         LayoutParams webViewParams = new LayoutParams(0, 0);
-        mWebView.setLayoutParams(webViewParams);
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
-        mWebView.setWebViewClient(new MyWebViewClient());
-        mWebView.setVisibility(INVISIBLE);
+        mWeakWebView.setLayoutParams(webViewParams);
+        mWeakWebView.getSettings().setJavaScriptEnabled(true);
+        mWeakWebView.addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
+        mWeakWebView.setWebViewClient(new MyWebViewClient());
+        mWeakWebView.setVisibility(INVISIBLE);
 
         TypedArray typedArray = mContext.obtainStyledAttributes(attrs,
                 R.styleable.ComicImageView);
@@ -132,7 +140,7 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
         }
         this.addView(mImageView);
         this.addView(mLoadingView);
-        this.addView(mWebView);
+        this.addView(mWeakWebView);
         typedArray.recycle();
     }
 
@@ -143,29 +151,34 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
 
     @Override
     public void showPage(Page page) {
-        Glide.with(getContext()).load(page.getImageUrl())
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE).into(
-                new SimpleTarget<GlideDrawable>() {
-                    @Override
-                    public void onResourceReady(GlideDrawable resource,
-                                                GlideAnimation<? super GlideDrawable>
-                                                        glideAnimation) {
-                        mLoadingView.clearAnimation();
-                        mLoadingView.setVisibility(GONE);
-                        mImageView.setImageDrawable(resource);
-                        mImageView.setVisibility(VISIBLE);
-                    }
-                });
+        final WeakReference<PhotoView> imageViewWeakReference = new WeakReference<>(mImageView);
+        final ImageView weakImageView = imageViewWeakReference.get();
+        if (weakImageView != null) {
+            Glide.with(getContext()).load(page.getImageUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE).into(
+                    new SimpleTarget<GlideDrawable>() {
+                        @Override
+                        public void onResourceReady(GlideDrawable resource,
+                                                    GlideAnimation<? super GlideDrawable>
+                                                            glideAnimation) {
+                            mLoadingView.clearAnimation();
+                            mLoadingView.setVisibility(GONE);
+                            weakImageView.setImageDrawable(resource);
+                            weakImageView.setVisibility(VISIBLE);
+                        }
+                    });
+        }
     }
 
     @Override
     public void loadUrlByWebView(String url) {
-        mWebView.loadUrl(url);
+        mWeakWebView.loadUrl(url);
     }
 
-    @Override
-    public void onViewTap(View view, float x, float y) {
-        EventDispatcher.post(new ComicPageControlEvent(ComicPageControlEvent.SINGLE_CLICK_TYPE,
-                mPosition));
+    public void recycle() {
+        mWebView = null;
+        mWeakWebView = null;
+        mImageView.setImageDrawable(null);
+        mPresenter = null;
     }
 }
