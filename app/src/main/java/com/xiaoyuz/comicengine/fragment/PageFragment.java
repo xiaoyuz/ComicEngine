@@ -14,6 +14,7 @@ import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.contract.PageContract;
 import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
+import com.xiaoyuz.comicengine.event.PageDestroyEvent;
 import com.xiaoyuz.comicengine.ui.adapter.PageAdapter;
 
 import java.util.ArrayList;
@@ -69,8 +70,11 @@ public class PageFragment extends BaseFragment implements PageContract.View {
     private RelativeLayout mBottom;
     private TextView mPageNumView;
 
-    private String mChapterUrl;
+    private String mBookUrl;
     private ArrayList<String> mPageUrls;
+    private int mChapterIndex;
+    private int mHistoryPosition;
+    private String mChapterTitle;
 
     private EventHandler mEventHandler;
 
@@ -79,8 +83,11 @@ public class PageFragment extends BaseFragment implements PageContract.View {
     @Override
     protected void initVariables() {
         Bundle bundle = getArguments();
-        mChapterUrl = bundle.getString("chapterUrl");
+        mBookUrl = bundle.getString("bookUrl");
         mPageUrls = bundle.getStringArrayList("urls");
+        mChapterIndex = bundle.getInt("chapterIndex");
+        mHistoryPosition = bundle.getInt("history");
+        mChapterTitle = bundle.getString("chapterTitle");
         mEventHandler = new EventHandler();
         EventDispatcher.register(mEventHandler);
     }
@@ -96,7 +103,11 @@ public class PageFragment extends BaseFragment implements PageContract.View {
         mViewPager.setOffscreenPageLimit(4);
         mViewPager.setVisibility(View.INVISIBLE);
         mViewPager.addOnPageChangeListener(new OnPageChange());
-        mPresenter.loadChapterHistory(mChapterUrl);
+        if (mHistoryPosition != 0) {
+            jump2HistoryPage(mHistoryPosition);
+        } else {
+            mViewPager.setVisibility(View.VISIBLE);
+        }
 
         mHeader = (RelativeLayout) view.findViewById(R.id.header);
         mBottom = (RelativeLayout) view.findViewById(R.id.bottom);
@@ -118,7 +129,9 @@ public class PageFragment extends BaseFragment implements PageContract.View {
     public void onDestroy() {
         super.onDestroy();
         EventDispatcher.unregister(mEventHandler);
-        mPresenter.saveChapterHistory(mChapterUrl, mViewPager.getCurrentItem());
+        mPresenter.saveChapterHistory(mBookUrl, mChapterIndex, mChapterTitle,
+                mViewPager.getCurrentItem());
+        EventDispatcher.post(new PageDestroyEvent(mBookUrl));
     }
 
     @Override

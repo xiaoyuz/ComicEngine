@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.otto.Subscribe;
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.activity.BookInfoActivity;
@@ -23,6 +24,7 @@ import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.entity.BookDetail;
 import com.xiaoyuz.comicengine.entity.Chapter;
 import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.event.PageDestroyEvent;
 import com.xiaoyuz.comicengine.ui.adapter.ChapterAdapter;
 import com.xiaoyuz.comicengine.utils.App;
 
@@ -35,12 +37,25 @@ import java.util.List;
 public class BookDetailFragment extends BaseFragment implements
         BookDetailContract.View {
 
+    private class EventHandler {
+        @Subscribe
+        public void onPageDestroy(PageDestroyEvent event) {
+            mPresenter.loadChapterHistory(event.getBookUrl());
+        }
+    }
+
     private RecyclerView mRecyclerView;
     private TextView mLoadingView;
+    private TextView mHistoryView;
     private SearchResult mSearchResult;
     private List<Chapter> mChapters;
     private BookDetailContract.Presenter mPresenter;
     private ChapterAdapter mChapterAdapter;
+
+    private int mHistoryChapterIndex;
+    private int mHistoryPosition;
+
+    private EventHandler mEventHandler;
 
     @Override
     protected void initVariables() {
@@ -48,6 +63,7 @@ public class BookDetailFragment extends BaseFragment implements
         mSearchResult = getArguments().getParcelable("searchResult");
         mChapters = new ArrayList<>();
         mChapterAdapter = new ChapterAdapter(mChapters, mPresenter);
+        mEventHandler = new EventHandler();
     }
 
     @Override
@@ -55,10 +71,13 @@ public class BookDetailFragment extends BaseFragment implements
                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.book_detail_fragment,
                 container, false);
+        EventDispatcher.register(mEventHandler);
         ((TextView) view.findViewById(R.id.title)).setText(mSearchResult.getTitle());
         ((TextView) view.findViewById(R.id.status)).setText(mSearchResult.getStatus());
         ((TextView) view.findViewById(R.id.last_chapter)).setText(mSearchResult.getLastChapter());
         ((TextView) view.findViewById(R.id.update_time)).setText(mSearchResult.getUpdateTime());
+
+        mHistoryView = (TextView) view.findViewById(R.id.history);
 
         Glide.with(App.getContext()).load(mSearchResult.getBookCover())
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
@@ -74,6 +93,7 @@ public class BookDetailFragment extends BaseFragment implements
     @Override
     protected void loadData() {
         mPresenter.loadBookDetail(mSearchResult.getUrl());
+        mPresenter.loadChapterHistory(mSearchResult.getUrl());
     }
 
     @Override
@@ -99,18 +119,30 @@ public class BookDetailFragment extends BaseFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventDispatcher.unregister(mEventHandler);
         mPresenter.unsubscribe();
     }
 
     @Override
-    public void showChapter(String chapterUrl, ArrayList<String> pageUrls) {
+    public void showChapter(int chapterIndex, Chapter chapter, ArrayList<String> pageUrls) {
         Bundle bundle = new Bundle();
-        bundle.putString("chapterUrl", chapterUrl);
+        bundle.putString("chapterUrl", chapter.getUrl());
+        bundle.putString("chapterTitle", chapter.getTitle());
         bundle.putStringArrayList("urls", pageUrls);
+        bundle.putInt("chapterIndex", chapterIndex);
+        bundle.putString("bookUrl", mSearchResult.getUrl());
+        bundle.putInt("history", chapterIndex == mHistoryChapterIndex ? mHistoryPosition : 0);
         PageFragment fragment = new PageFragment();
         fragment.setArguments(bundle);
         new PagePresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
                 BookRemoteDataSource.getInstance()), fragment);
         EventDispatcher.post(new BookInfoActivity.GotoFragmentOperation(fragment));
+    }
+
+    @Override
+    public void setHistory(int chapterIndex, String chapterTitle, int position) {
+        mHistoryChapterIndex = chapterIndex;
+        mHistoryPosition = position;
+        mHistoryView.setText("Last read: " + chapterTitle);
     }
 }

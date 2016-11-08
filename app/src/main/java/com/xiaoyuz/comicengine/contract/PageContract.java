@@ -16,8 +16,7 @@ public interface PageContract {
 
     interface Presenter extends BasePresenter {
 
-        void saveChapterHistory(String chapterUrl, int position);
-
-        void loadChapterHistory(String chapterUrl);
+        void saveChapterHistory(String bookUrl, int chapterIndex,
+                                String chapterTitle, int pagePosition);
     }
 }

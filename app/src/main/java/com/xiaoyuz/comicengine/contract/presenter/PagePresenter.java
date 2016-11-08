@@ -42,29 +42,12 @@ public class PagePresenter implements PageContract.Presenter {
     }
 
     @Override
-    public void saveChapterHistory(String chapterUrl, int position) {
-        Subscription subscription = mBookRepository.saveChapterHistory(chapterUrl, position)
+    public void saveChapterHistory(String bookUrl, int chapterIndex, String chapterTitle,
+                                   int pagePosition) {
+        Subscription subscription = mBookRepository.saveChapterHistory(bookUrl,
+                chapterIndex, chapterTitle, pagePosition)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe();
-        mSubscriptions.add(subscription);
-    }
-
-    @Override
-    public void loadChapterHistory(String chapterUrl) {
-        Subscription subscription = mBookRepository.getChapterHistory(chapterUrl)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer position) {
-                        mView.jump2HistoryPage(position);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
-                    }
-                });
         mSubscriptions.add(subscription);
     }
 }

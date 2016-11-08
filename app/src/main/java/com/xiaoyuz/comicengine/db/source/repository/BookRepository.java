@@ -36,7 +36,6 @@ public class BookRepository implements BookDataSource {
 
     @Override
     public Observable<List<SearchResult>> getSearchResults(String keyword, int page) {
-        int a = 1;
         return mBookRemoteDataSource.getSearchResults(keyword, page);
     }
 
@@ -59,9 +58,8 @@ public class BookRepository implements BookDataSource {
     }
 
     @Override
-    public Observable<Integer> getChapterHistory(String chapterUrl) {
-        int a = 1;
-        return mBookLocalDataSource.getChapterHistory(chapterUrl);
+    public Observable<String> getChapterHistory(String bookUrl) {
+        return mBookLocalDataSource.getChapterHistory(bookUrl);
     }
 
     @Override
@@ -70,7 +68,9 @@ public class BookRepository implements BookDataSource {
     }
 
     @Override
-    public Observable<Object> saveChapterHistory(String chapterUrl, int position) {
-        return mBookLocalDataSource.saveChapterHistory(chapterUrl, position);
+    public Observable<Object> saveChapterHistory(String bookUrl, int chapterIndex,
+                                                 String chapterTitle, int position) {
+        return mBookLocalDataSource.saveChapterHistory(bookUrl, chapterIndex,
+                chapterTitle, position);
     }
 }

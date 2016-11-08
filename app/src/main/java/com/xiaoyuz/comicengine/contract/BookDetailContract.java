@@ -18,14 +18,18 @@ public interface BookDetailContract {
 
         void showNoChapter();
 
-        void showChapter(String chapterUrl, ArrayList<String> pageUrls);
+        void showChapter(int chapterIndex, Chapter chapter, ArrayList<String> pageUrls);
+
+        void setHistory(int chapterIndex, String chapterTitle, int position);
     }
 
     interface Presenter extends BasePresenter {
 
         void loadBookDetail(String url);
 
-        void openChapter(Chapter chapter);
+        void openChapter(Chapter chapter, int chapterIndex);
+
+        void loadChapterHistory(String bookUrl);
 
     }
 }

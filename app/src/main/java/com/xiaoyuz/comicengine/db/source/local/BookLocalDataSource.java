@@ -10,9 +10,6 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by zhangxiaoyu on 16/11/3.
@@ -60,12 +57,11 @@ public class BookLocalDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<Integer> getChapterHistory(final String chapterUrl) {
-        int a = 1;
-        return Observable.create(new Observable.OnSubscribe<Integer>() {
+    public Observable<String> getChapterHistory(final String bookUrl) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
-            public void call(Subscriber<? super Integer> subscriber) {
-                subscriber.onNext(ComicEngineCache.getChapterHistory(chapterUrl));
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onNext(ComicEngineCache.getChapterHistory(bookUrl));
                 subscriber.onCompleted();
             }
         });
@@ -82,11 +78,12 @@ public class BookLocalDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<Object> saveChapterHistory(final String chapterUrl, final int position) {
+    public Observable<Object> saveChapterHistory(final String bookUrl, final int chapterIndex,
+                                                 final String chapterTitle, final int position) {
         return Observable.create(new Observable.OnSubscribe<Object>() {
             @Override
             public void call(Subscriber<? super Object> subscriber) {
-                ComicEngineCache.putChapterHistory(chapterUrl, position);
+                ComicEngineCache.putChapterHistory(bookUrl, chapterIndex, chapterTitle, position);
             }
         });
     }

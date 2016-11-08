@@ -1,6 +1,7 @@
 package com.xiaoyuz.comicengine.contract.presenter;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.xiaoyuz.comicengine.contract.BookDetailContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
@@ -65,13 +66,36 @@ public class BookDetailPresenter implements BookDetailContract.Presenter {
     }
 
     @Override
-    public void openChapter(Chapter chapter) {
+    public void openChapter(Chapter chapter, int chapterIndex) {
         ArrayList<String> pageUrls = new ArrayList<>();
         String pageInfo = chapter.getPageInfo();
         int maxPageNum = Integer.parseInt(pageInfo.split("p")[0]);
         for (int i = 1; i <= maxPageNum; i++) {
             pageUrls.add(chapter.getUrl() + "?p=" + i);
         }
-        mBookDetailView.showChapter(chapter.getUrl(), pageUrls);
+        mBookDetailView.showChapter(chapterIndex, chapter, pageUrls);
+    }
+
+    @Override
+    public void loadChapterHistory(String bookUrl) {
+        Subscription subscription = mBookRepository.getChapterHistory(bookUrl)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String history) {
+                        if (!TextUtils.isEmpty(history)) {
+                            String[] historyInfos = history.split("-");
+                            mBookDetailView.setHistory(Integer.parseInt(historyInfos[0]),
+                                    historyInfos[1], Integer.parseInt(historyInfos[2]));
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+        mSubscriptions.add(subscription);
     }
 }

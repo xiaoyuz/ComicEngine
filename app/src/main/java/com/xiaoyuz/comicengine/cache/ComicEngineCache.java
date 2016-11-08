@@ -20,17 +20,13 @@ public class ComicEngineCache {
         return App.getACache().getAsString(PAGE_HTML_KEY + url);
     }
 
-    public static void putChapterHistory(String chapterUrl, int position) {
-        App.getACache().put(CHAPTER_HISTORY_KEY + chapterUrl, String.valueOf(position));
+    public static void putChapterHistory(String bookUrl, int chapterIndex,
+                                         String chapterTitle, int position) {
+        App.getACache().put(CHAPTER_HISTORY_KEY + bookUrl, String.valueOf(chapterIndex)
+                + "-" + chapterTitle + "-" + String.valueOf(position));
     }
 
-    public static int getChapterHistory(String chapterUrl) {
-        String string = App.getACache().getAsString(CHAPTER_HISTORY_KEY + chapterUrl);
-        try {
-            int position = Integer.parseInt(string);
-            return position;
-        } catch (Exception e) {
-            return 0;
-        }
+    public static String getChapterHistory(String bookUrl) {
+        return App.getACache().getAsString(CHAPTER_HISTORY_KEY + bookUrl);
     }
 }

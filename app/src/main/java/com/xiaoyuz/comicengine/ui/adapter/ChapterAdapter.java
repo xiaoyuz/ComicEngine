@@ -34,7 +34,7 @@ public class ChapterAdapter extends
         @Override
         public void onClick(View v) {
             Chapter chapter = (Chapter) v.getTag();
-            mPresenter.openChapter(chapter);
+            mPresenter.openChapter(chapter, getAdapterPosition());
         }
     }
 

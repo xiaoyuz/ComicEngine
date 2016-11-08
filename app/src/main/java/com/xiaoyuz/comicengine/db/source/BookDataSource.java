@@ -21,9 +21,10 @@ public interface BookDataSource {
 
     Observable<Page> getPage(String html);
 
-    Observable<Integer> getChapterHistory(String chapterUrl);
+    Observable<String> getChapterHistory(String chapterUrl);
 
     Observable<Object> saveHtml(String url, String html);
 
-    Observable<Object> saveChapterHistory(String chapterUrl, int position);
+    Observable<Object> saveChapterHistory(String bookUrl, int chapterIndex,
+                                          String chapterTitle, int position);
 }
