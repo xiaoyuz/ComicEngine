@@ -13,7 +13,6 @@ import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.activity.BookInfoActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
-import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.SearchResultContract;
 import com.xiaoyuz.comicengine.contract.presenter.BookDetailPresenter;
 import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
@@ -22,6 +21,7 @@ import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.entity.SearchResult;
 import com.xiaoyuz.comicengine.ui.adapter.SearchResultsAdapter;
 import com.xiaoyuz.comicengine.utils.App;
+import com.xiaoyuz.comicengine.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,18 +46,9 @@ public class SearchResultsFragment extends BaseFragment
 
     private SearchResultContract.Presenter mSearchResultPresenter;
 
-    private LazyInstance<BookDetailFragment> mLazyBookDetailFragment =
-            new LazyInstance<>(
-                    new LazyInstance.InstanceCreator<BookDetailFragment>() {
-                        @Override
-                        public BookDetailFragment createInstance() {
-                            return new BookDetailFragment();
-                        }
-                    });
-
     @Override
     protected void initVariables() {
-        mKeyword = getArguments().getString("keyword");
+        mKeyword = getArguments().getString(Constants.Bundle.SEARCH_RESULTS_FRAGMENT_KEYWORD);
         mSearchResultPresenter.subscribe();
         mSearchResults = new ArrayList<>();
         mLastLoadedResults = new ArrayList<>();
@@ -137,8 +128,8 @@ public class SearchResultsFragment extends BaseFragment
     @Override
     public void openBookDetail(SearchResult searchResult) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("searchResult", searchResult);
-        BookDetailFragment fragment = mLazyBookDetailFragment.get();
+        bundle.putParcelable(Constants.Bundle.BOOK_DETAIL_FRAGMENT_SEARCH_RESULT, searchResult);
+        BookDetailFragment fragment = new BookDetailFragment();
         fragment.setArguments(bundle);
         new BookDetailPresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
                 BookRemoteDataSource.getInstance()),

@@ -16,6 +16,7 @@ import com.xiaoyuz.comicengine.contract.PageContract;
 import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
 import com.xiaoyuz.comicengine.event.PageDestroyEvent;
 import com.xiaoyuz.comicengine.ui.adapter.PageAdapter;
+import com.xiaoyuz.comicengine.utils.Constants;
 
 import java.util.ArrayList;
 
@@ -83,11 +84,11 @@ public class PageFragment extends BaseFragment implements PageContract.View {
     @Override
     protected void initVariables() {
         Bundle bundle = getArguments();
-        mBookUrl = bundle.getString("bookUrl");
-        mPageUrls = bundle.getStringArrayList("urls");
-        mChapterIndex = bundle.getInt("chapterIndex");
-        mHistoryPosition = bundle.getInt("history");
-        mChapterTitle = bundle.getString("chapterTitle");
+        mBookUrl = bundle.getString(Constants.Bundle.PAGE_FRAGMENT_BOOK_URL);
+        mPageUrls = bundle.getStringArrayList(Constants.Bundle.PAGE_FRAGMENT_PAGE_URLS);
+        mChapterIndex = bundle.getInt(Constants.Bundle.PAGE_FRAGMENT_CHAPTER_INDEX);
+        mHistoryPosition = bundle.getInt(Constants.Bundle.PAGE_FRAGMENT_HISTORY_POSITION);
+        mChapterTitle = bundle.getString(Constants.Bundle.PAGE_FRAGMENT_CHAPTER_TITLE);
         mEventHandler = new EventHandler();
         EventDispatcher.register(mEventHandler);
     }

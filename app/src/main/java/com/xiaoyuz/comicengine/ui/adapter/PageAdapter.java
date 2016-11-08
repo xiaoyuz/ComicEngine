@@ -12,7 +12,7 @@ import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.ui.widget.ComicImageView;
 import com.xiaoyuz.comicengine.utils.App;
-import com.xiaoyuz.comicengine.utils.Contants;
+import com.xiaoyuz.comicengine.utils.Constants;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class PageAdapter extends PagerAdapter {
         new ComicImagePresenter(
                 BookRepository.getInstance(BookLocalDataSource.getInstance(),
                         BookRemoteDataSource.getInstance()), comicImageView)
-                .loadHtmlPage(Contants.MOBILE_URL_DOMAIN + mPageUrls.get(position));
+                .loadHtmlPage(Constants.Net.MOBILE_URL_DOMAIN + mPageUrls.get(position));
         collection.addView(pageView, 0);
         return pageView;
     }

@@ -27,6 +27,7 @@ import com.xiaoyuz.comicengine.entity.SearchResult;
 import com.xiaoyuz.comicengine.event.PageDestroyEvent;
 import com.xiaoyuz.comicengine.ui.adapter.ChapterAdapter;
 import com.xiaoyuz.comicengine.utils.App;
+import com.xiaoyuz.comicengine.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,8 @@ public class BookDetailFragment extends BaseFragment implements
     @Override
     protected void initVariables() {
         mPresenter.subscribe();
-        mSearchResult = getArguments().getParcelable("searchResult");
+        mSearchResult = getArguments().getParcelable(Constants
+                .Bundle.BOOK_DETAIL_FRAGMENT_SEARCH_RESULT);
         mChapters = new ArrayList<>();
         mChapterAdapter = new ChapterAdapter(mChapters, mPresenter);
         mEventHandler = new EventHandler();
@@ -126,12 +128,12 @@ public class BookDetailFragment extends BaseFragment implements
     @Override
     public void showChapter(int chapterIndex, Chapter chapter, ArrayList<String> pageUrls) {
         Bundle bundle = new Bundle();
-        bundle.putString("chapterUrl", chapter.getUrl());
-        bundle.putString("chapterTitle", chapter.getTitle());
-        bundle.putStringArrayList("urls", pageUrls);
-        bundle.putInt("chapterIndex", chapterIndex);
-        bundle.putString("bookUrl", mSearchResult.getUrl());
-        bundle.putInt("history", chapterIndex == mHistoryChapterIndex ? mHistoryPosition : 0);
+        bundle.putString(Constants.Bundle.PAGE_FRAGMENT_CHAPTER_TITLE, chapter.getTitle());
+        bundle.putStringArrayList(Constants.Bundle.PAGE_FRAGMENT_PAGE_URLS, pageUrls);
+        bundle.putInt(Constants.Bundle.PAGE_FRAGMENT_CHAPTER_INDEX, chapterIndex);
+        bundle.putString(Constants.Bundle.PAGE_FRAGMENT_BOOK_URL, mSearchResult.getUrl());
+        bundle.putInt(Constants.Bundle.PAGE_FRAGMENT_HISTORY_POSITION,
+                chapterIndex == mHistoryChapterIndex ? mHistoryPosition : 0);
         PageFragment fragment = new PageFragment();
         fragment.setArguments(bundle);
         new PagePresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),

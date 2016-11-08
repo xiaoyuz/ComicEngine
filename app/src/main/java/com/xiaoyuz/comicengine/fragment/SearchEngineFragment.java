@@ -17,6 +17,7 @@ import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.presenter.SearchResultPresenter;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
+import com.xiaoyuz.comicengine.utils.Constants;
 
 /**
  * Created by zhangxiaoyu on 16/10/27.
@@ -49,17 +50,10 @@ public class SearchEngineFragment extends BaseFragment {
             public void onClick(View v) {
                 String keyword = keywordEditText.getText().toString();
                 Bundle bundle = new Bundle();
-                bundle.putString("keyword", keyword);
+                bundle.putString(Constants.Bundle.BOOK_INFO_ACTIVITY_KEYWORD, keyword);
                 Intent intent = new Intent(getActivity(), BookInfoActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
-//                mLazySearchResultsFragment.get().setArguments(bundle);
-//                new SearchResultPresenter(BookRepository.getInstance(
-//                        BookRemoteDataSource.getInstance()),
-//                        mLazySearchResultsFragment.get());
-//                EventDispatcher.post(new MainActivity.GotoFragmentOperation
-//                        (mLazySearchResultsFragment.get(),
-//                        true));
             }
         });
         return view;
