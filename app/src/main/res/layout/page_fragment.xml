@@ -28,6 +28,16 @@
             android:textSize="18sp"
             android:textColor="@android:color/white"
             android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/chapter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/page_num"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="5dp" />
     </RelativeLayout>
 
     <!-- footer -->

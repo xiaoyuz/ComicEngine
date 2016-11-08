@@ -3,9 +3,13 @@ package com.xiaoyuz.comicengine.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.xiaoyuz.comicengine.R;
 
 /**
  * Created by zhangxiaoyu on 16-10-11.
@@ -26,6 +30,27 @@ public abstract class BaseFragment extends Fragment {
         view.setClickable(true);
         loadData();
         return view;
+    }
+
+    protected void back() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() == 1) {
+            getActivity().finish();
+        } else {
+            fm.popBackStack();
+        }
+    }
+
+    protected void initBackableToolBar(View view, String title) {
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.mipmap.ic_menu_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                back();
+            }
+        });
+        toolbar.setTitle(title);
     }
 
     protected abstract void initVariables();

@@ -67,6 +67,7 @@ public class PageFragment extends BaseFragment implements PageContract.View {
     private RelativeLayout mHeader;
     private RelativeLayout mBottom;
     private TextView mPageNumView;
+    private TextView mChapterView;
 
     private String mBookUrl;
     private ArrayList<String> mPageUrls;
@@ -110,6 +111,8 @@ public class PageFragment extends BaseFragment implements PageContract.View {
         mHeader = (RelativeLayout) view.findViewById(R.id.header);
         mBottom = (RelativeLayout) view.findViewById(R.id.bottom);
         mPageNumView = (TextView) view.findViewById(R.id.page_num);
+        mChapterView = (TextView) view.findViewById(R.id.chapter);
+        mChapterView.setText(mChapterTitle);
         return view;
     }
 

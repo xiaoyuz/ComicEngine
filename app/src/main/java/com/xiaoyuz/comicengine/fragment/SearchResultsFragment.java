@@ -60,6 +60,8 @@ public class SearchResultsFragment extends BaseFragment
                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_results_fragment,
                 container, false);
+        initBackableToolBar(view, "Search Results: " + mKeyword);
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list);

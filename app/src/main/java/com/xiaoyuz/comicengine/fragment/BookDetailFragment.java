@@ -75,6 +75,7 @@ public class BookDetailFragment extends BaseFragment implements
                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.book_detail_fragment,
                 container, false);
+        initBackableToolBar(view, mSearchResult.getTitle());
         EventDispatcher.register(mEventHandler);
         ((TextView) view.findViewById(R.id.title)).setText(mSearchResult.getTitle());
         ((TextView) view.findViewById(R.id.status)).setText(mSearchResult.getStatus());
