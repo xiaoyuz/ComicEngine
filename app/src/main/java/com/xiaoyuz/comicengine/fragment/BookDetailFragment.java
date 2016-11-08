@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class BookDetailFragment extends BaseFragment implements
     private RecyclerView mRecyclerView;
     private TextView mLoadingView;
     private TextView mHistoryView;
+    private Button mReadButton;
     private SearchResult mSearchResult;
     private List<Chapter> mChapters;
     private BookDetailContract.Presenter mPresenter;
@@ -80,6 +82,7 @@ public class BookDetailFragment extends BaseFragment implements
         ((TextView) view.findViewById(R.id.update_time)).setText(mSearchResult.getUpdateTime());
 
         mHistoryView = (TextView) view.findViewById(R.id.history);
+        mReadButton = (Button) view.findViewById(R.id.read);
 
         Glide.with(App.getContext()).load(mSearchResult.getBookCover())
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
@@ -145,6 +148,15 @@ public class BookDetailFragment extends BaseFragment implements
     public void setHistory(int chapterIndex, String chapterTitle, int position) {
         mHistoryChapterIndex = chapterIndex;
         mHistoryPosition = position;
-        mHistoryView.setText("Last read: " + chapterTitle);
+        mHistoryView.setText("Last read: " + chapterTitle
+                + ", Page: " + String.valueOf(position + 1));
+
+        mReadButton.setVisibility(View.VISIBLE);
+        mReadButton.findViewById(R.id.read).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.openChapter(mChapters.get(mHistoryChapterIndex), mHistoryChapterIndex);
+            }
+        });
     }
 }

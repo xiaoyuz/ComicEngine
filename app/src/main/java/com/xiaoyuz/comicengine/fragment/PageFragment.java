@@ -57,10 +57,7 @@ public class PageFragment extends BaseFragment implements PageContract.View {
         @Override
         public void onPageScrollStateChanged(int state) {
             if (state == ViewPager.SCROLL_STATE_IDLE) {
-                StringBuffer pageNumInfoSB = new StringBuffer()
-                        .append(mViewPager.getCurrentItem() + 1)
-                        .append("/").append(mPageUrls.size());
-                mPageNumView.setText(pageNumInfoSB.toString());
+                updatePageNum();
             }
         }
     }
@@ -118,7 +115,7 @@ public class PageFragment extends BaseFragment implements PageContract.View {
 
     @Override
     protected void loadData() {
-
+        updatePageNum();
     }
 
     @Override
@@ -139,5 +136,12 @@ public class PageFragment extends BaseFragment implements PageContract.View {
     public void jump2HistoryPage(int position) {
         mViewPager.setCurrentItem(position, false);
         mViewPager.setVisibility(View.VISIBLE);
+    }
+
+    private void updatePageNum() {
+        StringBuffer pageNumInfoSB = new StringBuffer()
+                .append(mViewPager.getCurrentItem() + 1)
+                .append("/").append(mPageUrls.size());
+        mPageNumView.setText(pageNumInfoSB.toString());
     }
 }

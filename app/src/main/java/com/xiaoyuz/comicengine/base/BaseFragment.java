@@ -23,6 +23,7 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view =  initView(inflater, container, savedInstanceState);
+        view.setClickable(true);
         loadData();
         return view;
     }
