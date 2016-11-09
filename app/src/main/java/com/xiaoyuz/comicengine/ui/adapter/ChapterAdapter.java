@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.BookDetailContract;
-import com.xiaoyuz.comicengine.entity.Chapter;
+import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
 
 import java.util.List;
 
@@ -33,15 +33,15 @@ public class ChapterAdapter extends
 
         @Override
         public void onClick(View v) {
-            Chapter chapter = (Chapter) v.getTag();
+            BaseChapter chapter = (BaseChapter) v.getTag();
             mPresenter.openChapter(chapter, getAdapterPosition());
         }
     }
 
-    private List<Chapter> mChapters;
+    private List<BaseChapter> mChapters;
     private BookDetailContract.Presenter mPresenter;
 
-    public ChapterAdapter(List<Chapter> chapters, BookDetailContract.Presenter presenter) {
+    public ChapterAdapter(List<BaseChapter> chapters, BookDetailContract.Presenter presenter) {
         mChapters = chapters;
         mPresenter = presenter;
     }

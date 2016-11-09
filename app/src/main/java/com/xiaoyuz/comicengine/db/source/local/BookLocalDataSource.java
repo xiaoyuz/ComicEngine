@@ -2,9 +2,9 @@ package com.xiaoyuz.comicengine.db.source.local;
 
 import com.xiaoyuz.comicengine.cache.ComicEngineCache;
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
-import com.xiaoyuz.comicengine.entity.BookDetail;
-import com.xiaoyuz.comicengine.entity.Page;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
+import com.xiaoyuz.comicengine.model.entity.base.BasePage;
+import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
 
 import java.util.List;
 
@@ -30,12 +30,12 @@ public class BookLocalDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<List<SearchResult>> getSearchResults(String keyword, int page) {
+    public Observable<List<BaseSearchResult>> getSearchResults(String keyword, int page) {
         return null;
     }
 
     @Override
-    public Observable<BookDetail> getBookDetail(String url) {
+    public Observable<BaseBookDetail> getBookDetail(String url) {
         return null;
     }
 
@@ -52,7 +52,7 @@ public class BookLocalDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<Page> getPage(String html) {
+    public Observable<BasePage> getPage(String html) {
         return null;
     }
 

@@ -7,7 +7,6 @@ import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 

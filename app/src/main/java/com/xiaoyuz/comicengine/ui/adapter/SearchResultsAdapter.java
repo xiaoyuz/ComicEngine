@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.SearchResultContract;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
 import com.xiaoyuz.comicengine.utils.App;
 
 import java.util.List;
@@ -45,16 +45,16 @@ public class SearchResultsAdapter extends
 
         @Override
         public void onClick(View v) {
-            SearchResult searchResult = (SearchResult) v.getTag();
+            BaseSearchResult searchResult = (BaseSearchResult) v.getTag();
             mPresenter.openBookDetail(searchResult);
         }
     }
 
-    private List<SearchResult> mSearchResults;
+    private List<BaseSearchResult> mSearchResults;
 
     private SearchResultContract.Presenter mPresenter;
 
-    public SearchResultsAdapter(List<SearchResult> searchResults,
+    public SearchResultsAdapter(List<BaseSearchResult> searchResults,
                            SearchResultContract.Presenter presenter) {
         mSearchResults = searchResults;
         mPresenter = presenter;

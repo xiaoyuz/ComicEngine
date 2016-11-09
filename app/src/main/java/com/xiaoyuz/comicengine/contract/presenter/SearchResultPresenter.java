@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.xiaoyuz.comicengine.contract.SearchResultContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
 
 import java.util.List;
 
@@ -49,9 +49,9 @@ public class SearchResultPresenter implements SearchResultContract.Presenter {
         Subscription subscription = mBookRepository.getSearchResults(keyword, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<SearchResult>>() {
+                .subscribe(new Action1<List<BaseSearchResult>>() {
                     @Override
-                    public void call(List<SearchResult> searchResults) {
+                    public void call(List<BaseSearchResult> searchResults) {
                         mSearchResultView.showSearchResults(searchResults);
                     }
                 }, new Action1<Throwable>() {
@@ -64,7 +64,7 @@ public class SearchResultPresenter implements SearchResultContract.Presenter {
     }
 
     @Override
-    public void openBookDetail(final SearchResult searchResult) {
+    public void openBookDetail(final BaseSearchResult searchResult) {
         mSearchResultView.openBookDetail(searchResult);
     }
 }

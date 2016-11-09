@@ -22,9 +22,9 @@ import com.xiaoyuz.comicengine.contract.presenter.PagePresenter;
 import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
-import com.xiaoyuz.comicengine.entity.BookDetail;
-import com.xiaoyuz.comicengine.entity.Chapter;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
+import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
+import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
 import com.xiaoyuz.comicengine.event.PageDestroyEvent;
 import com.xiaoyuz.comicengine.ui.adapter.ChapterAdapter;
 import com.xiaoyuz.comicengine.utils.App;
@@ -50,8 +50,8 @@ public class BookDetailFragment extends BaseFragment implements
     private TextView mLoadingView;
     private TextView mHistoryView;
     private Button mReadButton;
-    private SearchResult mSearchResult;
-    private List<Chapter> mChapters;
+    private BaseSearchResult mSearchResult;
+    private List<BaseChapter> mChapters;
     private BookDetailContract.Presenter mPresenter;
     private ChapterAdapter mChapterAdapter;
 
@@ -103,7 +103,7 @@ public class BookDetailFragment extends BaseFragment implements
     }
 
     @Override
-    public void showBookDetail(BookDetail bookDetail) {
+    public void showBookDetail(BaseBookDetail bookDetail) {
         mLoadingView.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
         mChapters.addAll(bookDetail.getChapters());
@@ -130,7 +130,8 @@ public class BookDetailFragment extends BaseFragment implements
     }
 
     @Override
-    public void showChapter(int chapterIndex, Chapter chapter, ArrayList<String> pageUrls) {
+    public void showChapter(int chapterIndex, BaseChapter chapter) {
+        ArrayList<String> pageUrls = chapter.createPageUrlList();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.Bundle.PAGE_FRAGMENT_CHAPTER_TITLE, chapter.getTitle());
         bundle.putStringArrayList(Constants.Bundle.PAGE_FRAGMENT_PAGE_URLS, pageUrls);

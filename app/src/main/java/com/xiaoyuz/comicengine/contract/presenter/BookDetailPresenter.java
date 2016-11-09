@@ -5,8 +5,8 @@ import android.text.TextUtils;
 
 import com.xiaoyuz.comicengine.contract.BookDetailContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
-import com.xiaoyuz.comicengine.entity.BookDetail;
-import com.xiaoyuz.comicengine.entity.Chapter;
+import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
+import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
 
 import java.util.ArrayList;
 
@@ -51,9 +51,9 @@ public class BookDetailPresenter implements BookDetailContract.Presenter {
         Subscription subscription = mBookRepository.getBookDetail(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<BookDetail>() {
+                .subscribe(new Action1<BaseBookDetail>() {
             @Override
-            public void call(BookDetail bookDetail) {
+            public void call(BaseBookDetail bookDetail) {
                 mBookDetailView.showBookDetail(bookDetail);
             }
         }, new Action1<Throwable>() {
@@ -66,14 +66,12 @@ public class BookDetailPresenter implements BookDetailContract.Presenter {
     }
 
     @Override
-    public void openChapter(Chapter chapter, int chapterIndex) {
+    public void openChapter(BaseChapter chapter, int chapterIndex) {
         ArrayList<String> pageUrls = new ArrayList<>();
-        String pageInfo = chapter.getPageInfo();
-        int maxPageNum = Integer.parseInt(pageInfo.split("p")[0]);
-        for (int i = 1; i <= maxPageNum; i++) {
+        for (int i = 1; i <= chapter.getMaxPageNum(); i++) {
             pageUrls.add(chapter.getUrl() + "?p=" + i);
         }
-        mBookDetailView.showChapter(chapterIndex, chapter, pageUrls);
+        mBookDetailView.showChapter(chapterIndex, chapter);
     }
 
     @Override

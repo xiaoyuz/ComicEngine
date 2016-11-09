@@ -18,7 +18,7 @@ import com.xiaoyuz.comicengine.contract.presenter.BookDetailPresenter;
 import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
 import com.xiaoyuz.comicengine.ui.adapter.SearchResultsAdapter;
 import com.xiaoyuz.comicengine.utils.App;
 import com.xiaoyuz.comicengine.utils.Constants;
@@ -34,8 +34,8 @@ public class SearchResultsFragment extends BaseFragment
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private List<SearchResult> mSearchResults;
-    private List<SearchResult> mLastLoadedResults;
+    private List<BaseSearchResult> mSearchResults;
+    private List<BaseSearchResult> mLastLoadedResults;
     private SearchResultsAdapter mAdapter;
     private TextView mLoadingView;
     private boolean mIsLoading;
@@ -105,7 +105,7 @@ public class SearchResultsFragment extends BaseFragment
     }
 
     @Override
-    public void showSearchResults(List<SearchResult> searchResults) {
+    public void showSearchResults(List<BaseSearchResult> searchResults) {
         mLoadingView.setVisibility(View.GONE);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         if (!sameSearchResults(mLastLoadedResults, searchResults)) {
@@ -128,7 +128,7 @@ public class SearchResultsFragment extends BaseFragment
     }
 
     @Override
-    public void openBookDetail(SearchResult searchResult) {
+    public void openBookDetail(BaseSearchResult searchResult) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.Bundle.BOOK_DETAIL_FRAGMENT_SEARCH_RESULT, searchResult);
         BookDetailFragment fragment = new BookDetailFragment();
@@ -154,8 +154,8 @@ public class SearchResultsFragment extends BaseFragment
         loadData();
     }
 
-    private boolean sameSearchResults(List<SearchResult> searchResults1,
-                                      List<SearchResult> searchResults2) {
+    private boolean sameSearchResults(List<BaseSearchResult> searchResults1,
+                                      List<BaseSearchResult> searchResults2) {
         if (searchResults1.size() != searchResults2.size()) {
             return false;
         }

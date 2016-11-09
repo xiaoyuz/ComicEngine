@@ -2,8 +2,8 @@ package com.xiaoyuz.comicengine.contract;
 
 import com.xiaoyuz.comicengine.base.BasePresenter;
 import com.xiaoyuz.comicengine.base.BaseView;
-import com.xiaoyuz.comicengine.entity.BookDetail;
-import com.xiaoyuz.comicengine.entity.Chapter;
+import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
+import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
 
 import java.util.ArrayList;
 
@@ -14,11 +14,11 @@ public interface BookDetailContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showBookDetail(BookDetail bookDetail);
+        void showBookDetail(BaseBookDetail bookDetail);
 
         void showNoChapter();
 
-        void showChapter(int chapterIndex, Chapter chapter, ArrayList<String> pageUrls);
+        void showChapter(int chapterIndex, BaseChapter chapter);
 
         void setHistory(int chapterIndex, String chapterTitle, int position);
     }
@@ -27,7 +27,7 @@ public interface BookDetailContract {
 
         void loadBookDetail(String url);
 
-        void openChapter(Chapter chapter, int chapterIndex);
+        void openChapter(BaseChapter chapter, int chapterIndex);
 
         void loadChapterHistory(String bookUrl);
 

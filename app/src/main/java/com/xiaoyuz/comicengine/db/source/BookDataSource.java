@@ -1,8 +1,8 @@
 package com.xiaoyuz.comicengine.db.source;
 
-import com.xiaoyuz.comicengine.entity.BookDetail;
-import com.xiaoyuz.comicengine.entity.Page;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
+import com.xiaoyuz.comicengine.model.entity.base.BasePage;
+import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
 
 import java.util.List;
 
@@ -13,13 +13,13 @@ import rx.Observable;
  */
 public interface BookDataSource {
 
-    Observable<List<SearchResult>> getSearchResults(String keyword, int page);
+    Observable<List<BaseSearchResult>> getSearchResults(String keyword, int page);
 
-    Observable<BookDetail> getBookDetail(String url);
+    Observable<BaseBookDetail> getBookDetail(String url);
 
     Observable<String> getHtml(String url);
 
-    Observable<Page> getPage(String html);
+    Observable<BasePage> getPage(String html);
 
     Observable<String> getChapterHistory(String chapterUrl);
 

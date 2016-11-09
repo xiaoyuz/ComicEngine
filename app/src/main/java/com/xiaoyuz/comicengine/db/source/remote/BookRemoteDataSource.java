@@ -1,17 +1,11 @@
 package com.xiaoyuz.comicengine.db.source.remote;
 
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
-import com.xiaoyuz.comicengine.entity.BookDetail;
-import com.xiaoyuz.comicengine.entity.Page;
-import com.xiaoyuz.comicengine.entity.SearchResult;
-import com.xiaoyuz.comicengine.net.JsoupParser;
-import com.xiaoyuz.comicengine.utils.Constants;
+import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
+import com.xiaoyuz.comicengine.model.entity.base.BasePage;
+import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
+import com.xiaoyuz.comicengine.utils.App;
 
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -36,18 +30,13 @@ public class BookRemoteDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<List<SearchResult>> getSearchResults(final String keyword, final int page) {
-        return Observable.create(new Observable.OnSubscribe<List<SearchResult>>() {
+    public Observable<List<BaseSearchResult>> getSearchResults(final String keyword, final int page) {
+        return Observable.create(new Observable.OnSubscribe<List<BaseSearchResult>>() {
             @Override
-            public void call(Subscriber<? super List<SearchResult>> subscriber) {
-                Document doc = JsoupParser
-                        .getDocument("http://www.57mh.com/search/q_" + keyword + "-p-" + page);
-                if (doc != null) {
-                    Elements elements = doc.select(".book-result .cf");
-                    List<SearchResult> searchResults = new ArrayList<>();
-                    for (Element element : elements) {
-                        searchResults.add(new SearchResult(element));
-                    }
+            public void call(Subscriber<? super List<BaseSearchResult>> subscriber) {
+                List<BaseSearchResult> searchResults = App.getEntityFactory()
+                        .createSearchResultEntity(keyword, page);
+                if (searchResults.size() != 0) {
                     subscriber.onNext(searchResults);
                     subscriber.onCompleted();
                 } else {
@@ -58,13 +47,14 @@ public class BookRemoteDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<BookDetail> getBookDetail(final String url) {
-        return Observable.create(new Observable.OnSubscribe<BookDetail>() {
+    public Observable<BaseBookDetail> getBookDetail(final String url) {
+        return Observable.create(new Observable.OnSubscribe<BaseBookDetail>() {
             @Override
-            public void call(Subscriber<? super BookDetail> subscriber) {
-                Document doc = JsoupParser.getDocument(Constants.Net.URL_DOMAIN + url);
-                if (doc != null) {
-                    subscriber.onNext(new BookDetail(doc));
+            public void call(Subscriber<? super BaseBookDetail> subscriber) {
+                BaseBookDetail bookDetail = App.getEntityFactory()
+                        .createBookDetailEntity(url);
+                if (bookDetail != null) {
+                    subscriber.onNext(bookDetail);
                     subscriber.onCompleted();
                 } else {
                     subscriber.onError(new NullPointerException());
@@ -85,12 +75,12 @@ public class BookRemoteDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<Page> getPage(final String html) {
-        return Observable.create(new Observable.OnSubscribe<Page>() {
+    public Observable<BasePage> getPage(final String html) {
+        return Observable.create(new Observable.OnSubscribe<BasePage>() {
             @Override
-            public void call(Subscriber<? super Page> subscriber) {
-                Document doc = JsoupParser.getDocumentByCode(html);
-                subscriber.onNext(new Page(doc));
+            public void call(Subscriber<? super BasePage> subscriber) {
+                BasePage page = App.getEntityFactory().createPageEntity(html);
+                subscriber.onNext(page);
                 subscriber.onCompleted();
             }
         });

@@ -5,7 +5,7 @@ import android.text.TextUtils;
 
 import com.xiaoyuz.comicengine.contract.ComicImageContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
-import com.xiaoyuz.comicengine.entity.Page;
+import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -79,9 +79,9 @@ public class ComicImagePresenter implements ComicImageContract.Presenter {
         Subscription subscription = mBookRepository.getPage(html)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Page>() {
+                .subscribe(new Action1<BasePage>() {
                     @Override
-                    public void call(Page page) {
+                    public void call(BasePage page) {
                         mView.showPage(page);
                     }
                 }, new Action1<Throwable>() {

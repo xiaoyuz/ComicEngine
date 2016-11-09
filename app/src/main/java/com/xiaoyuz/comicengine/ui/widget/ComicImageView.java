@@ -20,7 +20,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.ComicImageContract;
-import com.xiaoyuz.comicengine.entity.Page;
+import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
 import com.xiaoyuz.comicengine.utils.App;
 
@@ -150,7 +150,7 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
     }
 
     @Override
-    public void showPage(Page page) {
+    public void showPage(BasePage page) {
         final WeakReference<PhotoView> imageViewWeakReference = new WeakReference<>(mImageView);
         final ImageView weakImageView = imageViewWeakReference.get();
         if (weakImageView != null) {

@@ -1,11 +1,11 @@
 package com.xiaoyuz.comicengine.utils;
 
-import android.app.ActivityManager;
 import android.content.Context;
-import android.view.WindowManager;
 
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.cache.ACache;
+import com.xiaoyuz.comicengine.model.factory.BaseEntityFactory;
+import com.xiaoyuz.comicengine.model.factory.Mh57EntityFactory;
 
 /**
  * Created by zhangxiaoyu on 16-10-11.
@@ -20,19 +20,12 @@ public class App {
                     return ACache.get(getContext());
                 }
             });
-    private static LazyInstance<WindowManager.LayoutParams> sLazyWindowParams =
-            new LazyInstance<>(new LazyInstance.InstanceCreator<WindowManager.LayoutParams>() {
+
+    private static LazyInstance<Mh57EntityFactory> sLazyMh57EntityFactory =
+            new LazyInstance<>(new LazyInstance.InstanceCreator<Mh57EntityFactory>() {
                 @Override
-                public WindowManager.LayoutParams createInstance() {
-                    return new WindowManager.LayoutParams();
-                }
-            });
-    private static LazyInstance<ActivityManager> sLazyActivityManager =
-            new LazyInstance<>(new LazyInstance.InstanceCreator<ActivityManager>() {
-                @Override
-                public ActivityManager createInstance() {
-                    return (ActivityManager) sAppContext
-                            .getSystemService(Context.ACTIVITY_SERVICE);
+                public Mh57EntityFactory createInstance() {
+                    return new Mh57EntityFactory();
                 }
             });
 
@@ -52,11 +45,7 @@ public class App {
         return sLazyACache.get();
     }
 
-    public static WindowManager.LayoutParams getWindowParams() {
-        return sLazyWindowParams.get();
-    }
-
-    public static ActivityManager getActivityManager() {
-        return sLazyActivityManager.get();
+    public static BaseEntityFactory getEntityFactory() {
+        return sLazyMh57EntityFactory.get();
     }
 }

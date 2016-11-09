@@ -6,8 +6,9 @@ package com.xiaoyuz.comicengine.utils;
 public class Constants {
 
     public class Net {
-        public static final String URL_DOMAIN = "http://www.57mh.com";
-        public static final String MOBILE_URL_DOMAIN = "http://m.57mh.com";
+        public static final String MH57_URL_DOMAIN = "http://www.57mh.com";
+        public static final String MH57_MOBILE_URL_DOMAIN = "http://m.57mh.com";
+        public static final String MH57_SEARCH_URL_PREFIX = "http://www.57mh.com/search/q_";
     }
 
     public class Bundle {
