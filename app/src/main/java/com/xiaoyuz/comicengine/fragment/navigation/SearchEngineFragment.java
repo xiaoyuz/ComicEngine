@@ -1,6 +1,5 @@
-package com.xiaoyuz.comicengine.fragment;
+package com.xiaoyuz.comicengine.fragment.navigation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +9,13 @@ import android.widget.EditText;
 
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
-import com.xiaoyuz.comicengine.activity.BookInfoActivity;
-import com.xiaoyuz.comicengine.activity.MainActivity;
+import com.xiaoyuz.comicengine.activity.ComicActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
-import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.presenter.SearchResultPresenter;
+import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
+import com.xiaoyuz.comicengine.fragment.SearchResultsFragment;
 import com.xiaoyuz.comicengine.utils.Constants;
 
 /**
@@ -24,17 +23,8 @@ import com.xiaoyuz.comicengine.utils.Constants;
  */
 public class SearchEngineFragment extends BaseFragment {
 
-    private LazyInstance<SearchResultsFragment> mLazySearchResultsFragment;
-
     @Override
     protected void initVariables() {
-        mLazySearchResultsFragment = new LazyInstance<>(
-                new LazyInstance.InstanceCreator<SearchResultsFragment>() {
-            @Override
-            public SearchResultsFragment createInstance() {
-                return new SearchResultsFragment();
-            }
-        });
     }
 
     @Override
@@ -51,9 +41,14 @@ public class SearchEngineFragment extends BaseFragment {
                 String keyword = keywordEditText.getText().toString();
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.Bundle.BOOK_INFO_ACTIVITY_KEYWORD, keyword);
-                Intent intent = new Intent(getActivity(), BookInfoActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                SearchResultsFragment fragment = new SearchResultsFragment();
+                fragment.setArguments(bundle);
+                new SearchResultPresenter(BookRepository.getInstance(BookLocalDataSource
+                        .getInstance(), BookRemoteDataSource.getInstance()), fragment);
+                EventDispatcher.post(new ComicActivity.GotoFragmentOperation(fragment));
+//                Intent intent = new Intent(getActivity(), BookInfoActivity.class);
+//                intent.putExtras(bundle);
+//                startActivity(intent);
             }
         });
         return view;

@@ -15,7 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.otto.Subscribe;
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
-import com.xiaoyuz.comicengine.activity.BookInfoActivity;
+import com.xiaoyuz.comicengine.activity.ComicActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.contract.BookDetailContract;
 import com.xiaoyuz.comicengine.contract.presenter.PagePresenter;
@@ -142,7 +142,7 @@ public class BookDetailFragment extends BaseFragment implements
         fragment.setArguments(bundle);
         new PagePresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
                 BookRemoteDataSource.getInstance()), fragment);
-        EventDispatcher.post(new BookInfoActivity.GotoFragmentOperation(fragment));
+        EventDispatcher.post(new ComicActivity.GotoFragmentOperation(fragment));
     }
 
     @Override

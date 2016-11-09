@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
-import com.xiaoyuz.comicengine.activity.BookInfoActivity;
+import com.xiaoyuz.comicengine.activity.ComicActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.contract.SearchResultContract;
 import com.xiaoyuz.comicengine.contract.presenter.BookDetailPresenter;
@@ -136,7 +136,7 @@ public class SearchResultsFragment extends BaseFragment
         new BookDetailPresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
                 BookRemoteDataSource.getInstance()),
                 fragment);
-        EventDispatcher.post(new BookInfoActivity.GotoFragmentOperation(fragment));
+        EventDispatcher.post(new ComicActivity.GotoFragmentOperation(fragment));
     }
 
     @Override

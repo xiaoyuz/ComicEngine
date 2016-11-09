@@ -1,4 +1,4 @@
-package com.xiaoyuz.comicengine.fragment;
+package com.xiaoyuz.comicengine.fragment.navigation;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

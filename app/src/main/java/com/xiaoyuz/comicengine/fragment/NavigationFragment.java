@@ -1,60 +1,38 @@
-package com.xiaoyuz.comicengine.activity;
+package com.xiaoyuz.comicengine.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.squareup.otto.Subscribe;
-import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
-import com.xiaoyuz.comicengine.base.BaseActivity;
+import com.xiaoyuz.comicengine.activity.ComicActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
-import com.xiaoyuz.comicengine.fragment.DefaultFragment;
-import com.xiaoyuz.comicengine.fragment.SearchEngineFragment;
+import com.xiaoyuz.comicengine.fragment.navigation.DefaultFragment;
+import com.xiaoyuz.comicengine.fragment.navigation.SearchEngineFragment;
 
-public class MainActivity extends BaseActivity
+/**
+ * Created by zhangxiaoyu on 16-11-9.
+ */
+public class NavigationFragment extends BaseFragment
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static class GotoFragmentOperation {
-
-        private BaseFragment mFragment;
-
-        public GotoFragmentOperation(BaseFragment fragment) {
-            mFragment = fragment;
-        }
-
-        public BaseFragment getFragment() {
-            return mFragment;
-        }
-    }
-
-    private class EventHandler {
-        @Subscribe
-        public void onGotoFragmentOperation(GotoFragmentOperation operation) {
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.fragment_container, operation.getFragment());
-            ft.commitAllowingStateLoss();
-        }
-    }
-
+    private NavigationView mNavigationView;
+    private View mBaseView;
     private LazyInstance<SearchEngineFragment> mLazySearchEngineFragment;
     private LazyInstance<DefaultFragment> mLazyDefaultFragment;
-
-    private NavigationView mNavigationView;
-
-    private EventHandler mEventHandler;
 
     @Override
     protected void initVariables() {
@@ -74,16 +52,16 @@ public class MainActivity extends BaseActivity
                         return new SearchEngineFragment();
                     }
                 });
-        mEventHandler = new EventHandler();
     }
 
     @Override
-    protected void initViews(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mBaseView = inflater.inflate(R.layout.navigation_fragment, container, false);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        Toolbar toolbar = (Toolbar) mBaseView.findViewById(R.id.toolbar);
+        ((ComicActivity) getActivity()).setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) mBaseView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,40 +70,24 @@ public class MainActivity extends BaseActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) mBaseView.findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open,
+                getActivity(), drawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView = (NavigationView) mBaseView.findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        EventDispatcher.register(mEventHandler);
         selectNavItem(0);
+
+        return mBaseView;
     }
 
     @Override
     protected void loadData() {
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
     }
 
     @Override
@@ -148,24 +110,23 @@ public class MainActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Fragment fragment;
         switch (id) {
             case R.id.nav_camera:
-                EventDispatcher.post(new GotoFragmentOperation(mLazySearchEngineFragment.get()));
+                fragment = mLazySearchEngineFragment.get();
                 break;
             default:
-                EventDispatcher.post(new GotoFragmentOperation(mLazyDefaultFragment.get()));
+                fragment = mLazyDefaultFragment.get();
                 break;
         }
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.fragment_container, fragment);
+        ft.commitAllowingStateLoss();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) mBaseView.findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventDispatcher.unregister(mEventHandler);
     }
 
     private void selectNavItem(int pos) {
