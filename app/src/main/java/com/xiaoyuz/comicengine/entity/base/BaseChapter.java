@@ -1,20 +1,17 @@
-package com.xiaoyuz.comicengine.entity;
+package com.xiaoyuz.comicengine.entity.base;
 
 import org.jsoup.nodes.Element;
 
 /**
- * Created by zhangxiaoyu on 16-10-28.
+ * Created by zhangxiaoyu on 16-11-9.
  */
-public class Chapter {
+public abstract class BaseChapter extends BaseEntity {
 
-    private String title;
-    private String pageInfo;
-    private String url;
+    protected String title;
+    protected String pageInfo;
+    protected String url;
 
-    public Chapter(Element element) {
-        title = element.select("a").attr("title");
-        url = element.select("a").attr("href");
-        pageInfo = element.select("a span i").text();
+    public BaseChapter(Element element) {
     }
 
     public String getTitle() {

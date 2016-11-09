@@ -5,8 +5,8 @@ import android.text.TextUtils;
 
 import com.xiaoyuz.comicengine.contract.BookDetailContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
-import com.xiaoyuz.comicengine.entity.BookDetail;
-import com.xiaoyuz.comicengine.entity.Chapter;
+import com.xiaoyuz.comicengine.entity.mh57.BookDetail;
+import com.xiaoyuz.comicengine.entity.mh57.Chapter;
 
 import java.util.ArrayList;
 

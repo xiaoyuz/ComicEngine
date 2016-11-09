@@ -2,8 +2,8 @@ package com.xiaoyuz.comicengine.contract;
 
 import com.xiaoyuz.comicengine.base.BasePresenter;
 import com.xiaoyuz.comicengine.base.BaseView;
-import com.xiaoyuz.comicengine.entity.BookDetail;
-import com.xiaoyuz.comicengine.entity.Chapter;
+import com.xiaoyuz.comicengine.entity.mh57.BookDetail;
+import com.xiaoyuz.comicengine.entity.mh57.Chapter;
 
 import java.util.ArrayList;
 

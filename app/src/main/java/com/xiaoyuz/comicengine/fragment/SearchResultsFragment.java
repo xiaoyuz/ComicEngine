@@ -18,7 +18,7 @@ import com.xiaoyuz.comicengine.contract.presenter.BookDetailPresenter;
 import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.entity.mh57.SearchResult;
 import com.xiaoyuz.comicengine.ui.adapter.SearchResultsAdapter;
 import com.xiaoyuz.comicengine.utils.App;
 import com.xiaoyuz.comicengine.utils.Constants;

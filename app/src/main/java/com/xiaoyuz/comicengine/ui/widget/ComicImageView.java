@@ -20,7 +20,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.ComicImageContract;
-import com.xiaoyuz.comicengine.entity.Page;
+import com.xiaoyuz.comicengine.entity.mh57.Page;
 import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
 import com.xiaoyuz.comicengine.utils.App;
 

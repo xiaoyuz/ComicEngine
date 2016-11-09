@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.BookDetailContract;
-import com.xiaoyuz.comicengine.entity.Chapter;
+import com.xiaoyuz.comicengine.entity.mh57.Chapter;
 
 import java.util.List;
 

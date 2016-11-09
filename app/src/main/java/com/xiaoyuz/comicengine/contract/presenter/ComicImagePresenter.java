@@ -5,7 +5,7 @@ import android.text.TextUtils;
 
 import com.xiaoyuz.comicengine.contract.ComicImageContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
-import com.xiaoyuz.comicengine.entity.Page;
+import com.xiaoyuz.comicengine.entity.mh57.Page;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;

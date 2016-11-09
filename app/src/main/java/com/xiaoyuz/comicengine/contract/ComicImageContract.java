@@ -1,10 +1,8 @@
 package com.xiaoyuz.comicengine.contract;
 
-import android.graphics.Bitmap;
-
 import com.xiaoyuz.comicengine.base.BasePresenter;
 import com.xiaoyuz.comicengine.base.BaseView;
-import com.xiaoyuz.comicengine.entity.Page;
+import com.xiaoyuz.comicengine.entity.mh57.Page;
 
 /**
  * Created by zhangxiaoyu on 16-11-1.

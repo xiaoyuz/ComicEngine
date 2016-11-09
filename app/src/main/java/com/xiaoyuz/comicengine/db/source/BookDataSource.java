@@ -1,8 +1,8 @@
 package com.xiaoyuz.comicengine.db.source;
 
-import com.xiaoyuz.comicengine.entity.BookDetail;
-import com.xiaoyuz.comicengine.entity.Page;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.entity.mh57.BookDetail;
+import com.xiaoyuz.comicengine.entity.mh57.Page;
+import com.xiaoyuz.comicengine.entity.mh57.SearchResult;
 
 import java.util.List;
 

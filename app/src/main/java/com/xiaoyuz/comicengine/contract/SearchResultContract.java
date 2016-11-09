@@ -2,8 +2,7 @@ package com.xiaoyuz.comicengine.contract;
 
 import com.xiaoyuz.comicengine.base.BasePresenter;
 import com.xiaoyuz.comicengine.base.BaseView;
-import com.xiaoyuz.comicengine.entity.BookDetail;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.entity.mh57.SearchResult;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
 package com.xiaoyuz.comicengine.db.source.remote;
 
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
-import com.xiaoyuz.comicengine.entity.BookDetail;
-import com.xiaoyuz.comicengine.entity.Page;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.entity.mh57.BookDetail;
+import com.xiaoyuz.comicengine.entity.mh57.Page;
+import com.xiaoyuz.comicengine.entity.mh57.SearchResult;
 import com.xiaoyuz.comicengine.net.JsoupParser;
 import com.xiaoyuz.comicengine.utils.Constants;
 

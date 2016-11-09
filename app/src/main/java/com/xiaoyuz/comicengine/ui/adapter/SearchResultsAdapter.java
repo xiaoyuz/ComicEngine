@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.SearchResultContract;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.entity.mh57.SearchResult;
 import com.xiaoyuz.comicengine.utils.App;
 
 import java.util.List;

@@ -1,21 +1,16 @@
-package com.xiaoyuz.comicengine.entity;
+package com.xiaoyuz.comicengine.entity.mh57;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.xiaoyuz.comicengine.entity.base.BaseSearchResult;
 
 import org.jsoup.nodes.Element;
 
 /**
  * Created by zhangxiaoyu on 16/10/27.
  */
-public class SearchResult implements Parcelable {
-
-    private String bookCover;
-    private String status;
-    private String url;
-    private String title;
-    private String updateTime;
-    private String lastChapter;
+public class SearchResult extends BaseSearchResult implements Parcelable {
 
     public static final Parcelable.Creator<SearchResult> CREATOR = new Creator(){
 
@@ -38,10 +33,10 @@ public class SearchResult implements Parcelable {
     };
 
     public SearchResult() {
-
     }
 
     public SearchResult(Element element) {
+        super(element);
         bookCover = element.select(".book-cover .bcover img").attr("src");
         status = element.select(".book-detail dd.tags.status>span>span")
                 .first().text();
@@ -64,68 +59,5 @@ public class SearchResult implements Parcelable {
         dest.writeString(title);
         dest.writeString(updateTime);
         dest.writeString(lastChapter);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return url.equals(((SearchResult) obj).url) && title.equals(((SearchResult) obj).title);
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuffer().append("Cover: ").append(bookCover).append("\n")
-                .append("status: ").append(status).append("\n")
-                .append("url: ").append(url).append("\n")
-                .append("title: ").append(title).append("\n")
-                .append("updatetime: ").append(updateTime).append("\n")
-                .append("lastChaper: ").append(lastChapter).toString();
-    }
-
-    public String getBookCover() {
-        return bookCover;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getUpdateTime() {
-        return updateTime;
-    }
-
-    public String getLastChapter() {
-        return lastChapter;
-    }
-
-    public void setBookCover(String bookCover) {
-        this.bookCover = bookCover;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public void setLastChapter(String lastChapter) {
-        this.lastChapter = lastChapter;
     }
 }

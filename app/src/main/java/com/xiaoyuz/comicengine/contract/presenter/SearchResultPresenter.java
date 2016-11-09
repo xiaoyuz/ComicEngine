@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.xiaoyuz.comicengine.contract.SearchResultContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
-import com.xiaoyuz.comicengine.entity.SearchResult;
+import com.xiaoyuz.comicengine.entity.mh57.SearchResult;
 
 import java.util.List;
 
