@@ -112,7 +112,7 @@ public class NavigationFragment extends BaseFragment
         int id = item.getItemId();
         Fragment fragment;
         switch (id) {
-            case R.id.nav_camera:
+            case R.id.nav_search:
                 fragment = mLazySearchEngineFragment.get();
                 break;
             default:
