@@ -1,5 +1,7 @@
 package com.xiaoyuz.comicengine.db.source.remote;
 
+import android.text.TextUtils;
+
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
@@ -80,8 +82,12 @@ public class BookRemoteDataSource implements BookDataSource {
             @Override
             public void call(Subscriber<? super BasePage> subscriber) {
                 BasePage page = App.getEntityFactory().createPageEntity(html);
-                subscriber.onNext(page);
-                subscriber.onCompleted();
+                if (!TextUtils.isEmpty(page.getImageUrl())) {
+                    subscriber.onNext(page);
+                    subscriber.onCompleted();
+                } else {
+                    subscriber.onError(new NullPointerException());
+                }
             }
         });
     }

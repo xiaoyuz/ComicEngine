@@ -49,6 +49,7 @@ public class ComicImagePresenter implements ComicImageContract.Presenter {
      */
     @Override
     public void loadHtmlPage(final String url) {
+        mView.setUrl(url);
         Subscription subscription = mBookRepository.getHtml(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -56,15 +57,17 @@ public class ComicImagePresenter implements ComicImageContract.Presenter {
                     @Override
                     public void call(String html) {
                         if (TextUtils.isEmpty(html)) {
+                            // Load remotely
                             mView.loadUrlByWebView(url);
                         } else {
-                            loadPage(html);
+                            // local
+                            loadPage(false, url, html);
                         }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-
+                        mView.showNetError();
                     }
                 });
         mSubscriptions.add(subscription);
@@ -75,26 +78,28 @@ public class ComicImagePresenter implements ComicImageContract.Presenter {
      * @param html
      */
     @Override
-    public void loadPage(String html) {
+    public void loadPage(final boolean isRemote, final String url, final String html) {
         Subscription subscription = mBookRepository.getPage(html)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<BasePage>() {
                     @Override
                     public void call(BasePage page) {
+                        if(isRemote) {
+                            saveHtmlToLocal(url, html);
+                        }
                         mView.showPage(page);
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-
+                        mView.showNetError();
                     }
                 });
         mSubscriptions.add(subscription);
     }
 
-    @Override
-    public void saveHtmlToLocal(String url, String html) {
+    private void saveHtmlToLocal(String url, String html) {
         Subscription subscription = mBookRepository.saveHtml(url, html)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe();

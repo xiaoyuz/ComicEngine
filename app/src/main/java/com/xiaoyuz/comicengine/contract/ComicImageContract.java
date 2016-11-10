@@ -11,17 +11,19 @@ public interface ComicImageContract {
 
     interface View extends BaseView<Presenter> {
 
+        void setUrl(String url);
+
         void showPage(BasePage page);
 
         void loadUrlByWebView(String url);
+
+        void showNetError();
     }
 
     interface Presenter extends BasePresenter {
 
         void loadHtmlPage(String url);
 
-        void loadPage(String html);
-
-        void saveHtmlToLocal(String url, String html);
+        void loadPage(boolean isRemote, String url, String html);
     }
 }

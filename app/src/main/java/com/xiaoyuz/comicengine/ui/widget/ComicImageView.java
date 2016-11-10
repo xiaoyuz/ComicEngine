@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -22,7 +23,6 @@ import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.ComicImageContract;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
-import com.xiaoyuz.comicengine.utils.App;
 
 import java.lang.ref.WeakReference;
 
@@ -37,8 +37,7 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
     final class InJavaScriptLocalObj {
         @JavascriptInterface
         public void showSource(final String url, final String html) {
-            mPresenter.saveHtmlToLocal(url, html);
-            mPresenter.loadPage(html);
+            mPresenter.loadPage(true, url, html);
         }
     }
 
@@ -59,10 +58,13 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
     protected PhotoView mImageView;
     protected Context mContext;
     protected ImageView mLoadingView;
+    protected TextView mReloadView;
     private ComicImageContract.Presenter mPresenter;
 
     private WebView mWebView;
     private WebView mWeakWebView;
+
+    private String mUrl;
 
     public ComicImageView(Context context) {
         super(context);
@@ -100,11 +102,20 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
             }
         });
 
-        mLoadingView = new ImageView(App.getContext());
+        mLoadingView = new ImageView(mContext);
         LayoutParams loadingParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
         loadingParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         mLoadingView.setLayoutParams(loadingParams);
+
+        mReloadView = new TextView(mContext);
+        LayoutParams reloadParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        reloadParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        mReloadView.setLayoutParams(reloadParams);
+        mReloadView.setText("Error! Click to Reload.");
+        mReloadView.setTextSize(18);
+        mReloadView.setVisibility(GONE);
 
         // WebView
         mWebView = new WebView(getContext());
@@ -140,6 +151,7 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
         }
         this.addView(mImageView);
         this.addView(mLoadingView);
+        this.addView(mReloadView);
         this.addView(mWeakWebView);
         typedArray.recycle();
     }
@@ -173,6 +185,29 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
     @Override
     public void loadUrlByWebView(String url) {
         mWeakWebView.loadUrl(url);
+    }
+
+    @Override
+    public void showNetError() {
+        final WeakReference<PhotoView> imageViewWeakReference = new WeakReference<>(mImageView);
+        final ImageView weakImageView = imageViewWeakReference.get();
+        mReloadView.setVisibility(VISIBLE);
+        weakImageView.setVisibility(GONE);
+        mLoadingView.setVisibility(GONE);
+
+        mReloadView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mReloadView.setVisibility(GONE);
+                mLoadingView.setVisibility(VISIBLE);
+                mPresenter.loadHtmlPage(mUrl);
+            }
+        });
+    }
+
+    @Override
+    public void setUrl(String url) {
+        mUrl = url;
     }
 
     public void recycle() {
