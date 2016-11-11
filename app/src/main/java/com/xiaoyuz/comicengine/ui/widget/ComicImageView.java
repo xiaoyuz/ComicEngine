@@ -41,7 +41,7 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
         }
     }
 
-    final class MyWebViewClient extends WebViewClient {
+    final class ComicWebViewClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
@@ -125,7 +125,7 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
         mWeakWebView.setLayoutParams(webViewParams);
         mWeakWebView.getSettings().setJavaScriptEnabled(true);
         mWeakWebView.addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
-        mWeakWebView.setWebViewClient(new MyWebViewClient());
+        mWeakWebView.setWebViewClient(new ComicWebViewClient());
         mWeakWebView.setVisibility(INVISIBLE);
 
         TypedArray typedArray = mContext.obtainStyledAttributes(attrs,
@@ -211,6 +211,7 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
     }
 
     public void recycle() {
+        mWeakWebView.stopLoading();
         mWebView = null;
         mWeakWebView = null;
         mImageView.setImageDrawable(null);

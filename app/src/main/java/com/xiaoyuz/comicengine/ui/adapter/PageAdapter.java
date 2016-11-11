@@ -60,6 +60,7 @@ public class PageAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup collection, int position, Object view) {
+
         ((ComicImageView) ((View) view).findViewById(R.id.comic_image_view)).recycle();
         collection.removeView((View) view);
     }
