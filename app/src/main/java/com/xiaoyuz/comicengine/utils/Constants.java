@@ -30,6 +30,6 @@ public class Constants {
     }
 
     public class Database {
-        public static final int MAX_HISTORY_COUNT = 3;
+        public static final int MAX_HISTORY_COUNT = 10;
     }
 }
