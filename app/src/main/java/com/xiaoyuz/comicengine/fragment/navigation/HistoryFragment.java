@@ -33,7 +33,6 @@ import java.util.List;
  */
 public class HistoryFragment extends BaseFragment implements HistoryContract.View {
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private HistoryContract.Presenter mPresenter;
     private HistoryAdapter mAdapter;
@@ -44,7 +43,6 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.history_fragment, container, false);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(App.getContext());
         mRecyclerView.setLayoutManager(layoutManager);
@@ -70,7 +68,6 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
 
     @Override
     public void showHistories(List<History> histories) {
-        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         mHistoryList.addAll(histories);
         mAdapter.notifyDataSetChanged();
     }
