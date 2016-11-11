@@ -6,6 +6,7 @@ import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
+import com.xiaoyuz.comicengine.model.entity.history.History;
 import com.xiaoyuz.comicengine.utils.App;
 
 import java.util.List;
@@ -105,6 +106,16 @@ public class BookRemoteDataSource implements BookDataSource {
     @Override
     public Observable<Object> saveChapterHistory(String bookUrl, int chapterIndex,
                                                  String chapterTitle, int position) {
+        return null;
+    }
+
+    @Override
+    public Observable<Object> saveHistory(History history) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<History>> getHistories() {
         return null;
     }
 }

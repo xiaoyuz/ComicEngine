@@ -3,6 +3,7 @@ package com.xiaoyuz.comicengine.db.source;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
+import com.xiaoyuz.comicengine.model.entity.history.History;
 
 import java.util.List;
 
@@ -27,4 +28,8 @@ public interface BookDataSource {
 
     Observable<Object> saveChapterHistory(String bookUrl, int chapterIndex,
                                           String chapterTitle, int position);
+
+    Observable<Object> saveHistory(History history);
+
+    Observable<List<History>> getHistories();
 }

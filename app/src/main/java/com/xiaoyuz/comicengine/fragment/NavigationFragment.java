@@ -20,7 +20,12 @@ import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.activity.ComicActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
+import com.xiaoyuz.comicengine.contract.presenter.HistoryPresenter;
+import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
+import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
+import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.fragment.navigation.DefaultFragment;
+import com.xiaoyuz.comicengine.fragment.navigation.HistoryFragment;
 import com.xiaoyuz.comicengine.fragment.navigation.SearchEngineFragment;
 
 /**
@@ -31,7 +36,9 @@ public class NavigationFragment extends BaseFragment
 
     private NavigationView mNavigationView;
     private View mBaseView;
+    private Toolbar mToolbar;
     private LazyInstance<SearchEngineFragment> mLazySearchEngineFragment;
+    private LazyInstance<HistoryFragment> mLazyHistoryFragment;
     private LazyInstance<DefaultFragment> mLazyDefaultFragment;
 
     @Override
@@ -52,14 +59,21 @@ public class NavigationFragment extends BaseFragment
                         return new SearchEngineFragment();
                     }
                 });
+        mLazyHistoryFragment =
+                new LazyInstance<>(new LazyInstance.InstanceCreator<HistoryFragment>() {
+                    @Override
+                    public HistoryFragment createInstance() {
+                        return new HistoryFragment();
+                    }
+                });
     }
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBaseView = inflater.inflate(R.layout.navigation_fragment, container, false);
 
-        Toolbar toolbar = (Toolbar) mBaseView.findViewById(R.id.toolbar);
-        ((ComicActivity) getActivity()).setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) mBaseView.findViewById(R.id.toolbar);
+        ((ComicActivity) getActivity()).setSupportActionBar(mToolbar);
 
         FloatingActionButton fab = (FloatingActionButton) mBaseView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +86,7 @@ public class NavigationFragment extends BaseFragment
 
         DrawerLayout drawer = (DrawerLayout) mBaseView.findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                getActivity(), drawer, toolbar, R.string.navigation_drawer_open,
+                getActivity(), drawer, mToolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -113,7 +127,18 @@ public class NavigationFragment extends BaseFragment
         Fragment fragment;
         switch (id) {
             case R.id.nav_search:
+                mToolbar.setTitle(R.string.title_search);
                 fragment = mLazySearchEngineFragment.get();
+                break;
+            case R.id.nav_history:
+                mToolbar.setTitle(R.string.title_history);
+                fragment = mLazyHistoryFragment.get();
+                new HistoryPresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
+                        BookRemoteDataSource.getInstance()), (HistoryFragment) fragment);
+                break;
+            case R.id.nav_offline:
+                mToolbar.setTitle(R.string.title_offline);
+                fragment = mLazyDefaultFragment.get();
                 break;
             default:
                 fragment = mLazyDefaultFragment.get();

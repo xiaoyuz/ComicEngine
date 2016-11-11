@@ -28,4 +28,8 @@ public class Constants {
         // BookInfoActivity
         public static final String BOOK_INFO_ACTIVITY_KEYWORD = "keyword";
     }
+
+    public class Database {
+        public static final int MAX_HISTORY_COUNT = 3;
+    }
 }

@@ -3,7 +3,11 @@ package com.xiaoyuz.comicengine.model.entity.base;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.xiaoyuz.comicengine.model.entity.history.History;
+
 import org.jsoup.nodes.Element;
+
+import java.util.Date;
 
 /**
  * Created by zhangxiaoyu on 16-11-9.
@@ -22,7 +26,6 @@ public abstract class BaseSearchResult extends BaseEntity implements Parcelable 
 
     public BaseSearchResult(Element element) {
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -101,5 +104,26 @@ public abstract class BaseSearchResult extends BaseEntity implements Parcelable 
         dest.writeString(title);
         dest.writeString(updateTime);
         dest.writeString(lastChapter);
+    }
+
+    public void fromHistory(History history) {
+        setUrl(history.getUrl());
+        setLastChapter(history.getLastChapter());
+        setStatus(history.getStatus());
+        setUpdateTime(history.getUpdateTime());
+        setTitle(history.getTitle());
+        setBookCover(history.getBookCover());
+    }
+
+    public History toHistory() {
+        History history = new History();
+        history.setBookCover(getBookCover());
+        history.setTitle(getTitle());
+        history.setUpdateTime(getUpdateTime());
+        history.setStatus(getStatus());
+        history.setLastChapter(getLastChapter());
+        history.setUrl(getUrl());
+        history.setHistoryTime(new Date());
+        return history;
     }
 }

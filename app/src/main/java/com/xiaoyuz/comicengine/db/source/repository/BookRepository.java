@@ -4,6 +4,7 @@ import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
+import com.xiaoyuz.comicengine.model.entity.history.History;
 
 import java.util.List;
 
@@ -72,5 +73,15 @@ public class BookRepository implements BookDataSource {
                                                  String chapterTitle, int position) {
         return mBookLocalDataSource.saveChapterHistory(bookUrl, chapterIndex,
                 chapterTitle, position);
+    }
+
+    @Override
+    public Observable<Object> saveHistory(History history) {
+        return mBookLocalDataSource.saveHistory(history);
+    }
+
+    @Override
+    public Observable<List<History>> getHistories() {
+        return mBookLocalDataSource.getHistories();
     }
 }
