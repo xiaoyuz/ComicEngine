@@ -19,6 +19,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.xiaoyuz.comicengine.engine.ComicGlideModule"
+            android:value="GlideModule" />
         <activity
             android:name=".activity.ComicActivity"
             android:label="@string/app_name"
