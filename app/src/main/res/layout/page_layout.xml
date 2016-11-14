@@ -8,8 +8,7 @@
         android:id="@+id/comic_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        comic:loading_anim="@anim/loading_animation"
-        comic:loading_src="@drawable/loading"
+        comic:loading_text="@string/loading"
         comic:background_color="@color/comic_page_background"/>
 
 </FrameLayout>

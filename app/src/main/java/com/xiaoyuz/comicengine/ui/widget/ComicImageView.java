@@ -2,10 +2,9 @@ package com.xiaoyuz.comicengine.ui.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -57,8 +56,8 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
 
     protected PhotoView mImageView;
     protected Context mContext;
-    protected ImageView mLoadingView;
     protected TextView mReloadView;
+    protected TextView mLoadingView;
     private ComicImageContract.Presenter mPresenter;
 
     private WebView mWebView;
@@ -102,12 +101,6 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
             }
         });
 
-        mLoadingView = new ImageView(mContext);
-        LayoutParams loadingParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT);
-        loadingParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        mLoadingView.setLayoutParams(loadingParams);
-
         mReloadView = new TextView(mContext);
         LayoutParams reloadParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
@@ -116,6 +109,14 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
         mReloadView.setText("Error! Click to Reload.");
         mReloadView.setTextSize(18);
         mReloadView.setVisibility(GONE);
+
+        mLoadingView = new TextView(mContext);
+        LayoutParams loadingParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        loadingParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        mLoadingView.setLayoutParams(loadingParams);
+        mLoadingView.setTextColor(Color.WHITE);
+        mLoadingView.setVisibility(VISIBLE);
 
         // WebView
         mWebView = new WebView(getContext());
@@ -133,15 +134,9 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
         for (int i = 0; i < typedArray.getIndexCount(); i++) {
             int attr = typedArray.getIndex(i);
             switch (attr) {
-                case R.styleable.ComicImageView_loading_anim:
-                    Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(
-                            getContext(), typedArray.getResourceId(
-                                    R.styleable.ComicImageView_loading_anim, 0));
-                    mLoadingView.startAnimation(hyperspaceJumpAnimation);
-                    break;
-                case R.styleable.ComicImageView_loading_src:
-                    mLoadingView.setImageResource(typedArray.getResourceId(
-                            R.styleable.ComicImageView_loading_src, 0));
+                case R.styleable.ComicImageView_loading_text:
+                    mLoadingView.setText(typedArray.getResourceId(
+                            R.styleable.ComicImageView_loading_text, 0));
                     break;
                 case R.styleable.ComicImageView_background_color:
                     mImageView.setBackgroundColor(typedArray.getResourceId(
@@ -150,8 +145,8 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
             }
         }
         this.addView(mImageView);
-        this.addView(mLoadingView);
         this.addView(mReloadView);
+        this.addView(mLoadingView);
         this.addView(mWeakWebView);
         typedArray.recycle();
     }
@@ -173,7 +168,6 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
                         public void onResourceReady(GlideDrawable resource,
                                                     GlideAnimation<? super GlideDrawable>
                                                             glideAnimation) {
-                            mLoadingView.clearAnimation();
                             mLoadingView.setVisibility(GONE);
                             weakImageView.setImageDrawable(resource);
                             weakImageView.setVisibility(VISIBLE);

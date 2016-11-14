@@ -2,8 +2,7 @@
 <resources>
 
     <declare-styleable name="ComicImageView">
-        <attr name="loading_src" format="reference|integer"></attr>
-        <attr name="loading_anim" format="reference|integer"></attr>
+        <attr name="loading_text" format="reference|string"></attr>
         <attr name="background_color" format="reference|integer"></attr>
     </declare-styleable>
 
