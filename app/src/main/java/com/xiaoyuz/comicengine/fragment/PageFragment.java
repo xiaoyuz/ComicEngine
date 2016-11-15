@@ -16,6 +16,7 @@ import com.xiaoyuz.comicengine.contract.PageContract;
 import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
 import com.xiaoyuz.comicengine.event.PageDestroyEvent;
 import com.xiaoyuz.comicengine.ui.adapter.PageAdapter;
+import com.xiaoyuz.comicengine.ui.widget.ComicViewPager;
 import com.xiaoyuz.comicengine.utils.Constants;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class PageFragment extends BaseFragment implements PageContract.View {
         }
     }
 
-    private ViewPager mViewPager;
+    private ComicViewPager mViewPager;
     private PageAdapter mPageAdapter;
     private RelativeLayout mHeader;
     private RelativeLayout mBottom;
@@ -96,7 +97,7 @@ public class PageFragment extends BaseFragment implements PageContract.View {
                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.page_fragment, container, false);
 
-        mViewPager = (ViewPager) view.findViewById(R.id.viewer);
+        mViewPager = (ComicViewPager) view.findViewById(R.id.viewer);
         mPageAdapter = new PageAdapter(mPageUrls);
         mViewPager.setAdapter(mPageAdapter);
         mViewPager.setOffscreenPageLimit(4);
