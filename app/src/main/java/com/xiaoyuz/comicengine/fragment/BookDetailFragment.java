@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -83,7 +84,7 @@ public class BookDetailFragment extends BaseFragment implements
         ((TextView) view.findViewById(R.id.update_time)).setText(mSearchResult.getUpdateTime());
 
         mHistoryView = (TextView) view.findViewById(R.id.history);
-        mReadButton = (Button) view.findViewById(R.id.read);
+        mReadButton = (Button) view.findViewById(R.id.continue_read);
 
         Glide.with(App.getContext()).load(mSearchResult.getBookCover())
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
@@ -155,10 +156,16 @@ public class BookDetailFragment extends BaseFragment implements
                 + ", Page: " + String.valueOf(position + 1));
 
         mReadButton.setVisibility(View.VISIBLE);
-        mReadButton.findViewById(R.id.read).setOnClickListener(new View.OnClickListener() {
+        mReadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.openChapter(mChapters.get(mHistoryChapterIndex), mHistoryChapterIndex);
+                if (mChapters.isEmpty()) {
+                    Toast.makeText(App.getContext(), R.string.chapter_list_not_ready,
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    mPresenter.openChapter(mChapters.get(mHistoryChapterIndex),
+                            mHistoryChapterIndex);
+                }
             }
         });
     }

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">ComicEngine</string>
 
+    <string name="fragment_not_ready">This page is not ready.</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -16,4 +18,6 @@
     <string name="title_search">ComicEngine</string>
     <string name="title_offline">Offline</string>
     <string name="title_history">History</string>
+
+    <string name="chapter_list_not_ready">Please wait...</string>
 </resources>
