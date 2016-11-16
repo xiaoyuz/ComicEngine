@@ -7,7 +7,7 @@ import com.xiaoyuz.comicengine.utils.App;
  */
 public class ComicEngineCache {
 
-    private static final int EXPIRE_TIME = 600; // seconds
+    private static final int EXPIRE_TIME = 24 * 60 * 60; // seconds
 
     private static final String PAGE_HTML_KEY = "page_html_";
     private static final String CHAPTER_HISTORY_KEY = "chapter_history_";
