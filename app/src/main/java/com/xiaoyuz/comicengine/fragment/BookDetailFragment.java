@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.otto.Subscribe;
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
@@ -51,6 +52,7 @@ public class BookDetailFragment extends BaseFragment implements
     private TextView mLoadingView;
     private TextView mHistoryView;
     private Button mReadButton;
+    private ExpandableTextView mDescriptionView;
     private BaseSearchResult mSearchResult;
     private List<BaseChapter> mChapters;
     private BookDetailContract.Presenter mPresenter;
@@ -85,6 +87,7 @@ public class BookDetailFragment extends BaseFragment implements
 
         mHistoryView = (TextView) view.findViewById(R.id.history);
         mReadButton = (Button) view.findViewById(R.id.continue_read);
+        mDescriptionView = (ExpandableTextView) view.findViewById(R.id.expand_text_view);
 
         Glide.with(App.getContext()).load(mSearchResult.getBookCover())
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
@@ -106,6 +109,7 @@ public class BookDetailFragment extends BaseFragment implements
 
     @Override
     public void showBookDetail(BaseBookDetail bookDetail) {
+        mDescriptionView.setText(bookDetail.getDescription());
         mLoadingView.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
         mChapters.addAll(bookDetail.getChapters());
