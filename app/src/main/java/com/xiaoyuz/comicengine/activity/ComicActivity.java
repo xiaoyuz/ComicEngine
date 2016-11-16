@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
+import android.view.WindowManager;
 
 import com.squareup.otto.Subscribe;
 import com.xiaoyuz.comicengine.EventDispatcher;
@@ -62,6 +63,8 @@ public class ComicActivity extends BaseActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.comic_activity);
 
         EventDispatcher.register(mEventHandler);
