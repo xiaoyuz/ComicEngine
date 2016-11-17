@@ -21,7 +21,7 @@ public class BaseBookDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<BaseBookDetail> getBookDetail(final String url) {
+    public Observable<BaseBookDetail> getBookDetail(final BaseSearchResult searchResult) {
         return null;
     }
 

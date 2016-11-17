@@ -29,10 +29,13 @@ public class Mh57EntityFactory extends BaseEntityFactory {
     }
 
     @Override
-    public BaseBookDetail createBookDetailEntity(String url) {
-        Document doc = JsoupParser.getDocument(Constants.Net.MH57_URL_DOMAIN + url);
+    public BaseBookDetail createBookDetailEntity(BaseSearchResult searchResult) {
+        Document doc = JsoupParser.getDocument(Constants.Net.MH57_URL_DOMAIN
+                + searchResult.getUrl());
         if (doc != null) {
-            return new Mh57BookDetail(doc);
+            BaseBookDetail bookDetail = new Mh57BookDetail(doc);
+            bookDetail.setSearchResult(searchResult);
+            return bookDetail;
         }
         return null;
     }

@@ -102,7 +102,7 @@ public class BookDetailFragment extends BaseFragment implements
 
     @Override
     protected void loadData() {
-        mPresenter.loadBookDetail(mSearchResult.getUrl());
+        mPresenter.loadBookDetail(mSearchResult);
         mPresenter.loadChapterHistory(mSearchResult.getUrl());
         mPresenter.saveReadHistory(mSearchResult.toHistory());
     }

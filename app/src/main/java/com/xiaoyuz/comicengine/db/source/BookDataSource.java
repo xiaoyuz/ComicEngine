@@ -16,7 +16,7 @@ public interface BookDataSource {
 
     Observable<List<BaseSearchResult>> getSearchResults(String keyword, int page);
 
-    Observable<BaseBookDetail> getBookDetail(String url);
+    Observable<BaseBookDetail> getBookDetail(BaseSearchResult searchResult);
 
     Observable<String> getHtml(String url);
 

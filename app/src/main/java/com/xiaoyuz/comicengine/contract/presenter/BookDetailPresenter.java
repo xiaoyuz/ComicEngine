@@ -7,6 +7,7 @@ import com.xiaoyuz.comicengine.contract.BookDetailContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
+import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
 import com.xiaoyuz.comicengine.model.entity.history.History;
 
 import java.util.ArrayList;
@@ -48,8 +49,8 @@ public class BookDetailPresenter implements BookDetailContract.Presenter {
     }
 
     @Override
-    public void loadBookDetail(String url) {
-        Subscription subscription = mBookRepository.getBookDetail(url)
+    public void loadBookDetail(BaseSearchResult searchResult) {
+        Subscription subscription = mBookRepository.getBookDetail(searchResult)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<BaseBookDetail>() {

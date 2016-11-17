@@ -3,11 +3,9 @@ package com.xiaoyuz.comicengine.db.source.remote;
 import android.text.TextUtils;
 
 import com.xiaoyuz.comicengine.db.source.BaseBookDataSource;
-import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
-import com.xiaoyuz.comicengine.model.entity.history.History;
 import com.xiaoyuz.comicengine.utils.App;
 
 import java.util.List;
@@ -34,7 +32,8 @@ public class BookRemoteDataSource extends BaseBookDataSource {
     }
 
     @Override
-    public Observable<List<BaseSearchResult>> getSearchResults(final String keyword, final int page) {
+    public Observable<List<BaseSearchResult>> getSearchResults(final String keyword,
+                                                               final int page) {
         return Observable.create(new Observable.OnSubscribe<List<BaseSearchResult>>() {
             @Override
             public void call(Subscriber<? super List<BaseSearchResult>> subscriber) {
@@ -51,12 +50,12 @@ public class BookRemoteDataSource extends BaseBookDataSource {
     }
 
     @Override
-    public Observable<BaseBookDetail> getBookDetail(final String url) {
+    public Observable<BaseBookDetail> getBookDetail(final BaseSearchResult searchResult) {
         return Observable.create(new Observable.OnSubscribe<BaseBookDetail>() {
             @Override
             public void call(Subscriber<? super BaseBookDetail> subscriber) {
                 BaseBookDetail bookDetail = App.getEntityFactory()
-                        .createBookDetailEntity(url);
+                        .createBookDetailEntity(searchResult);
                 if (bookDetail != null) {
                     subscriber.onNext(bookDetail);
                     subscriber.onCompleted();

@@ -9,11 +9,20 @@ import java.util.List;
  */
 public abstract class BaseBookDetail extends BaseEntity {
 
+    protected BaseSearchResult searchResult;
     protected String description;
     protected List<BaseChapter> chapters;
 
     public BaseBookDetail(Element element) {
 
+    }
+
+    public BaseSearchResult getSearchResult() {
+        return searchResult;
+    }
+
+    public void setSearchResult(BaseSearchResult searchResult) {
+        this.searchResult = searchResult;
     }
 
     public String getDescription() {

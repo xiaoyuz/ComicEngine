@@ -16,7 +16,7 @@ public abstract class BaseEntityFactory {
 
     public abstract List<BaseSearchResult> createSearchResultEntity(String keyword, int page);
 
-    public abstract BaseBookDetail createBookDetailEntity(String url);
+    public abstract BaseBookDetail createBookDetailEntity(BaseSearchResult searchResult);
 
     public abstract List<BaseChapter> createChapterEntity(Element element);
 
