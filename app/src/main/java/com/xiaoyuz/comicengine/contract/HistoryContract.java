@@ -2,7 +2,7 @@ package com.xiaoyuz.comicengine.contract;
 
 import com.xiaoyuz.comicengine.base.BasePresenter;
 import com.xiaoyuz.comicengine.base.BaseView;
-import com.xiaoyuz.comicengine.model.entity.history.History;
+import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
 
 import java.util.List;
 
@@ -13,15 +13,15 @@ public interface HistoryContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showHistories(List<History> histories);
+        void showHistories(List<BaseHistory> histories);
 
-        void openBookDetail(History history);
+        void openBookDetail(BaseHistory history);
     }
 
     interface Presenter extends BasePresenter {
 
         void loadHistories();
 
-        void openBookDetail(History history);
+        void openBookDetail(BaseHistory history);
     }
 }

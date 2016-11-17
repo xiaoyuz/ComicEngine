@@ -3,19 +3,42 @@ package com.xiaoyuz.comicengine.model.entity.base;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.xiaoyuz.comicengine.model.entity.history.History;
-
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
 import org.jsoup.nodes.Element;
 
 import java.util.Date;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by zhangxiaoyu on 16-11-9.
  */
-public abstract class BaseSearchResult extends BaseEntity implements Parcelable {
+@Entity
+public class BaseSearchResult extends BaseEntity implements Parcelable {
+
+    public static final Parcelable.Creator<BaseSearchResult> CREATOR = new Creator(){
+
+        @Override
+        public BaseSearchResult createFromParcel(Parcel source) {
+            BaseSearchResult searchResult = new BaseSearchResult();
+            searchResult.setBookCover(source.readString());
+            searchResult.setStatus(source.readString());
+            searchResult.setUrl(source.readString());
+            searchResult.setTitle(source.readString());
+            searchResult.setUpdateTime(source.readString());
+            searchResult.setLastChapter(source.readString());
+            return searchResult;
+        }
+
+        @Override
+        public BaseSearchResult[] newArray(int size) {
+            return new BaseSearchResult[size];
+        }
+    };
 
     protected String bookCover;
     protected String status;
+    @Id
     protected String url;
     protected String title;
     protected String updateTime;
@@ -25,6 +48,17 @@ public abstract class BaseSearchResult extends BaseEntity implements Parcelable 
     }
 
     public BaseSearchResult(Element element) {
+    }
+
+    @Generated(hash = 1366281907)
+    public BaseSearchResult(String bookCover, String status, String url,
+            String title, String updateTime, String lastChapter) {
+        this.bookCover = bookCover;
+        this.status = status;
+        this.url = url;
+        this.title = title;
+        this.updateTime = updateTime;
+        this.lastChapter = lastChapter;
     }
 
     @Override
@@ -106,7 +140,7 @@ public abstract class BaseSearchResult extends BaseEntity implements Parcelable 
         dest.writeString(lastChapter);
     }
 
-    public void fromHistory(History history) {
+    public void fromHistory(BaseHistory history) {
         setUrl(history.getUrl());
         setLastChapter(history.getLastChapter());
         setStatus(history.getStatus());
@@ -115,8 +149,8 @@ public abstract class BaseSearchResult extends BaseEntity implements Parcelable 
         setBookCover(history.getBookCover());
     }
 
-    public History toHistory() {
-        History history = new History();
+    public BaseHistory toHistory() {
+        BaseHistory history = new BaseHistory();
         history.setBookCover(getBookCover());
         history.setTitle(getTitle());
         history.setUpdateTime(getUpdateTime());

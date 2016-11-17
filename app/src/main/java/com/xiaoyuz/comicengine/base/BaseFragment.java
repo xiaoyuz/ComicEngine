@@ -26,7 +26,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view =  initView(inflater, container, savedInstanceState);
+        View view = initView(inflater, container, savedInstanceState);
         view.setClickable(true);
         loadData();
         return view;

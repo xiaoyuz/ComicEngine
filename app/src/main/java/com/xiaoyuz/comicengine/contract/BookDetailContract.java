@@ -5,9 +5,7 @@ import com.xiaoyuz.comicengine.base.BaseView;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
-import com.xiaoyuz.comicengine.model.entity.history.History;
-
-import java.util.ArrayList;
+import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
 
 /**
  * Created by zhangxiaoyu on 16/10/29.
@@ -33,6 +31,8 @@ public interface BookDetailContract {
 
         void loadChapterHistory(String bookUrl);
 
-        void saveReadHistory(History history);
+        void saveReadHistory(BaseHistory history);
+
+        void offlineChapter(BaseBookDetail bookDetail);
     }
 }

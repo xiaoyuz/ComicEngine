@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.HistoryContract;
-import com.xiaoyuz.comicengine.model.entity.history.History;
+import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
 import com.xiaoyuz.comicengine.utils.App;
 
 import java.util.List;
@@ -38,16 +38,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         @Override
         public void onClick(View v) {
-            History history = (History) v.getTag();
+            BaseHistory history = (BaseHistory) v.getTag();
             mPresenter.openBookDetail(history);
         }
     }
 
-    private List<History> mHistories;
+    private List<BaseHistory> mHistories;
 
     private HistoryContract.Presenter mPresenter;
 
-    public HistoryAdapter(List<History> histories, HistoryContract.Presenter presenter) {
+    public HistoryAdapter(List<BaseHistory> histories, HistoryContract.Presenter presenter) {
         mHistories = histories;
         mPresenter = presenter;
     }

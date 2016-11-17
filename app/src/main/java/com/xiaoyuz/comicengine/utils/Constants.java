@@ -18,6 +18,8 @@ public class Constants {
         public static final String PAGE_FRAGMENT_CHAPTER_INDEX = "chapterIndex";
         public static final String PAGE_FRAGMENT_HISTORY_POSITION = "history";
         public static final String PAGE_FRAGMENT_CHAPTER_TITLE = "chapterTitle";
+        public static final String PAGE_FRAGMENT_OFFLINE_CHAPTER = "offline_chapter";
+        public static final String PAGE_FRAGMENT_OFFLINE_DETAIL = "offline_detail";
 
         // BookDetailFragment
         public static final String BOOK_DETAIL_FRAGMENT_SEARCH_RESULT = "searchResult";

@@ -1,7 +1,6 @@
 package com.xiaoyuz.comicengine.fragment.navigation;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,7 +18,7 @@ import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.fragment.BookDetailFragment;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
-import com.xiaoyuz.comicengine.model.entity.history.History;
+import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
 import com.xiaoyuz.comicengine.model.entity.mh57.Mh57SearchResult;
 import com.xiaoyuz.comicengine.ui.adapter.HistoryAdapter;
 import com.xiaoyuz.comicengine.utils.App;
@@ -36,7 +35,7 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
     private RecyclerView mRecyclerView;
     private HistoryContract.Presenter mPresenter;
     private HistoryAdapter mAdapter;
-    private List<History> mHistoryList;
+    private List<BaseHistory> mHistoryList;
 
     @Override
     protected View initView(LayoutInflater inflater,
@@ -67,13 +66,13 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
     }
 
     @Override
-    public void showHistories(List<History> histories) {
+    public void showHistories(List<BaseHistory> histories) {
         mHistoryList.addAll(histories);
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void openBookDetail(History history) {
+    public void openBookDetail(BaseHistory history) {
         // TODO: Use global class not extended class.
         BaseSearchResult searchResult = new Mh57SearchResult();
         searchResult.fromHistory(history);
@@ -86,5 +85,11 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
                 BookRemoteDataSource.getInstance()),
                 fragment);
         EventDispatcher.post(new ComicActivity.GotoFragmentOperation(fragment));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.unsubscribe();
     }
 }

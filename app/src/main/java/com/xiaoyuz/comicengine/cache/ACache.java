@@ -3,7 +3,9 @@ package com.xiaoyuz.comicengine.cache;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.xiaoyuz.comicengine.utils.BitmapUtils;
 
 import org.json.JSONArray;
@@ -22,6 +24,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -317,6 +320,25 @@ public class ACache {
             return null;
         }
         return BitmapUtils.bitmap2Drawable(BitmapUtils.Bytes2Bimap(getAsBinary(key)));
+    }
+
+    public void putAsGson(String key, Object object) {
+        Gson gson = new Gson();
+        put(key, gson.toJson(object));
+    }
+
+    public void putAsGson(String key, Object object, int saveTime) {
+        Gson gson = new Gson();
+        put(key, gson.toJson(object), saveTime);
+    }
+
+    public Object getFromGson(String key, Type type) {
+        String gsonStr = getAsString(key);
+        if (TextUtils.isEmpty(gsonStr)) {
+            return null;
+        }
+        Gson gson = new Gson();
+        return gson.fromJson(gsonStr, type);
     }
 
     public File file(String key) {

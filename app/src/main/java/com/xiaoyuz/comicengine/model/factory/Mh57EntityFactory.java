@@ -34,7 +34,7 @@ public class Mh57EntityFactory extends BaseEntityFactory {
                 + searchResult.getUrl());
         if (doc != null) {
             BaseBookDetail bookDetail = new Mh57BookDetail(doc);
-            bookDetail.setSearchResult(searchResult);
+            bookDetail.injectSearchResult(searchResult);
             return bookDetail;
         }
         return null;

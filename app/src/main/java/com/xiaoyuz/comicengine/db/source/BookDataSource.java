@@ -1,9 +1,10 @@
 package com.xiaoyuz.comicengine.db.source;
 
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
+import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
-import com.xiaoyuz.comicengine.model.entity.history.History;
+import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
 
 import java.util.List;
 
@@ -29,7 +30,15 @@ public interface BookDataSource {
     Observable<Object> saveChapterHistory(String bookUrl, int chapterIndex,
                                           String chapterTitle, int position);
 
-    Observable<Object> saveHistory(History history);
+    Observable<Object> saveHistory(BaseHistory history);
 
-    Observable<List<History>> getHistories();
+    Observable<List<BaseHistory>> getHistories();
+
+    Observable<Object> offlineBookDetail(BaseBookDetail bookDetail);
+
+    Observable<Object> addOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter);
+
+    Observable<Object> deleteOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter);
+
+    Observable<List<BaseChapter>> getOfflineChapters(BaseBookDetail bookDetail);
 }

@@ -20,6 +20,7 @@ import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.activity.ComicActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.contract.BookDetailContract;
+import com.xiaoyuz.comicengine.contract.presenter.OfflineChoosingPresenter;
 import com.xiaoyuz.comicengine.contract.presenter.PagePresenter;
 import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
@@ -32,6 +33,7 @@ import com.xiaoyuz.comicengine.ui.adapter.ChapterAdapter;
 import com.xiaoyuz.comicengine.utils.App;
 import com.xiaoyuz.comicengine.utils.Constants;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,10 +53,12 @@ public class BookDetailFragment extends BaseFragment implements
     private RecyclerView mRecyclerView;
     private TextView mLoadingView;
     private TextView mHistoryView;
+    private TextView mOfflineView;
     private Button mReadButton;
     private ExpandableTextView mDescriptionView;
     private BaseSearchResult mSearchResult;
     private List<BaseChapter> mChapters;
+    private BaseBookDetail mBookDetail;
     private BookDetailContract.Presenter mPresenter;
     private ChapterAdapter mChapterAdapter;
 
@@ -88,6 +92,22 @@ public class BookDetailFragment extends BaseFragment implements
         mHistoryView = (TextView) view.findViewById(R.id.history);
         mReadButton = (Button) view.findViewById(R.id.continue_read);
         mDescriptionView = (ExpandableTextView) view.findViewById(R.id.expand_text_view);
+        mOfflineView = (TextView) view.findViewById(R.id.offline);
+        mOfflineView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OfflineChoosingFragment fragment = new OfflineChoosingFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constants.Bundle.PAGE_FRAGMENT_OFFLINE_CHAPTER,
+                        (Serializable) mChapters);
+                bundle.putSerializable(Constants.Bundle.PAGE_FRAGMENT_OFFLINE_DETAIL, mBookDetail);
+                fragment.setArguments(bundle);
+                new OfflineChoosingPresenter(BookRepository.getInstance
+                        (BookLocalDataSource.getInstance(),
+                                BookRemoteDataSource.getInstance()), fragment);
+                EventDispatcher.post(new ComicActivity.GotoFragmentOperation(fragment));
+            }
+        });
 
         Glide.with(App.getContext()).load(mSearchResult.getBookCover())
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
@@ -109,6 +129,7 @@ public class BookDetailFragment extends BaseFragment implements
 
     @Override
     public void showBookDetail(BaseBookDetail bookDetail) {
+        mBookDetail = bookDetail;
         mDescriptionView.setText(bookDetail.getDescription());
         mLoadingView.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);

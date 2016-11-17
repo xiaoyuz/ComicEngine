@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.xiaoyuz.comicengine.contract.HistoryContract;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
-import com.xiaoyuz.comicengine.model.entity.history.History;
+import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
 
 import java.util.List;
 
@@ -48,9 +48,9 @@ public class HistoryPresenter implements HistoryContract.Presenter {
         mBookRepository.getHistories()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<History>>() {
+                .subscribe(new Action1<List<BaseHistory>>() {
                     @Override
-                    public void call(List<History> histories) {
+                    public void call(List<BaseHistory> histories) {
                         mView.showHistories(histories);
                     }
                 }, new Action1<Throwable>() {
@@ -62,7 +62,7 @@ public class HistoryPresenter implements HistoryContract.Presenter {
     }
 
     @Override
-    public void openBookDetail(History history) {
+    public void openBookDetail(BaseHistory history) {
         mView.openBookDetail(history);
     }
 }

@@ -8,7 +8,7 @@ import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
-import com.xiaoyuz.comicengine.model.entity.history.History;
+import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
 
 import java.util.ArrayList;
 
@@ -100,10 +100,24 @@ public class BookDetailPresenter implements BookDetailContract.Presenter {
     }
 
     @Override
-    public void saveReadHistory(History history) {
+    public void saveReadHistory(BaseHistory history) {
         Subscription subscription = mBookRepository.saveHistory(history)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe();
+        mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void offlineChapter(BaseBookDetail bookDetail) {
+        Subscription subscription = mBookRepository.offlineBookDetail(bookDetail)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Object>() {
+                    @Override
+                    public void call(Object o) {
+
+                    }
+                });
         mSubscriptions.add(subscription);
     }
 }

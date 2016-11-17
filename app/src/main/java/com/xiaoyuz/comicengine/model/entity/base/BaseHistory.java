@@ -1,4 +1,4 @@
-package com.xiaoyuz.comicengine.model.entity.history;
+package com.xiaoyuz.comicengine.model.entity.base;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
@@ -10,7 +10,7 @@ import java.util.Date;
  * Created by zhangxiaoyu on 16-11-11.
  */
 @Entity
-public class History {
+public class BaseHistory {
 
     private String bookCover;
     private String status;
@@ -21,8 +21,8 @@ public class History {
     private String lastChapter;
     private Date historyTime;
 
-    @Generated(hash = 1145632907)
-    public History(String bookCover, String status, String url, String title,
+    @Generated(hash = 1004251654)
+    public BaseHistory(String bookCover, String status, String url, String title,
             String updateTime, String lastChapter, Date historyTime) {
         this.bookCover = bookCover;
         this.status = status;
@@ -33,8 +33,8 @@ public class History {
         this.historyTime = historyTime;
     }
 
-    @Generated(hash = 869423138)
-    public History() {
+    @Generated(hash = 1033580046)
+    public BaseHistory() {
     }
 
     public String getBookCover() {

@@ -1,13 +1,16 @@
 package com.xiaoyuz.comicengine.ui.adapter;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
-import com.xiaoyuz.comicengine.contract.BookDetailContract;
+import com.xiaoyuz.comicengine.contract.OfflineChoosingContract;
+import com.xiaoyuz.comicengine.event.OfflineChoosingEvent;
 import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
 
 import java.util.List;
@@ -15,8 +18,8 @@ import java.util.List;
 /**
  * Created by zhangxiaoyu on 16/10/29.
  */
-public class ChapterAdapter extends
-        RecyclerView.Adapter<ChapterAdapter.ChapterViewHolder> {
+public class OfflineChapterAdapter extends
+        RecyclerView.Adapter<OfflineChapterAdapter.ChapterViewHolder> {
 
     class ChapterViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -30,22 +33,22 @@ public class ChapterAdapter extends
 
         @Override
         public void onClick(View v) {
-            BaseChapter chapter = (BaseChapter) v.getTag();
-            mPresenter.openChapter(chapter, getAdapterPosition());
+            EventDispatcher.post(new OfflineChoosingEvent((BaseChapter) v.getTag()));
         }
     }
 
     private List<BaseChapter> mChapters;
-    private BookDetailContract.Presenter mPresenter;
+    private OfflineChoosingContract.Presenter mPresenter;
 
-    public ChapterAdapter(List<BaseChapter> chapters, BookDetailContract.Presenter presenter) {
+    public OfflineChapterAdapter(List<BaseChapter> chapters,
+                                 OfflineChoosingContract.Presenter presenter) {
         mChapters = chapters;
         mPresenter = presenter;
     }
 
     @Override
     public ChapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chapter_item,
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.offline_chapter_item,
                 parent,false);
         return new ChapterViewHolder(view);
     }
@@ -61,5 +64,9 @@ public class ChapterAdapter extends
                 + mChapters.get(position).getPageInfo();
         holder.chapterInfoTextView.setText(chapterInfo);
         holder.chapterInfoTextView.setTag(mChapters.get(position));
+        // Remember, when using viewholder to resuse item displaying,
+        // there is an "if", there must be an "else"!
+        holder.chapterInfoTextView.setTextColor(mChapters.get(position).isOfflined() ?
+                Color.GREEN : Color.GRAY);
     }
 }

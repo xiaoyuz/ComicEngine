@@ -2,9 +2,10 @@ package com.xiaoyuz.comicengine.db.source.repository;
 
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
+import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
-import com.xiaoyuz.comicengine.model.entity.history.History;
+import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
 
 import java.util.List;
 
@@ -76,12 +77,32 @@ public class BookRepository implements BookDataSource {
     }
 
     @Override
-    public Observable<Object> saveHistory(History history) {
+    public Observable<Object> saveHistory(BaseHistory history) {
         return mBookLocalDataSource.saveHistory(history);
     }
 
     @Override
-    public Observable<List<History>> getHistories() {
+    public Observable<List<BaseHistory>> getHistories() {
         return mBookLocalDataSource.getHistories();
+    }
+
+    @Override
+    public Observable<Object> offlineBookDetail(BaseBookDetail bookDetail) {
+        return mBookLocalDataSource.offlineBookDetail(bookDetail);
+    }
+
+    @Override
+    public Observable<Object> addOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter) {
+        return mBookLocalDataSource.addOfflineChapter(bookDetail, chapter);
+    }
+
+    @Override
+    public Observable<Object> deleteOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter) {
+        return mBookLocalDataSource.deleteOfflineChapter(bookDetail, chapter);
+    }
+
+    @Override
+    public Observable<List<BaseChapter>> getOfflineChapters(BaseBookDetail bookDetail) {
+        return mBookLocalDataSource.getOfflineChapters(bookDetail);
     }
 }

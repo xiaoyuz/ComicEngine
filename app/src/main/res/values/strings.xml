@@ -20,4 +20,9 @@
     <string name="title_history">History</string>
 
     <string name="chapter_list_not_ready">Please wait...</string>
+
+    <string name="button_continue">Continue</string>
+    <string name="button_offline">Offline</string>
+    <string name="button_offline_done">Done</string>
+    <string name="button_offline_cancel">Cancel</string>
 </resources>

@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.cache.ACache;
-import com.xiaoyuz.comicengine.model.entity.history.DaoMaster;
-import com.xiaoyuz.comicengine.model.entity.history.DaoSession;
+import com.xiaoyuz.comicengine.model.entity.base.DaoMaster;
+import com.xiaoyuz.comicengine.model.entity.base.DaoSession;
 import com.xiaoyuz.comicengine.model.factory.BaseEntityFactory;
 import com.xiaoyuz.comicengine.model.factory.Mh57EntityFactory;
 
