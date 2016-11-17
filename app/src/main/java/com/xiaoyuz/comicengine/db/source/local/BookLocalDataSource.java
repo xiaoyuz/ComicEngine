@@ -2,6 +2,7 @@ package com.xiaoyuz.comicengine.db.source.local;
 
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.cache.ComicEngineCache;
+import com.xiaoyuz.comicengine.db.source.BaseBookDataSource;
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
@@ -22,7 +23,7 @@ import rx.Subscriber;
 /**
  * Created by zhangxiaoyu on 16/11/3.
  */
-public class BookLocalDataSource implements BookDataSource {
+public class BookLocalDataSource extends BaseBookDataSource {
 
     private static BookLocalDataSource sInstance;
     private LazyInstance<HistoryDao> mLazyHistoryDao
@@ -45,16 +46,6 @@ public class BookLocalDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<List<BaseSearchResult>> getSearchResults(String keyword, int page) {
-        return null;
-    }
-
-    @Override
-    public Observable<BaseBookDetail> getBookDetail(String url) {
-        return null;
-    }
-
-    @Override
     public Observable<String> getHtml(final String url) {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
@@ -64,11 +55,6 @@ public class BookLocalDataSource implements BookDataSource {
                 subscriber.onCompleted();
             }
         });
-    }
-
-    @Override
-    public Observable<BasePage> getPage(String html) {
-        return null;
     }
 
     @Override

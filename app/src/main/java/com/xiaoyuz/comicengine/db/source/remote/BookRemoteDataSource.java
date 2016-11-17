@@ -2,6 +2,7 @@ package com.xiaoyuz.comicengine.db.source.remote;
 
 import android.text.TextUtils;
 
+import com.xiaoyuz.comicengine.db.source.BaseBookDataSource;
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
@@ -17,7 +18,7 @@ import rx.Subscriber;
 /**
  * Created by zhangxiaoyu on 16-10-28.
  */
-public class BookRemoteDataSource implements BookDataSource {
+public class BookRemoteDataSource extends BaseBookDataSource {
 
     private static BookRemoteDataSource sInstance;
 
@@ -91,31 +92,5 @@ public class BookRemoteDataSource implements BookDataSource {
                 }
             }
         });
-    }
-
-    @Override
-    public Observable<String> getChapterHistory(String bookUrl) {
-        return null;
-    }
-
-    @Override
-    public Observable<Object> saveHtml(String url, String html) {
-        return null;
-    }
-
-    @Override
-    public Observable<Object> saveChapterHistory(String bookUrl, int chapterIndex,
-                                                 String chapterTitle, int position) {
-        return null;
-    }
-
-    @Override
-    public Observable<Object> saveHistory(History history) {
-        return null;
-    }
-
-    @Override
-    public Observable<List<History>> getHistories() {
-        return null;
     }
 }
