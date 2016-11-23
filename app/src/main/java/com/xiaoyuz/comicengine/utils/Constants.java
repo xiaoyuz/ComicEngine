@@ -6,7 +6,7 @@ package com.xiaoyuz.comicengine.utils;
 public class Constants {
 
     public class Build {
-        public static final boolean OFFLINE_ACTIVITED = true;
+        public static final boolean OFFLINE_ACTIVITED = false;
         public static final int JSOUP_TIMEOUT = 10000;
     }
 
