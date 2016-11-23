@@ -3,17 +3,13 @@ package com.xiaoyuz.comicengine.model.entity.base;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.jsoup.nodes.Element;
 
 import java.util.Date;
-import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Created by zhangxiaoyu on 16-11-9.
  */
-@Entity
 public class BaseSearchResult extends BaseEntity implements Parcelable {
 
     public static final Parcelable.Creator<BaseSearchResult> CREATOR = new Creator(){
@@ -38,7 +34,6 @@ public class BaseSearchResult extends BaseEntity implements Parcelable {
 
     protected String bookCover;
     protected String status;
-    @Id
     protected String url;
     protected String title;
     protected String updateTime;
@@ -48,17 +43,6 @@ public class BaseSearchResult extends BaseEntity implements Parcelable {
     }
 
     public BaseSearchResult(Element element) {
-    }
-
-    @Generated(hash = 1366281907)
-    public BaseSearchResult(String bookCover, String status, String url,
-            String title, String updateTime, String lastChapter) {
-        this.bookCover = bookCover;
-        this.status = status;
-        this.url = url;
-        this.title = title;
-        this.updateTime = updateTime;
-        this.lastChapter = lastChapter;
     }
 
     @Override

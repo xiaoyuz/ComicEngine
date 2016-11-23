@@ -4,7 +4,6 @@ import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.cache.ComicEngineCache;
 import com.xiaoyuz.comicengine.db.source.BaseBookDataSource;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
-import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetailDao;
 import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
 import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
 import com.xiaoyuz.comicengine.model.entity.base.BaseHistoryDao;
@@ -33,13 +32,6 @@ public class BookLocalDataSource extends BaseBookDataSource {
         @Override
         public BaseHistoryDao createInstance() {
             return App.getDaoSession().getBaseHistoryDao();
-        }
-    });
-    private LazyInstance<BaseBookDetailDao> mLazyBookDetailDao
-            = new LazyInstance<>(new LazyInstance.InstanceCreator<BaseBookDetailDao>() {
-        @Override
-        public BaseBookDetailDao createInstance() {
-            return App.getDaoSession().getBaseBookDetailDao();
         }
     });
     private LazyInstance<BaseOfflineBookDao> mLazyOfflineBookDao
@@ -138,16 +130,6 @@ public class BookLocalDataSource extends BaseBookDataSource {
         });
     }
 
-    @Override
-    public Observable<Object> offlineBookDetail(final BaseBookDetail bookDetail) {
-        return Observable.create(new Observable.OnSubscribe<Object>() {
-            @Override
-            public void call(Subscriber<? super Object> subscriber) {
-                mLazyBookDetailDao.get().insertOrReplace(bookDetail);
-            }
-        });
-    }
-
     private void deleteOldestHistory() {
         Query<BaseHistory> query = mLazyHistoryDao.get().queryBuilder()
                 .offset(0).limit(1).orderAsc(BaseHistoryDao.Properties.HistoryTime).build();
@@ -230,6 +212,19 @@ public class BookLocalDataSource extends BaseBookDataSource {
                     subscriber.onNext(query.list().get(0).getChapters());
                     subscriber.onCompleted();
                 }
+            }
+        });
+    }
+
+    @Override
+    public Observable<List<BaseOfflineBook>> getAllOfflineBooks() {
+        return Observable.create(new Observable.OnSubscribe<List<BaseOfflineBook>>() {
+            @Override
+            public void call(Subscriber<? super List<BaseOfflineBook>> subscriber) {
+                Query<BaseOfflineBook> query = mLazyOfflineBookDao.get().queryBuilder().build();
+                List<BaseOfflineBook> offlineBooks = query.list();
+                subscriber.onNext(offlineBooks);
+                subscriber.onCompleted();
             }
         });
     }

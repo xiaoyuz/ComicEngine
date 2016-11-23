@@ -19,11 +19,13 @@ import com.xiaoyuz.comicengine.activity.ComicActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.presenter.HistoryPresenter;
+import com.xiaoyuz.comicengine.contract.presenter.OfflinePresenter;
 import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
 import com.xiaoyuz.comicengine.fragment.navigation.DefaultFragment;
 import com.xiaoyuz.comicengine.fragment.navigation.HistoryFragment;
+import com.xiaoyuz.comicengine.fragment.navigation.OfflineFragment;
 import com.xiaoyuz.comicengine.fragment.navigation.SearchEngineFragment;
 
 /**
@@ -37,6 +39,7 @@ public class NavigationFragment extends BaseFragment
     private Toolbar mToolbar;
     private LazyInstance<SearchEngineFragment> mLazySearchEngineFragment;
     private LazyInstance<HistoryFragment> mLazyHistoryFragment;
+    private LazyInstance<OfflineFragment> mLazyOfflineFragment;
     private LazyInstance<DefaultFragment> mLazyDefaultFragment;
 
     @Override
@@ -62,6 +65,13 @@ public class NavigationFragment extends BaseFragment
                     @Override
                     public HistoryFragment createInstance() {
                         return new HistoryFragment();
+                    }
+                });
+        mLazyOfflineFragment =
+                new LazyInstance<>(new LazyInstance.InstanceCreator<OfflineFragment>() {
+                    @Override
+                    public OfflineFragment createInstance() {
+                        return new OfflineFragment();
                     }
                 });
     }
@@ -127,7 +137,9 @@ public class NavigationFragment extends BaseFragment
                 break;
             case R.id.nav_offline:
                 mToolbar.setTitle(R.string.title_offline);
-                fragment = mLazyDefaultFragment.get();
+                fragment = mLazyOfflineFragment.get();
+                new OfflinePresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
+                        BookRemoteDataSource.getInstance()), (OfflineFragment) fragment);
                 break;
             default:
                 fragment = mLazyDefaultFragment.get();

@@ -106,18 +106,4 @@ public class BookDetailPresenter implements BookDetailContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread()).subscribe();
         mSubscriptions.add(subscription);
     }
-
-    @Override
-    public void offlineChapter(BaseBookDetail bookDetail) {
-        Subscription subscription = mBookRepository.offlineBookDetail(bookDetail)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Object>() {
-                    @Override
-                    public void call(Object o) {
-
-                    }
-                });
-        mSubscriptions.add(subscription);
-    }
 }

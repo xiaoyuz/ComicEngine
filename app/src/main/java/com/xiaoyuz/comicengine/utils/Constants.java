@@ -5,6 +5,11 @@ package com.xiaoyuz.comicengine.utils;
  */
 public class Constants {
 
+    public class Build {
+        public static final boolean OFFLINE_ACTIVITED = true;
+        public static final int JSOUP_TIMEOUT = 10000;
+    }
+
     public class Net {
         public static final String MH57_URL_DOMAIN = "http://www.57mh.com";
         public static final String MH57_MOBILE_URL_DOMAIN = "http://m.57mh.com";

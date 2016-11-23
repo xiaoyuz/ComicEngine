@@ -93,6 +93,7 @@ public class BookDetailFragment extends BaseFragment implements
         mReadButton = (Button) view.findViewById(R.id.continue_read);
         mDescriptionView = (ExpandableTextView) view.findViewById(R.id.expand_text_view);
         mOfflineView = (TextView) view.findViewById(R.id.offline);
+        mOfflineView.setVisibility(Constants.Build.OFFLINE_ACTIVITED ? View.VISIBLE : View.GONE);
         mOfflineView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

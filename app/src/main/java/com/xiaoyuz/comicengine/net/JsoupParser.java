@@ -1,5 +1,7 @@
 package com.xiaoyuz.comicengine.net;
 
+import com.xiaoyuz.comicengine.utils.Constants;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -15,7 +17,7 @@ public class JsoupParser {
             Document doc = Jsoup.connect(url)
                     .header("User-Agent", "Mozilla/5.0 (Macintosh; U;" +
                             "Intel Mac OS X 10.4; en-US; rv:1.9.2.2)" +
-                            " Gecko/20100316 Firefox/3.6.2").timeout(10000)
+                            " Gecko/20100316 Firefox/3.6.2").timeout(Constants.Build.JSOUP_TIMEOUT)
                     .get();
             return doc;
         } catch (IOException e) {

@@ -3,6 +3,7 @@ package com.xiaoyuz.comicengine.db.source.repository;
 import com.xiaoyuz.comicengine.db.source.BookDataSource;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
+import com.xiaoyuz.comicengine.model.entity.base.BaseOfflineBook;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
 import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
@@ -87,11 +88,6 @@ public class BookRepository implements BookDataSource {
     }
 
     @Override
-    public Observable<Object> offlineBookDetail(BaseBookDetail bookDetail) {
-        return mBookLocalDataSource.offlineBookDetail(bookDetail);
-    }
-
-    @Override
     public Observable<Object> addOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter) {
         return mBookLocalDataSource.addOfflineChapter(bookDetail, chapter);
     }
@@ -104,5 +100,10 @@ public class BookRepository implements BookDataSource {
     @Override
     public Observable<List<BaseChapter>> getOfflineChapters(BaseBookDetail bookDetail) {
         return mBookLocalDataSource.getOfflineChapters(bookDetail);
+    }
+
+    @Override
+    public Observable<List<BaseOfflineBook>> getAllOfflineBooks() {
+        return mBookLocalDataSource.getAllOfflineBooks();
     }
 }

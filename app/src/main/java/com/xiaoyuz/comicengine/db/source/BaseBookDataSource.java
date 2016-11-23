@@ -2,6 +2,7 @@ package com.xiaoyuz.comicengine.db.source;
 
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
+import com.xiaoyuz.comicengine.model.entity.base.BaseOfflineBook;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
 import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
@@ -63,11 +64,6 @@ public class BaseBookDataSource implements BookDataSource {
     }
 
     @Override
-    public Observable<Object> offlineBookDetail(BaseBookDetail bookDetail) {
-        return null;
-    }
-
-    @Override
     public Observable<Object> addOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter) {
         return null;
     }
@@ -80,6 +76,11 @@ public class BaseBookDataSource implements BookDataSource {
 
     @Override
     public Observable<List<BaseChapter>> getOfflineChapters(BaseBookDetail bookDetail) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<BaseOfflineBook>> getAllOfflineBooks() {
         return null;
     }
 }

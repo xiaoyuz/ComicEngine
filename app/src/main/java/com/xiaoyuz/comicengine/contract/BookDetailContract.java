@@ -32,7 +32,5 @@ public interface BookDetailContract {
         void loadChapterHistory(String bookUrl);
 
         void saveReadHistory(BaseHistory history);
-
-        void offlineChapter(BaseBookDetail bookDetail);
     }
 }

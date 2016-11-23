@@ -46,9 +46,6 @@ public class SearchEngineFragment extends BaseFragment {
                 new SearchResultPresenter(BookRepository.getInstance(BookLocalDataSource
                         .getInstance(), BookRemoteDataSource.getInstance()), fragment);
                 EventDispatcher.post(new ComicActivity.GotoFragmentOperation(fragment));
-//                Intent intent = new Intent(getActivity(), BookInfoActivity.class);
-//                intent.putExtras(bundle);
-//                startActivity(intent);
             }
         });
         return view;

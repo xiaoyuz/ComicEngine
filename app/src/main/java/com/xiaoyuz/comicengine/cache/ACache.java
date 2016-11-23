@@ -304,7 +304,7 @@ public class ACache {
         if (getAsBinary(key) == null) {
             return null;
         }
-        return BitmapUtils.Bytes2Bimap(getAsBinary(key));
+        return BitmapUtils.Bytes2Bitmap(getAsBinary(key));
     }
 
     public void put(String key, Drawable value) {
@@ -319,7 +319,7 @@ public class ACache {
         if (getAsBinary(key) == null) {
             return null;
         }
-        return BitmapUtils.bitmap2Drawable(BitmapUtils.Bytes2Bimap(getAsBinary(key)));
+        return BitmapUtils.bitmap2Drawable(BitmapUtils.Bytes2Bitmap(getAsBinary(key)));
     }
 
     public void putAsGson(String key, Object object) {

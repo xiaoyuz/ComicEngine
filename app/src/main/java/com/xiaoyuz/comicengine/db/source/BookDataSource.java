@@ -2,6 +2,7 @@ package com.xiaoyuz.comicengine.db.source;
 
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
+import com.xiaoyuz.comicengine.model.entity.base.BaseOfflineBook;
 import com.xiaoyuz.comicengine.model.entity.base.BasePage;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
 import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
@@ -34,11 +35,11 @@ public interface BookDataSource {
 
     Observable<List<BaseHistory>> getHistories();
 
-    Observable<Object> offlineBookDetail(BaseBookDetail bookDetail);
-
     Observable<Object> addOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter);
 
     Observable<Object> deleteOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter);
 
     Observable<List<BaseChapter>> getOfflineChapters(BaseBookDetail bookDetail);
+
+    Observable<List<BaseOfflineBook>> getAllOfflineBooks();
 }

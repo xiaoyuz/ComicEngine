@@ -29,7 +29,7 @@ public class BitmapUtils {
     /*
      * byte[] → Bitmap
      */
-    public static Bitmap Bytes2Bimap(byte[] b) {
+    public static Bitmap Bytes2Bitmap(byte[] b) {
         if (b.length == 0) {
             return null;
         }
