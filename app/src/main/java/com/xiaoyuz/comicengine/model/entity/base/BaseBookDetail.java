@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by zhangxiaoyu on 16-11-9.
  */
-public abstract class BaseBookDetail extends BaseEntity implements Serializable {
+public class BaseBookDetail extends BaseEntity implements Serializable {
 
     public static final long serialVersionUID = 536871008;
     protected String url;

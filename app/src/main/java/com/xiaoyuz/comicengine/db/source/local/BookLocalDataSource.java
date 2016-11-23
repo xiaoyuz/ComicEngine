@@ -159,11 +159,9 @@ public class BookLocalDataSource extends BaseBookDataSource {
                             offlineBook = new BaseOfflineBook();
                             offlineBook.setUrl(bookDetail.getUrl());
                             offlineBook.setBookDetail(bookDetail);
-                            offlineBook.setChapters(new ArrayList<BaseChapter>() {
-                                {
-                                    add(chapter);
-                                }
-                            });
+                            List<BaseChapter> list = new ArrayList<>();
+                            list.add(chapter);
+                            offlineBook.setChapters(list);
                         }
                         mLazyOfflineBookDao.get().insertOrReplace(offlineBook);
                     }

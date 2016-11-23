@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Created by zhangxiaoyu on 16-11-9.
  */
-public abstract class BaseChapter extends BaseEntity implements Serializable {
+public class BaseChapter extends BaseEntity implements Serializable {
 
     protected String title;
     protected String pageInfo;
@@ -56,7 +56,9 @@ public abstract class BaseChapter extends BaseEntity implements Serializable {
         this.maxPageNum = maxPageNum;
     }
 
-    public abstract ArrayList<String> createPageUrlList();
+    public ArrayList<String> createPageUrlList() {
+        return null;
+    }
 
     public boolean isOfflined() {
         return isOfflined;
