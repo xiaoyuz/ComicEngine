@@ -10,7 +10,7 @@ public interface PageContract {
 
     interface View extends BaseView<Presenter> {
 
-        void jump2HistoryPage(int position);
+        void jump2LastRead(int position);
 
     }
 

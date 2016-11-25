@@ -48,9 +48,15 @@
         android:layout_gravity="bottom"
         android:background="@color/image_detail_header_background"
         android:clickable="true"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:gravity="center">
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"/>
 
     </RelativeLayout>
-
-
 </FrameLayout>

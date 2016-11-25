@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -24,7 +25,8 @@ import java.util.ArrayList;
 /**
  * Created by zhangxiaoyu on 16-10-18.
  */
-public class PageFragment extends BaseFragment implements PageContract.View {
+public class PageFragment extends BaseFragment implements PageContract.View,
+        SeekBar.OnSeekBarChangeListener {
 
     private class EventHandler {
         @Subscribe
@@ -59,6 +61,7 @@ public class PageFragment extends BaseFragment implements PageContract.View {
         public void onPageScrollStateChanged(int state) {
             if (state == ViewPager.SCROLL_STATE_IDLE) {
                 updatePageNum();
+                syncSeekBar();
             }
         }
     }
@@ -69,6 +72,7 @@ public class PageFragment extends BaseFragment implements PageContract.View {
     private RelativeLayout mBottom;
     private TextView mPageNumView;
     private TextView mChapterView;
+    private SeekBar mSeekBar;
 
     private String mBookUrl;
     private ArrayList<String> mPageUrls;
@@ -79,6 +83,7 @@ public class PageFragment extends BaseFragment implements PageContract.View {
     private EventHandler mEventHandler;
 
     private PageContract.Presenter mPresenter;
+    private int mProgress;
 
     @Override
     protected void initVariables() {
@@ -104,7 +109,7 @@ public class PageFragment extends BaseFragment implements PageContract.View {
         mViewPager.setVisibility(View.INVISIBLE);
         mViewPager.addOnPageChangeListener(new OnPageChange());
         if (mHistoryPosition != 0) {
-            jump2HistoryPage(mHistoryPosition);
+            jump2LastRead(mHistoryPosition);
         } else {
             mViewPager.setVisibility(View.VISIBLE);
         }
@@ -114,12 +119,16 @@ public class PageFragment extends BaseFragment implements PageContract.View {
         mPageNumView = (TextView) view.findViewById(R.id.page_num);
         mChapterView = (TextView) view.findViewById(R.id.chapter);
         mChapterView.setText(mChapterTitle);
+
+        mSeekBar = (SeekBar) view.findViewById(R.id.seekbar);
+        mSeekBar.setOnSeekBarChangeListener(this);
         return view;
     }
 
     @Override
     protected void loadData() {
         updatePageNum();
+        syncSeekBar();
     }
 
     @Override
@@ -137,14 +146,48 @@ public class PageFragment extends BaseFragment implements PageContract.View {
     }
 
     @Override
-    public void jump2HistoryPage(int position) {
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean userControl) {
+        mProgress = progress;
+        if (userControl) {
+            updatePageNumBySeekBarDragging();
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        int jumpPageNum = (int) (mPageUrls.size() * (mProgress / 100.0));
+        mViewPager.setCurrentItem(jumpPageNum, false);
+        updatePageNum();
+    }
+
+    @Override
+    public void jump2LastRead(int position) {
         mViewPager.setCurrentItem(position, false);
         mViewPager.setVisibility(View.VISIBLE);
     }
 
+    private void syncSeekBar() {
+        mSeekBar.setProgress((int) (((double) mViewPager.getCurrentItem()
+                / mPageUrls.size()) * 100));
+    }
+
     private void updatePageNum() {
+        displayPageInfo(mViewPager.getCurrentItem() + 1);
+    }
+
+    private void updatePageNumBySeekBarDragging() {
+        int jumpPageNum = (int) (mPageUrls.size() * (mProgress / 100.0));
+        displayPageInfo(Math.min(jumpPageNum + 1, mPageUrls.size()));
+    }
+
+    private void displayPageInfo(int pageNum) {
         StringBuffer pageNumInfoSB = new StringBuffer()
-                .append(mViewPager.getCurrentItem() + 1)
+                .append(pageNum)
                 .append("/").append(mPageUrls.size());
         mPageNumView.setText(pageNumInfoSB.toString());
     }

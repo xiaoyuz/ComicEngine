@@ -102,6 +102,14 @@ public class ComicImageView extends RelativeLayout implements ComicImageContract
             }
         });
 
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventDispatcher.post(new ComicPageControlEvent(
+                        ComicPageControlEvent.SINGLE_CLICK_TYPE));
+            }
+        });
+
         mReloadView = new TextView(mContext);
         LayoutParams reloadParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
