@@ -3,12 +3,14 @@ package com.xiaoyuz.comicengine.fragment;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.EdgeEffectCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.xiaoyuz.comicengine.EventDispatcher;
@@ -23,6 +25,7 @@ import com.xiaoyuz.comicengine.ui.widget.ComicViewPager;
 import com.xiaoyuz.comicengine.utils.Constants;
 import com.xiaoyuz.comicengine.utils.DeviceUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
@@ -66,6 +69,12 @@ public class PageFragment extends BaseFragment implements PageContract.View,
                 updatePageNum();
                 syncSeekBar();
             }
+            if(leftEdge != null && !leftEdge.isFinished()) {
+                Toast.makeText(getContext(), "This is the first page", Toast.LENGTH_SHORT).show();
+            }
+            if(rightEdge != null && !rightEdge.isFinished()) {
+                Toast.makeText(getContext(), "This is the last page", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -76,6 +85,9 @@ public class PageFragment extends BaseFragment implements PageContract.View,
     private TextView mPageNumView;
     private TextView mChapterView;
     private SeekBar mSeekBar;
+
+    private EdgeEffectCompat leftEdge;
+    private EdgeEffectCompat rightEdge;
 
     private String mBookUrl;
     private ArrayList<String> mPageUrls;
@@ -117,6 +129,20 @@ public class PageFragment extends BaseFragment implements PageContract.View,
             mViewPager.setVisibility(View.VISIBLE);
         }
 
+        try {
+            Field mLeftEdgeField = mViewPager.getClass()
+                    .getSuperclass().getDeclaredField("mLeftEdge");
+            Field mLightEdgeField = mViewPager.getClass()
+                    .getSuperclass().getDeclaredField("mRightEdge");
+            if (mLeftEdgeField != null && mLightEdgeField != null) {
+                mLeftEdgeField.setAccessible(true);
+                mLightEdgeField.setAccessible(true);
+                leftEdge = (EdgeEffectCompat) mLeftEdgeField.get(mViewPager);
+                rightEdge = (EdgeEffectCompat) mLightEdgeField.get(mViewPager);
+            }
+        } catch (Exception e) {
+        }
+
         mHeader = (RelativeLayout) view.findViewById(R.id.header);
         mBottom = (RelativeLayout) view.findViewById(R.id.bottom);
         mPageNumView = (TextView) view.findViewById(R.id.page_num);
@@ -126,7 +152,6 @@ public class PageFragment extends BaseFragment implements PageContract.View,
         mSeekBar = (SeekBar) view.findViewById(R.id.seekbar);
         mSeekBar.setOnSeekBarChangeListener(this);
 
-        DeviceUtils.rotateScreen(getActivity(), ComicEngineCache.getPageOrientation());
         view.findViewById(R.id.rotate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,6 +159,12 @@ public class PageFragment extends BaseFragment implements PageContract.View,
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        DeviceUtils.rotateScreen(getActivity(), ComicEngineCache.getPageOrientation());
     }
 
     @Override
