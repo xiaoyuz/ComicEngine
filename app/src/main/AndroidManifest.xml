@@ -27,7 +27,9 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBarAndTitleFullScreen"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

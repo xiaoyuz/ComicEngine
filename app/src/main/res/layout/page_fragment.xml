@@ -38,6 +38,16 @@
             android:textSize="18sp"
             android:textColor="@android:color/white"
             android:layout_marginLeft="5dp" />
+
+        <ImageView
+            android:id="@+id/rotate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:src="@drawable/rotate"
+            android:layout_marginRight="5dp" />
     </RelativeLayout>
 
     <!-- footer -->

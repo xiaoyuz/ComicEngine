@@ -1,5 +1,6 @@
 package com.xiaoyuz.comicengine.fragment;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -13,12 +14,14 @@ import com.squareup.otto.Subscribe;
 import com.xiaoyuz.comicengine.EventDispatcher;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.base.BaseFragment;
+import com.xiaoyuz.comicengine.cache.ComicEngineCache;
 import com.xiaoyuz.comicengine.contract.PageContract;
 import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
 import com.xiaoyuz.comicengine.event.PageDestroyEvent;
 import com.xiaoyuz.comicengine.ui.adapter.PageAdapter;
 import com.xiaoyuz.comicengine.ui.widget.ComicViewPager;
 import com.xiaoyuz.comicengine.utils.Constants;
+import com.xiaoyuz.comicengine.utils.DeviceUtils;
 
 import java.util.ArrayList;
 
@@ -122,6 +125,14 @@ public class PageFragment extends BaseFragment implements PageContract.View,
 
         mSeekBar = (SeekBar) view.findViewById(R.id.seekbar);
         mSeekBar.setOnSeekBarChangeListener(this);
+
+        DeviceUtils.rotateScreen(getActivity(), ComicEngineCache.getPageOrientation());
+        view.findViewById(R.id.rotate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rotateScreen();
+            }
+        });
         return view;
     }
 
@@ -134,6 +145,12 @@ public class PageFragment extends BaseFragment implements PageContract.View,
     @Override
     public void setPresenter(PageContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        DeviceUtils.rotateScreen(getActivity(), ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override
@@ -190,5 +207,14 @@ public class PageFragment extends BaseFragment implements PageContract.View,
                 .append(pageNum)
                 .append("/").append(mPageUrls.size());
         mPageNumView.setText(pageNumInfoSB.toString());
+    }
+
+    private void rotateScreen() {
+        int orientation = getActivity().getRequestedOrientation();
+        DeviceUtils.rotateScreen(getActivity(),
+                orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT ?
+                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE :
+                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        ComicEngineCache.putPageOrientation(getActivity().getRequestedOrientation());
     }
 }
