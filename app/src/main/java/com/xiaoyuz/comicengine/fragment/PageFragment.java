@@ -2,6 +2,7 @@ package com.xiaoyuz.comicengine.fragment;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.EdgeEffectCompat;
 import android.view.LayoutInflater;
@@ -10,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.xiaoyuz.comicengine.EventDispatcher;
@@ -20,6 +20,7 @@ import com.xiaoyuz.comicengine.cache.ComicEngineCache;
 import com.xiaoyuz.comicengine.contract.PageContract;
 import com.xiaoyuz.comicengine.event.ComicPageControlEvent;
 import com.xiaoyuz.comicengine.event.PageDestroyEvent;
+import com.xiaoyuz.comicengine.event.PageTurningEvent;
 import com.xiaoyuz.comicengine.ui.adapter.PageAdapter;
 import com.xiaoyuz.comicengine.ui.widget.ComicViewPager;
 import com.xiaoyuz.comicengine.utils.Constants;
@@ -70,10 +71,10 @@ public class PageFragment extends BaseFragment implements PageContract.View,
                 syncSeekBar();
             }
             if(leftEdge != null && !leftEdge.isFinished()) {
-                Toast.makeText(getContext(), "This is the first page", Toast.LENGTH_SHORT).show();
+                showPageTurningSnackBar(false);
             }
             if(rightEdge != null && !rightEdge.isFinished()) {
-                Toast.makeText(getContext(), "This is the last page", Toast.LENGTH_SHORT).show();
+                showPageTurningSnackBar(true);
             }
         }
     }
@@ -247,5 +248,34 @@ public class PageFragment extends BaseFragment implements PageContract.View,
                         ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE :
                         ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ComicEngineCache.putPageOrientation(getActivity().getRequestedOrientation());
+    }
+
+    private void showPageTurningSnackBar(boolean isLastPage) {
+        Snackbar snackbar = Snackbar.make(getView(), isLastPage ? "This is the last page." :
+                "This is the first page.",
+                Snackbar.LENGTH_LONG);
+        if (!isLastPage) {
+            if (mChapterIndex != 0) {
+                snackbar.setAction("Prev chapter",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                back();
+                                EventDispatcher.post(new PageTurningEvent(false,
+                                        mChapterIndex));
+                            }
+                        });
+            }
+        } else {
+            snackbar.setAction("Next chapter",
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            back();
+                            EventDispatcher.post(new PageTurningEvent(true, mChapterIndex));
+                        }
+                    });
+        }
+        snackbar.show();
     }
 }

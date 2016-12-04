@@ -25,6 +25,7 @@ import com.xiaoyuz.comicengine.contract.presenter.PagePresenter;
 import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
+import com.xiaoyuz.comicengine.event.PageTurningEvent;
 import com.xiaoyuz.comicengine.model.entity.base.BaseBookDetail;
 import com.xiaoyuz.comicengine.model.entity.base.BaseChapter;
 import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
@@ -47,6 +48,20 @@ public class BookDetailFragment extends BaseFragment implements
         @Subscribe
         public void onPageDestroy(PageDestroyEvent event) {
             mPresenter.loadChapterHistory(event.getBookUrl());
+        }
+
+        @Subscribe
+        public void onPageTurningEvent(PageTurningEvent event) {
+            int chapterIndex = event.getChaperIndex();
+            if (event.isNext()) {
+                if (chapterIndex + 1 >= mChapters.size()) {
+                    Toast.makeText(getContext(), "No more chapter.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                showChapter(chapterIndex + 1, mChapters.get(chapterIndex + 1));
+            } else {
+                showChapter(chapterIndex - 1, mChapters.get(chapterIndex - 1));
+            }
         }
     }
 
@@ -189,8 +204,7 @@ public class BookDetailFragment extends BaseFragment implements
                     Toast.makeText(App.getContext(), R.string.chapter_list_not_ready,
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    mPresenter.openChapter(mChapters.get(mHistoryChapterIndex),
-                            mHistoryChapterIndex);
+                    showChapter(mHistoryChapterIndex, mChapters.get(mHistoryChapterIndex));
                 }
             }
         });

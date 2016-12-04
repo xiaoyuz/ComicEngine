@@ -69,10 +69,6 @@ public class BookDetailPresenter implements BookDetailContract.Presenter {
 
     @Override
     public void openChapter(BaseChapter chapter, int chapterIndex) {
-        ArrayList<String> pageUrls = new ArrayList<>();
-        for (int i = 1; i <= chapter.getMaxPageNum(); i++) {
-            pageUrls.add(chapter.getUrl() + "?p=" + i);
-        }
         mBookDetailView.showChapter(chapterIndex, chapter);
     }
 
