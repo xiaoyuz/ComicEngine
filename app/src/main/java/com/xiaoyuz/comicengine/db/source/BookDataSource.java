@@ -16,7 +16,7 @@ import rx.Observable;
  */
 public interface BookDataSource {
 
-    Observable<List<BaseSearchResult>> getSearchResults(String keyword, int page);
+    Observable<BaseSearchResult> getSearchResult(String keyword, int page);
 
     Observable<BaseBookDetail> getBookDetail(BaseSearchResult searchResult);
 

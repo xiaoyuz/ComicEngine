@@ -9,9 +9,12 @@ import com.xiaoyuz.comicengine.model.entity.base.BaseSearchResult;
 import com.xiaoyuz.comicengine.utils.App;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 /**
  * Created by zhangxiaoyu on 16-10-28.
@@ -31,9 +34,9 @@ public class BookRemoteDataSource extends BaseBookDataSource {
         return sInstance;
     }
 
+    // TODO: This block is just for learning, a better way is to return Observable<List> directly.
     @Override
-    public Observable<List<BaseSearchResult>> getSearchResults(final String keyword,
-                                                               final int page) {
+    public Observable<BaseSearchResult> getSearchResult(final String keyword, final int page) {
         return Observable.create(new Observable.OnSubscribe<List<BaseSearchResult>>() {
             @Override
             public void call(Subscriber<? super List<BaseSearchResult>> subscriber) {
@@ -45,6 +48,11 @@ public class BookRemoteDataSource extends BaseBookDataSource {
                 } else {
                     subscriber.onError(new NullPointerException());
                 }
+            }
+        }).concatMap(new Func1<List<BaseSearchResult>, Observable<BaseSearchResult>>() {
+            @Override
+            public Observable<BaseSearchResult> call(List<BaseSearchResult> baseSearchResults) {
+                return Observable.from(baseSearchResults);
             }
         });
     }

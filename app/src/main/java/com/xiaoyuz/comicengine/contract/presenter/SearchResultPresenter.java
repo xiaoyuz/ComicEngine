@@ -46,9 +46,10 @@ public class SearchResultPresenter implements SearchResultContract.Presenter {
 
     @Override
     public void loadSearchResults(String keyword, int page) {
-        Subscription subscription = mBookRepository.getSearchResults(keyword, page)
+        Subscription subscription = mBookRepository.getSearchResult(keyword, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .toList()
                 .subscribe(new Action1<List<BaseSearchResult>>() {
                     @Override
                     public void call(List<BaseSearchResult> searchResults) {

@@ -38,8 +38,8 @@ public class BookRepository implements BookDataSource {
     }
 
     @Override
-    public Observable<List<BaseSearchResult>> getSearchResults(String keyword, int page) {
-        return mBookRemoteDataSource.getSearchResults(keyword, page);
+    public Observable<BaseSearchResult> getSearchResult(String keyword, int page) {
+        return mBookRemoteDataSource.getSearchResult(keyword, page);
     }
 
     @Override

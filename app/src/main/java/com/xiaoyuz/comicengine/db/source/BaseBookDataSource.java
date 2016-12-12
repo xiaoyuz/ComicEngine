@@ -17,8 +17,8 @@ import rx.Observable;
 public class BaseBookDataSource implements BookDataSource {
 
     @Override
-    public Observable<List<BaseSearchResult>> getSearchResults(final String keyword,
-                                                               final int page) {
+    public Observable<BaseSearchResult> getSearchResult(final String keyword,
+                                                              final int page) {
         return null;
     }
 

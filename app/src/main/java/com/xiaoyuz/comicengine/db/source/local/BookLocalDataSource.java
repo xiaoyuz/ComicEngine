@@ -130,12 +130,6 @@ public class BookLocalDataSource extends BaseBookDataSource {
         });
     }
 
-    private void deleteOldestHistory() {
-        Query<BaseHistory> query = mLazyHistoryDao.get().queryBuilder()
-                .offset(0).limit(1).orderAsc(BaseHistoryDao.Properties.HistoryTime).build();
-        mLazyHistoryDao.get().delete(query.list().get(0));
-    }
-
     @Override
     public Observable<Object> addOfflineChapter(final BaseBookDetail bookDetail,
                                                 final BaseChapter chapter) {
@@ -225,5 +219,17 @@ public class BookLocalDataSource extends BaseBookDataSource {
                 subscriber.onCompleted();
             }
         });
+    }
+
+    private List<BaseHistory> getHistoryDatas() {
+        Query<BaseHistory> query = mLazyHistoryDao.get().queryBuilder()
+                .orderDesc(BaseHistoryDao.Properties.HistoryTime).build();
+        return query.list();
+    }
+
+    private void deleteOldestHistory() {
+        Query<BaseHistory> query = mLazyHistoryDao.get().queryBuilder()
+                .offset(0).limit(1).orderAsc(BaseHistoryDao.Properties.HistoryTime).build();
+        mLazyHistoryDao.get().delete(query.list().get(0));
     }
 }
