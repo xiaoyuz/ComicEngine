@@ -19,68 +19,68 @@ public class BaseBookDataSource implements BookDataSource {
     @Override
     public Observable<BaseSearchResult> getSearchResult(final String keyword,
                                                               final int page) {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<BaseBookDetail> getBookDetail(final BaseSearchResult searchResult) {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<String> getHtml(String url) {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<BasePage> getPage(final String html) {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<String> getChapterHistory(String bookUrl) {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<Object> saveHtml(String url, String html) {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<Object> saveChapterHistory(String bookUrl, int chapterIndex,
                                                  String chapterTitle, int position) {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<Object> saveHistory(BaseHistory history) {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<List<BaseHistory>> getHistories() {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<Object> addOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter) {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<Object> deleteOfflineChapter(BaseBookDetail bookDetail,
                                                    BaseChapter chapter) {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<List<BaseChapter>> getOfflineChapters(BaseBookDetail bookDetail) {
-        return null;
+        return Observable.empty();
     }
 
     @Override
     public Observable<List<BaseOfflineBook>> getAllOfflineBooks() {
-        return null;
+        return Observable.empty();
     }
 }

@@ -44,7 +44,8 @@ public class BookRepository implements BookDataSource {
 
     @Override
     public Observable<BaseBookDetail> getBookDetail(BaseSearchResult searchResult) {
-        return mBookRemoteDataSource.getBookDetail(searchResult);
+        return Observable.concat(mBookLocalDataSource.getBookDetail(searchResult),
+                mBookRemoteDataSource.getBookDetail(searchResult)).first();
     }
 
     @Override
