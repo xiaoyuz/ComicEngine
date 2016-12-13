@@ -71,12 +71,12 @@ public class BookDetailFragment extends BaseFragment implements
     private TextView mOfflineView;
     private Button mReadButton;
     private ExpandableTextView mDescriptionView;
+
     private BaseSearchResult mSearchResult;
     private List<BaseChapter> mChapters;
     private BaseBookDetail mBookDetail;
     private BookDetailContract.Presenter mPresenter;
     private ChapterAdapter mChapterAdapter;
-
     private int mHistoryChapterIndex;
     private int mHistoryPosition;
 
@@ -84,12 +84,9 @@ public class BookDetailFragment extends BaseFragment implements
 
     @Override
     protected void initVariables() {
-        mPresenter.subscribe();
         mSearchResult = getArguments().getParcelable(Constants
                 .Bundle.BOOK_DETAIL_FRAGMENT_SEARCH_RESULT);
         mChapters = new ArrayList<>();
-        mChapterAdapter = new ChapterAdapter(mChapters, mPresenter);
-        mEventHandler = new EventHandler();
     }
 
     @Override
@@ -97,6 +94,11 @@ public class BookDetailFragment extends BaseFragment implements
                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.book_detail_fragment,
                 container, false);
+
+        mPresenter.subscribe();
+        mChapterAdapter = new ChapterAdapter(mChapters, mPresenter);
+        mEventHandler = new EventHandler();
+
         initBackableToolBar(view, mSearchResult.getTitle());
         EventDispatcher.register(mEventHandler);
         ((TextView) view.findViewById(R.id.title)).setText(mSearchResult.getTitle());

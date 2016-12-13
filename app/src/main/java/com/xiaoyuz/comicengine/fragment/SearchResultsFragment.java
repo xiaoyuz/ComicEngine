@@ -34,25 +34,22 @@ public class SearchResultsFragment extends BaseFragment
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private List<BaseSearchResult> mSearchResults;
-    private List<BaseSearchResult> mLastLoadedResults;
     private SearchResultsAdapter mAdapter;
     private TextView mLoadingView;
+
+    private List<BaseSearchResult> mSearchResults;
+    private List<BaseSearchResult> mLastLoadedResults;
     private boolean mIsLoading;
     private boolean mNoMoreResult;
     private int mNextPage = 1;
-
     private String mKeyword;
-
     private SearchResultContract.Presenter mSearchResultPresenter;
 
     @Override
     protected void initVariables() {
         mKeyword = getArguments().getString(Constants.Bundle.SEARCH_RESULTS_FRAGMENT_KEYWORD);
-        mSearchResultPresenter.subscribe();
         mSearchResults = new ArrayList<>();
         mLastLoadedResults = new ArrayList<>();
-        mAdapter = new SearchResultsAdapter(mSearchResults, mSearchResultPresenter);
     }
 
     @Override
@@ -60,6 +57,9 @@ public class SearchResultsFragment extends BaseFragment
                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_results_fragment,
                 container, false);
+        mSearchResultPresenter.subscribe();
+        mAdapter = new SearchResultsAdapter(mSearchResults, mSearchResultPresenter);
+
         initBackableToolBar(view, "Search Results: " + mKeyword);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);

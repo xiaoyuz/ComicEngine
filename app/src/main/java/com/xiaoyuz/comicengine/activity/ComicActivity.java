@@ -1,5 +1,6 @@
 package com.xiaoyuz.comicengine.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.WindowManager;
@@ -86,5 +87,13 @@ public class ComicActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventDispatcher.unregister(mEventHandler);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 }

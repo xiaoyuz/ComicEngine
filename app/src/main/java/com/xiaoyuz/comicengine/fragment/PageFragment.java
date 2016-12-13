@@ -95,11 +95,10 @@ public class PageFragment extends BaseFragment implements PageContract.View,
     private int mChapterIndex;
     private int mHistoryPosition;
     private String mChapterTitle;
-
-    private EventHandler mEventHandler;
-
     private PageContract.Presenter mPresenter;
     private int mProgress;
+
+    private EventHandler mEventHandler;
 
     @Override
     protected void initVariables() {
@@ -109,14 +108,16 @@ public class PageFragment extends BaseFragment implements PageContract.View,
         mChapterIndex = bundle.getInt(Constants.Bundle.PAGE_FRAGMENT_CHAPTER_INDEX);
         mHistoryPosition = bundle.getInt(Constants.Bundle.PAGE_FRAGMENT_HISTORY_POSITION);
         mChapterTitle = bundle.getString(Constants.Bundle.PAGE_FRAGMENT_CHAPTER_TITLE);
-        mEventHandler = new EventHandler();
-        EventDispatcher.register(mEventHandler);
     }
 
     @Override
     protected View initView(LayoutInflater inflater,
                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.page_fragment, container, false);
+
+        mPresenter.subscribe();
+        mEventHandler = new EventHandler();
+        EventDispatcher.register(mEventHandler);
 
         mViewPager = (ComicViewPager) view.findViewById(R.id.viewer);
         mPageAdapter = new PageAdapter(mPageUrls);
@@ -192,6 +193,7 @@ public class PageFragment extends BaseFragment implements PageContract.View,
         mPresenter.saveChapterHistory(mBookUrl, mChapterIndex, mChapterTitle,
                 mViewPager.getCurrentItem());
         EventDispatcher.post(new PageDestroyEvent(mBookUrl));
+        mPresenter.unsubscribe();
     }
 
     @Override

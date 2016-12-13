@@ -41,11 +41,12 @@ public class OfflineChoosingFragment extends BaseFragment implements
         }
     }
 
-    private OfflineChoosingContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
+    private OfflineChapterAdapter mAdapter;
+
+    private OfflineChoosingContract.Presenter mPresenter;
     private List<BaseChapter> mChapters;
     private BaseBookDetail mBookDetail;
-    private OfflineChapterAdapter mAdapter;
 
     private EventHandler mEventHandler;
 
@@ -56,9 +57,6 @@ public class OfflineChoosingFragment extends BaseFragment implements
                 .Bundle.PAGE_FRAGMENT_OFFLINE_CHAPTER);
         mBookDetail = (BaseBookDetail) bundle.getSerializable(Constants
                 .Bundle.PAGE_FRAGMENT_OFFLINE_DETAIL);
-        mAdapter = new OfflineChapterAdapter(mChapters, mPresenter);
-
-        mEventHandler = new EventHandler();
     }
 
     @Override
@@ -66,6 +64,11 @@ public class OfflineChoosingFragment extends BaseFragment implements
                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.offline_choosing_fragment,
                 container, false);
+
+        mPresenter.subscribe();
+        mAdapter = new OfflineChapterAdapter(mChapters, mPresenter);
+        mEventHandler = new EventHandler();
+
         initBackableToolBar(view, "Offline");
         EventDispatcher.register(mEventHandler);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
