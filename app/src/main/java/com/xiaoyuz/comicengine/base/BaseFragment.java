@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.xiaoyuz.comicengine.R;
+import com.xiaoyuz.comicengine.ui.helper.FragmentHelper;
 
 /**
  * Created by zhangxiaoyu on 16-10-11.
@@ -33,11 +35,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void back() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() == 1) {
+        FragmentHelper helper = new FragmentHelper(getActivity().getSupportFragmentManager());
+        if (helper.backStackCount() == 1) {
             getActivity().finish();
         } else {
-            fm.popBackStack();
+            helper.popFragment();
         }
     }
 

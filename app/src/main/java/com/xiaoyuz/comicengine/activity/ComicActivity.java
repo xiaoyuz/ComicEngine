@@ -1,8 +1,6 @@
 package com.xiaoyuz.comicengine.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
@@ -13,6 +11,7 @@ import com.xiaoyuz.comicengine.base.BaseActivity;
 import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.fragment.NavigationFragment;
+import com.xiaoyuz.comicengine.ui.helper.FragmentHelper;
 
 /**
  * Created by zhangxiaoyu on 16-11-9.
@@ -35,19 +34,13 @@ public class ComicActivity extends BaseActivity {
     private class EventHandler {
         @Subscribe
         public void onGotoFragmentOperation(GotoFragmentOperation operation) {
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-
-            ft.add(R.id.fragment_container, operation.getFragment(),
-                    operation.getFragment().getClass().getSimpleName());
-            ft.addToBackStack(operation.getFragment().getClass().getSimpleName());
-            ft.commitAllowingStateLoss();
-            fm.executePendingTransactions();
+            mFragmentHelper.addFragment(operation.getFragment());
         }
     }
 
     private EventHandler mEventHandler;
     private LazyInstance<NavigationFragment> mLazyNavigationFragment;
+    private FragmentHelper mFragmentHelper;
 
     @Override
     protected void initVariables() {
@@ -59,6 +52,7 @@ public class ComicActivity extends BaseActivity {
                 return new NavigationFragment();
             }
         });
+        mFragmentHelper = new FragmentHelper(getSupportFragmentManager());
     }
 
     @Override
@@ -80,10 +74,10 @@ public class ComicActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            if (mFragmentHelper.backStackCount() == 1) {
                 finish();
             }
-            return getSupportFragmentManager().getBackStackEntryCount() >= 1;
+            return mFragmentHelper.backStackCount() >= 1;
         }
         return false;
     }
