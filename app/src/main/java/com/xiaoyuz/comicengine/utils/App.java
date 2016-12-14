@@ -1,15 +1,20 @@
 package com.xiaoyuz.comicengine.utils;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.cache.ACache;
+import com.xiaoyuz.comicengine.engine.exception.CrashHandler;
 import com.xiaoyuz.comicengine.model.entity.base.DaoMaster;
 import com.xiaoyuz.comicengine.model.entity.base.DaoSession;
 import com.xiaoyuz.comicengine.model.factory.BaseEntityFactory;
 import com.xiaoyuz.comicengine.model.factory.Mh57EntityFactory;
 
 import org.greenrobot.greendao.database.Database;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zhangxiaoyu on 16-10-11.
@@ -40,7 +45,17 @@ public class App {
 
     public static void initialize(Context context) {
         sAppContext = context;
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(getContext());
     }
+
+    private static LazyInstance<List<Activity>> sLazyActivityList =
+            new LazyInstance<>(new LazyInstance.InstanceCreator<List<Activity>>() {
+                @Override
+                public List<Activity> createInstance() {
+                    return new ArrayList<>();
+                }
+            });
 
     public static boolean isInitialized() {
         return sAppContext != null;
@@ -64,5 +79,22 @@ public class App {
         Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") :
                 helper.getWritableDb();
         return new DaoMaster(db).newSession();
+    }
+
+    public static void removeActivity(Activity activity){
+        sLazyActivityList.get().remove(activity);
+    }
+
+    public static void addActivity(Activity activity){
+        sLazyActivityList.get().add(activity);
+    }
+
+    public static void finishActivity(){
+        for (Activity activity : sLazyActivityList.get()) {
+            if (null != activity) {
+                activity.finish();
+            }
+        }
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 }

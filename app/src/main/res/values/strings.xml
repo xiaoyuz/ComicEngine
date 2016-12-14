@@ -25,4 +25,6 @@
     <string name="button_offline">Offline</string>
     <string name="button_offline_done">Done</string>
     <string name="button_offline_cancel">Cancel</string>
+
+    <string name="uncaught_exception_toast">Sorry something went wrong, restarting...</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.xiaoyuz.comicengine.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.WindowManager;
@@ -13,6 +12,7 @@ import com.xiaoyuz.comicengine.base.BaseFragment;
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.fragment.NavigationFragment;
 import com.xiaoyuz.comicengine.ui.helper.FragmentHelper;
+import com.xiaoyuz.comicengine.utils.App;
 
 /**
  * Created by zhangxiaoyu on 16-11-9.
@@ -58,6 +58,7 @@ public class ComicActivity extends BaseActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        App.addActivity(this);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.comic_activity);
@@ -87,13 +88,5 @@ public class ComicActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventDispatcher.unregister(mEventHandler);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
     }
 }
