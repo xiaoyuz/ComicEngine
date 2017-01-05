@@ -35,6 +35,8 @@ public interface BookDataSource {
 
     Observable<List<BaseHistory>> getHistories();
 
+    Observable<Boolean> deleteHistory(BaseHistory history);
+
     Observable<Object> addOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter);
 
     Observable<Object> deleteOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter);

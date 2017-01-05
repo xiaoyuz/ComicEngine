@@ -64,6 +64,11 @@ public class BaseBookDataSource implements BookDataSource {
     }
 
     @Override
+    public Observable<Boolean> deleteHistory(BaseHistory history) {
+        return Observable.empty();
+    }
+
+    @Override
     public Observable<Object> addOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter) {
         return Observable.empty();
     }

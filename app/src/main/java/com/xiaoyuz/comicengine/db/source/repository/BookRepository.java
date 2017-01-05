@@ -89,6 +89,11 @@ public class BookRepository implements BookDataSource {
     }
 
     @Override
+    public Observable<Boolean> deleteHistory(BaseHistory history) {
+        return mBookLocalDataSource.deleteHistory(history);
+    }
+
+    @Override
     public Observable<Object> addOfflineChapter(BaseBookDetail bookDetail, BaseChapter chapter) {
         return mBookLocalDataSource.addOfflineChapter(bookDetail, chapter);
     }

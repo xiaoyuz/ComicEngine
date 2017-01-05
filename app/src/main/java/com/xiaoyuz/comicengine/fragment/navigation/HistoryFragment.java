@@ -72,6 +72,11 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
     }
 
     @Override
+    public void onHistoryDeleted(int position) {
+        mAdapter.deleteHistory(position);
+    }
+
+    @Override
     public void openBookDetail(BaseHistory history) {
         // TODO: Use global class not extended class.
         BaseSearchResult searchResult = new Mh57SearchResult();

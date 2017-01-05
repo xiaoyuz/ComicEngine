@@ -131,6 +131,18 @@ public class BookLocalDataSource extends BaseBookDataSource {
     }
 
     @Override
+    public Observable<Boolean> deleteHistory(final BaseHistory history) {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                mLazyHistoryDao.get().delete(history);
+                subscriber.onNext(true);
+                subscriber.onCompleted();
+            }
+        });
+    }
+
+    @Override
     public Observable<Object> addOfflineChapter(final BaseBookDetail bookDetail,
                                                 final BaseChapter chapter) {
         return Observable.create(new Observable.OnSubscribe<Object>() {

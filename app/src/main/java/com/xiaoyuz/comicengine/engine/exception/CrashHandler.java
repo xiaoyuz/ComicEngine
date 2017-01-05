@@ -63,6 +63,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         if (ex == null) {
             return false;
         }
+        Log.e("exception", "uncaught", ex);
         new Thread() {
             @Override
             public void run() {

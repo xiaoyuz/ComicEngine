@@ -4,12 +4,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.daimajia.swipe.SwipeLayout;
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.contract.HistoryContract;
 import com.xiaoyuz.comicengine.model.entity.base.BaseHistory;
@@ -24,15 +26,19 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     class HistoryViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
+        SwipeLayout swipeLayout;
         RelativeLayout layout;
         ImageView imageView;
         TextView titleTextView;
+        Button deleteButton;
 
         public HistoryViewHolder(View view){
             super(view);
+            swipeLayout = (SwipeLayout) view.findViewById(R.id.swipe);
             layout = (RelativeLayout) view.findViewById(R.id.layout);
             imageView = (ImageView) view.findViewById(R.id.image);
             titleTextView = (TextView) view.findViewById(R.id.title);
+            deleteButton = (Button) view.findViewById(R.id.delete);
             layout.setOnClickListener(this);
         }
 
@@ -52,6 +58,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         mPresenter = presenter;
     }
 
+    public void deleteHistory(int position) {
+        mHistories.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mHistories.size());
+    }
+
     @Override
     public HistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -61,12 +73,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     }
 
     @Override
-    public void onBindViewHolder(HistoryViewHolder holder, int position) {
+    public void onBindViewHolder(HistoryViewHolder holder, final int position) {
         String imageUrl = mHistories.get(position).getBookCover();
 
         holder.titleTextView.setText(mHistories.get(position).getTitle());
 
         holder.itemView.setTag(mHistories.get(position));
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.deleteHistory(position, mHistories.get(position));
+            }
+        });
         Glide.with(App.getContext()).load(imageUrl)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(holder.imageView);

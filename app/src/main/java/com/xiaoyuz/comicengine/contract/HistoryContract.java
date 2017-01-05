@@ -16,6 +16,8 @@ public interface HistoryContract {
         void showHistories(List<BaseHistory> histories);
 
         void openBookDetail(BaseHistory history);
+
+        void onHistoryDeleted(int position);
     }
 
     interface Presenter extends BasePresenter {
@@ -23,5 +25,7 @@ public interface HistoryContract {
         void loadHistories();
 
         void openBookDetail(BaseHistory history);
+
+        void deleteHistory(int position, BaseHistory history);
     }
 }

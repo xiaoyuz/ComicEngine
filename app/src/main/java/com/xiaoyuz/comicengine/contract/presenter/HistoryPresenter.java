@@ -56,7 +56,6 @@ public class HistoryPresenter implements HistoryContract.Presenter {
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-
                     }
                 });
     }
@@ -64,5 +63,20 @@ public class HistoryPresenter implements HistoryContract.Presenter {
     @Override
     public void openBookDetail(BaseHistory history) {
         mView.openBookDetail(history);
+    }
+
+    @Override
+    public void deleteHistory(final int position, BaseHistory history) {
+        mBookRepository.deleteHistory(history)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean aBoolean) {
+                        if (aBoolean) {
+                            mView.onHistoryDeleted(position);
+                        }
+                    }
+                });
     }
 }
