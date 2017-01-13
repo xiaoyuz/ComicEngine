@@ -14,6 +14,7 @@
     <string name="nav_search">Search</string>
     <string name="nav_offline">Offline</string>
     <string name="nav_history">History</string>
+    <string name="nav_close">Close</string>
 
     <string name="title_search">ComicEngine</string>
     <string name="title_offline">Offline</string>

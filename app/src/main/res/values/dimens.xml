@@ -12,4 +12,6 @@
 
     <dimen name="action_bar_icon_width">48dp</dimen>
     <dimen name="action_bar_icon_height">48dp</dimen>
+
+    <dimen name="sliding_menu_width">80dp</dimen>
 </resources>

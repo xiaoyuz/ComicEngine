@@ -78,4 +78,6 @@ dependencies {
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'com.ms-square:expandableTextView:0.1.4'
     compile "com.daimajia.swipelayout:library:1.2.0@aar"
+
+    compile 'com.github.ozodrukh:CircularReveal:1.0.4@aar'
 }

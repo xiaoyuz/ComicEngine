@@ -26,7 +26,7 @@ public class FragmentHelper {
                     .getBackStackEntryAt(backStackCount - 1).getName());
             ft.hide(fromFragment);
         }
-        ft.add(R.id.fragment_container, fragment, fragment.getClass().getSimpleName());
+        ft.add(R.id.activity_fragment_container, fragment, fragment.getClass().getSimpleName());
         ft.addToBackStack(fragment.getClass().getSimpleName());
         ft.commit();
         mFragmentManager.executePendingTransactions();

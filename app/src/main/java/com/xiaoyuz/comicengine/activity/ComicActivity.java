@@ -40,13 +40,14 @@ public class ComicActivity extends BaseActivity {
     }
 
     private EventHandler mEventHandler;
-    private LazyInstance<NavigationFragment> mLazyNavigationFragment;
+    private LazyInstance<NavigationFragment> mLazyNewNavigationFragment;
+//    private LazyInstance<NavigationFragment> mLazyNavigationFragment;
     private FragmentHelper mFragmentHelper;
 
     @Override
     protected void initVariables() {
         mEventHandler = new EventHandler();
-        mLazyNavigationFragment = new LazyInstance<>(
+        mLazyNewNavigationFragment = new LazyInstance<>(
                 new LazyInstance.InstanceCreator<NavigationFragment>() {
             @Override
             public NavigationFragment createInstance() {
@@ -64,7 +65,7 @@ public class ComicActivity extends BaseActivity {
         setContentView(R.layout.comic_activity);
 
         EventDispatcher.register(mEventHandler);
-        EventDispatcher.post(new GotoFragmentOperation(mLazyNavigationFragment.get()));
+        EventDispatcher.post(new GotoFragmentOperation(mLazyNewNavigationFragment.get()));
     }
 
     @Override

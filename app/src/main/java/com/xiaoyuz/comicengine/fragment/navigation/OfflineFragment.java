@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by zhangxiaoyu on 16-10-18.
  */
-public class OfflineFragment extends BaseFragment implements OfflineContract.View {
+public class OfflineFragment extends BaseChildFragment implements OfflineContract.View {
 
     private OfflineContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
@@ -27,9 +27,9 @@ public class OfflineFragment extends BaseFragment implements OfflineContract.Vie
     @Override
     protected View initView(LayoutInflater inflater,
                             ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.offline_fragment, container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
-        return view;
+        setRootView(inflater.inflate(R.layout.offline_fragment, container, false));
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.list);
+        return rootView;
     }
 
     @Override

@@ -1,57 +1,61 @@
 package com.xiaoyuz.comicengine.fragment;
 
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.LinearLayout;
 
 import com.xiaoyuz.comicengine.R;
 import com.xiaoyuz.comicengine.activity.ComicActivity;
-import com.xiaoyuz.comicengine.base.BaseFragment;
+import com.xiaoyuz.comicengine.base.BaseActivity;
 import com.xiaoyuz.comicengine.base.LazyInstance;
 import com.xiaoyuz.comicengine.contract.presenter.HistoryPresenter;
 import com.xiaoyuz.comicengine.contract.presenter.OfflinePresenter;
 import com.xiaoyuz.comicengine.db.source.local.BookLocalDataSource;
 import com.xiaoyuz.comicengine.db.source.remote.BookRemoteDataSource;
 import com.xiaoyuz.comicengine.db.source.repository.BookRepository;
+import com.xiaoyuz.comicengine.fragment.navigation.BaseChildFragment;
 import com.xiaoyuz.comicengine.fragment.navigation.DefaultFragment;
 import com.xiaoyuz.comicengine.fragment.navigation.HistoryFragment;
 import com.xiaoyuz.comicengine.fragment.navigation.OfflineFragment;
 import com.xiaoyuz.comicengine.fragment.navigation.SearchEngineFragment;
+import com.xiaoyuz.comicengine.ui.widget.slidemenu.interfaces.Resourceble;
+import com.xiaoyuz.comicengine.ui.widget.slidemenu.interfaces.ScreenShotable;
+import com.xiaoyuz.comicengine.ui.widget.slidemenu.model.SlideMenuItem;
+import com.xiaoyuz.comicengine.ui.widget.slidemenu.util.ViewAnimator;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.codetail.animation.SupportAnimator;
+import io.codetail.animation.ViewAnimationUtils;
 
 /**
  * Created by zhangxiaoyu on 16-11-9.
  */
-public class NavigationFragment extends BaseFragment
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class NavigationFragment extends BaseChildFragment
+        implements ViewAnimator.ViewAnimatorListener {
 
-    private NavigationView mNavigationView;
-    private View mBaseView;
+    private DrawerLayout mDrawerLayout;
+    private LinearLayout mLeftDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private List<SlideMenuItem> mSlideMenuItems = new ArrayList<>();
+    private ViewAnimator viewAnimator;
+
     private Toolbar mToolbar;
     private LazyInstance<SearchEngineFragment> mLazySearchEngineFragment;
     private LazyInstance<HistoryFragment> mLazyHistoryFragment;
     private LazyInstance<OfflineFragment> mLazyOfflineFragment;
-    private LazyInstance<DefaultFragment> mLazyDefaultFragment;
 
     @Override
     protected void initVariables() {
-        mLazyDefaultFragment =
-                new LazyInstance<>(new LazyInstance
-                        .InstanceCreator<DefaultFragment>() {
-                    @Override
-                    public DefaultFragment createInstance() {
-                        return new DefaultFragment();
-                    }
-                });
         mLazySearchEngineFragment =
                 new LazyInstance<>(new LazyInstance
                         .InstanceCreator<SearchEngineFragment>() {
@@ -77,25 +81,64 @@ public class NavigationFragment extends BaseFragment
     }
 
     @Override
-    protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mBaseView = inflater.inflate(R.layout.navigation_fragment, container, false);
-
-        mToolbar = (Toolbar) mBaseView.findViewById(R.id.toolbar);
+    protected View initView(LayoutInflater inflater,
+                            ViewGroup container, Bundle savedInstanceState) {
+        setRootView(inflater.inflate(R.layout.navigation_fragment,
+                container, false));
+        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((ComicActivity) getActivity()).setSupportActionBar(mToolbar);
 
-        DrawerLayout drawer = (DrawerLayout) mBaseView.findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                getActivity(), drawer, mToolbar, R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        mDrawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
+        mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+        mLeftDrawer = (LinearLayout) rootView.findViewById(R.id.left_drawer);
+        mLeftDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDrawerLayout.closeDrawers();
+            }
+        });
 
-        mNavigationView = (NavigationView) mBaseView.findViewById(R.id.nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        setActionBar();
 
-        selectNavItem(0);
+//        selectNavItem(0);
+        createMenuList();
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, mLazySearchEngineFragment.get())
+                .commit();
 
-        return mBaseView;
+        viewAnimator = new ViewAnimator<>((BaseActivity) getActivity(),
+                mSlideMenuItems, mLazySearchEngineFragment.get(),
+                mDrawerLayout, this);
+
+        return rootView;
+    }
+
+    private void setActionBar() {
+        mDrawerToggle = new ActionBarDrawerToggle(
+                getActivity(), mDrawerLayout, mToolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                mLeftDrawer.removeAllViews();
+                mLeftDrawer.invalidate();
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                if (slideOffset > 0.6 && mLeftDrawer.getChildCount() == 0)
+                    viewAnimator.showMenuContent();
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
     }
 
     @Override
@@ -103,59 +146,78 @@ public class NavigationFragment extends BaseFragment
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    private void createMenuList() {
+        mSlideMenuItems.add(new SlideMenuItem(getString(R.string.nav_close),
+                R.drawable.ic_menu_close));
+        mSlideMenuItems.add(new SlideMenuItem(getString(R.string.nav_search),
+                R.drawable.ic_menu_search));
+        mSlideMenuItems.add(new SlideMenuItem(getString(R.string.nav_search),
+                R.drawable.ic_menu_recent_history));
+        mSlideMenuItems.add(new SlideMenuItem(getString(R.string.nav_offline),
+                R.drawable.ic_menu_offline));
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        Fragment fragment;
-        switch (id) {
-            case R.id.nav_search:
-                mToolbar.setTitle(R.string.title_search);
+    public void disableHomeButton() {
+        ((BaseActivity) getActivity()).getSupportActionBar()
+                .setHomeButtonEnabled(false);
+
+    }
+
+    @Override
+    public void enableHomeButton() {
+        ((BaseActivity) getActivity())
+                .getSupportActionBar().setHomeButtonEnabled(true);
+        mDrawerLayout.closeDrawers();
+
+    }
+
+    @Override
+    public void addViewToContainer(View view) {
+        mLeftDrawer.addView(view);
+    }
+
+    @Override
+    public ScreenShotable onSwitch(Resourceble slideMenuItem,
+                                   ScreenShotable screenShotable, int position) {
+        BaseChildFragment fragment = null;
+        switch (slideMenuItem.getImageRes()) {
+            case R.drawable.ic_menu_search:
                 fragment = mLazySearchEngineFragment.get();
                 break;
-            case R.id.nav_history:
-                mToolbar.setTitle(R.string.title_history);
+            case R.drawable.ic_menu_recent_history:
                 fragment = mLazyHistoryFragment.get();
                 new HistoryPresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
                         BookRemoteDataSource.getInstance()), (HistoryFragment) fragment);
                 break;
-            case R.id.nav_offline:
-                mToolbar.setTitle(R.string.title_offline);
+            case R.drawable.ic_menu_offline:
                 fragment = mLazyOfflineFragment.get();
                 new OfflinePresenter(BookRepository.getInstance(BookLocalDataSource.getInstance(),
                         BookRemoteDataSource.getInstance()), (OfflineFragment) fragment);
                 break;
             default:
-                fragment = mLazyDefaultFragment.get();
                 break;
         }
-        FragmentManager fm = getChildFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.fragment_container, fragment);
-        ft.commitAllowingStateLoss();
-
-        DrawerLayout drawer = (DrawerLayout) mBaseView.findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        if (fragment == null) {
+            return screenShotable;
+        }
+        replaceFragment(fragment, position);
+        return fragment;
     }
 
-    private void selectNavItem(int pos) {
-        onNavigationItemSelected(mNavigationView.getMenu().getItem(pos).setChecked(true));
+    private void replaceFragment(BaseChildFragment baseChildFragment,
+                                           int topPosition) {
+        View view = rootView.findViewById(R.id.fragment_container);
+        int finalRadius = Math.max(view.getWidth(), view.getHeight());
+        SupportAnimator animator = ViewAnimationUtils
+                .createCircularReveal(view, 0, topPosition, 0, finalRadius);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.setDuration(ViewAnimator.CIRCULAR_REVEAL_ANIMATION_DURATION);
+
+        rootView.findViewById(R.id.content_overlay).setBackgroundDrawable(
+                new BitmapDrawable(getResources(), baseChildFragment.getBitmap()));
+        animator.start();
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, baseChildFragment).commit();
     }
 }

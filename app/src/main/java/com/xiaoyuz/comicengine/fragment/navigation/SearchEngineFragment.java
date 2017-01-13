@@ -21,7 +21,7 @@ import com.xiaoyuz.comicengine.utils.Constants;
 /**
  * Created by zhangxiaoyu on 16/10/27.
  */
-public class SearchEngineFragment extends BaseFragment {
+public class SearchEngineFragment extends BaseChildFragment {
 
     @Override
     protected void initVariables() {
@@ -30,10 +30,10 @@ public class SearchEngineFragment extends BaseFragment {
     @Override
     protected View initView(LayoutInflater inflater,
                             ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.search_engine_fragment,
-                container, false);
-        final EditText keywordEditText = (EditText) view.findViewById(R.id.keyword);
-        Button searchButton = (Button) view.findViewById(R.id.search);
+        setRootView(inflater.inflate(R.layout.search_engine_fragment,
+                container, false));
+        final EditText keywordEditText = (EditText) rootView.findViewById(R.id.keyword);
+        Button searchButton = (Button) rootView.findViewById(R.id.search);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +48,7 @@ public class SearchEngineFragment extends BaseFragment {
                 EventDispatcher.post(new ComicActivity.GotoFragmentOperation(fragment));
             }
         });
-        return view;
+        return rootView;
     }
 
     @Override

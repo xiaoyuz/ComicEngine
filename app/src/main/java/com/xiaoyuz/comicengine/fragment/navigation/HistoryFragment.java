@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Created by zhangxiaoyu on 16-10-18.
  */
-public class HistoryFragment extends BaseFragment implements HistoryContract.View {
+public class HistoryFragment extends BaseChildFragment implements HistoryContract.View {
 
     private RecyclerView mRecyclerView;
     private HistoryContract.Presenter mPresenter;
@@ -40,13 +40,13 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
     @Override
     protected View initView(LayoutInflater inflater,
                             ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.history_fragment, container, false);
+        setRootView(inflater.inflate(R.layout.history_fragment, container, false));
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.list);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(App.getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
-        return view;
+        return rootView;
     }
 
     @Override

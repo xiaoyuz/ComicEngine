@@ -78,7 +78,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         holder.titleTextView.setText(mHistories.get(position).getTitle());
 
-        holder.itemView.setTag(mHistories.get(position));
+        holder.layout.setTag(mHistories.get(position));
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
